@@ -1,0 +1,39 @@
+Table Movies (
+INT movie_number PRIMARY KEY,
+VARCHAR(100) title NOT NULL,
+INT format_id FOREIGN KEY(Formats) NOT NULL,
+INT genre_id FOREIGN KEY(Genres) NOT NULL,
+VARCHAR(10) status NOT NULL
+)
+
+Table Formats (
+INT format_id PRIMARY KEY,
+VARCHAR(5) format_type NOT NULL
+)
+
+Table Genres (
+INT genre_id PRIMARY KEY,
+VARCHAR(20) genre_name NOT NULL
+)
+
+Table Members (
+INT member_id PRIMARY KEY,
+VARCHAR(50) name NOT NULL,
+VARCHAR(12) phone_number UNIQUE NOT NULL,
+INT favorite_genre FOREIGN KEY(Genres),
+INT membership_type_id FOREIGN KEY(MembershipTypes) NOT NULL,
+INT rented_movie_count
+)
+
+Table MembershipTypes (
+INT membership_type_id PRIMARY KEY,
+VARCHAR(10) membership_name NOT NULL
+)
+
+Table Dependents (
+INT dependent_id PRIMARY KEY,
+VARCHAR(50) dependent_name NOT NULL,
+INT member_id FOREIGN KEY(Members) NOT NULL,
+INT rented_movie_count
+)
+
