@@ -1,0 +1,35 @@
+1) Create two folders - primary and secondary - for the two database servers (in a place without needing administrator permission)
+
+2) Open powershell and cd to the bin directory of the postgreSQL installation
+
+3) Initialize the primary database
+
+	$ initdb -D "C:\dbs\primary"
+
+4) Edit the postgresql.conf file and change the port to 5433
+
+5) Start the primary server
+
+	$ .\pg_ctl -D "C:\dbs\primary" -o "-p 5433" -l "C:\dbs\primary\logfile" start
+
+6) Create a user for replication purpose
+
+	$ .\psql -p 5433 -d postgres -c "CREATE ROLE replicator with REPLICATION LOGIN PASSWORD '<password>';"
+
+7) Create a replication backup in the secondary database 
+
+	$ .\pg_basebackup -D "C:\dbs\secondary" -Fp -Xs -P -R -h 127.0.0.1 -U replicator -p 5433
+
+8) Start the secondary server
+
+	$ .\pg_ctl -D "C:\dbs\secondary" -o "-p 5435" -l "C:\dbs\secondary\logfile" start
+
+9) Connect a psql session in primary database
+
+	$ \.psql -p 5433 -U postgres
+
+10) Open another powershell and connect a psql session in secondary database
+
+	$ \.psql -p 5435 -U postgres
+
+11) Any statements committed in primary server will reflect in the secondary server
