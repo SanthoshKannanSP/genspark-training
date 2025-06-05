@@ -1,0 +1,31 @@
+<html>
+  <body>
+      <h2>Upload Notifications</h2>
+       <div id="notifications">
+
+       </div>
+      <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@8.0.7/dist/browser/signalr.min.js"></script>
+        <script>
+            const connection = new signalR.HubConnectionBuilder()
+                                .withUrl("http://localhost:5001/notification",{
+                                    withCredentials:true
+                                })
+                                .withAutomaticReconnect()
+                                .build();
+            connection.on("ReceiveMessage",(user,documentName)=>{
+                console.log(`${user} uploaded with Id ${documentName}`);
+                const placeHolder = document.getElementById("notifications");
+                const content = document.createElement("p")
+                content.innerHTML = `${user} uploaded with Id ${documentName}`;
+                placeHolder.append(content);
+            });
+
+            connection.start().then(()=>{
+                console.log("Connection successful");
+            })
+            .catch(err=>{
+                console.log("sinalR connection Failed")
+            })
+        </script>
+  </body>
+</html>
