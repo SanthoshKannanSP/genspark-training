@@ -1,0 +1,14 @@
+<div>
+    <p>Customer Id: {{customerDetailJson.id}}</p>
+    <p>Customer Name: {{customerDetailJson.name}}</p>
+    <p>Customer Phonenumber: {{customerDetailJson.phonenumber}}</p>
+    <p>Customer Email: {{customerDetailJson.email}}</p>
+    <div class="like-section">
+        Likes:
+        <div class="like-bar">
+            <i class="bi bi-hand-thumbs-up-fill" (click)="increaseCount()"></i>
+            <p>{{likes}}</p>
+            <i class="bi bi-hand-thumbs-down-fill" (click)="decreaseCount()"></i>
+        </div>
+    </div>
+</div>

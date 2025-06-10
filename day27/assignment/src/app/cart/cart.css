@@ -1,0 +1,42 @@
+@import "../../../node_modules/bootstrap-icons/font/bootstrap-icons.css";
+
+.cart-section {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  gap: 8px;
+  padding: 8px 12px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.cart-section:hover {
+  background-color: #f5f5f5;
+}
+
+.cart-section i {
+  font-size: 2rem;
+  color: #333;
+}
+
+.cart-text {
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.cart-section .badge {
+  background-color: #ff3b3b;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 4px 6px;
+  border-radius: 50%;
+  min-width: 20px;
+  text-align: center;
+  z-index: 1;
+}

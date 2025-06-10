@@ -1,0 +1,36 @@
+@import "../../../node_modules/bootstrap-icons/font/bootstrap-icons.css";
+
+.like-section
+{
+    display: flex;
+    align-items: center;
+}
+
+.like-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 12px;
+  padding: 8px 12px;
+  background-color: #f7f7f7;
+  border-radius: 12px;
+}
+
+.like-bar .bi {
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 6px;
+  transition: color 0.3s ease, background-color 0.3s ease;
+  border-radius: 50%;
+}
+
+.like-bar .bi:hover {
+  background-color: #e0e0e0;
+}
+
+.like-bar p {
+  margin: 0;
+  font-weight: 500;
+  font-size: 1rem;
+}

@@ -1,0 +1,10 @@
+<h1>Customer Details</h1>
+<app-customer-details />
+
+<h1>Products</h1>
+<app-cart [itemCount]="cartCount"/>
+<div class="product-grid">
+    @for (product of products; track product) {
+        <app-product-card [product]="product" [(cartCount)]="cartCount"/>
+    }
+</div>

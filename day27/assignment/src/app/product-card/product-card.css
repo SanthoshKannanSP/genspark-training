@@ -1,0 +1,77 @@
+@import "../../../node_modules/bootstrap-icons/font/bootstrap-icons.css";
+
+.card {
+    width: 300px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card img {
+    display: block;
+    max-width: 250px;
+    max-height: 300px; 
+    object-fit: contain; 
+    border-radius: 12px;
+}
+
+.product-name {
+    margin: 12px 0 8px;
+    font-size: 1.25rem;
+    color: #333;
+}
+
+.product-price {
+    font-size: 1rem;
+    color: #666;
+}
+
+.add-to-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 12px;
+  padding: 8px 12px;
+  background-color: #f7f7f7;
+  border-radius: 12px;
+}
+
+.add-to-card .bi {
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 6px;
+  transition: color 0.3s ease, background-color 0.3s ease;
+  border-radius: 50%;
+}
+
+.add-to-card .bi:hover {
+  background-color: #e0e0e0;
+}
+
+.add-to-card .plus:hover
+{
+    color: green;
+}
+
+.add-to-card .minus:hover
+{
+    color: red;
+}
+
+.add-to-card p {
+  margin: 0;
+  font-weight: 500;
+  font-size: 1rem;
+}

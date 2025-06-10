@@ -1,0 +1,9 @@
+<p>first works!</p>
+<h2>Hello {{name}}</h2>
+<input type="text" #uname [value]="name">
+<button (click)="OnButtonClick(uname.value)">Click me</button>
+
+<h2>Change the below value</h2>
+<input type="text" [(ngModel)]="currentVal">
+<h3>Curent value: {{currentVal}}</h3>
+<i [className]="heart" (click)="toggleHeart()"></i>
