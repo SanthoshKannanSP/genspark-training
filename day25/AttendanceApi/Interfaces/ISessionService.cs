@@ -1,0 +1,17 @@
+using AttendanceApi.Models;
+using AttendanceApi.Models.DTOs;
+
+namespace AttendanceApi.Interfaces;
+
+public interface ISessionService
+{
+    public Task<Session> ScheduleSession(AddSessionRequestDTO addSessionRequestDTO, int? teacherId);  // DOne
+    public Task<Session> CancelSession(int sessionId); // Done
+    public Task<Session> CompleteSession(int sessionId); // Done
+    public Task<Session> UpdateSession(UpdateSessionRequestDTO updateSessionRequestDTO); // Done
+    public Task<List<Session>> GetAllSession(); // Done
+    public Task<Session> GetSession(int sessionId); // Done
+    public Task<List<Session>> GetSessionByTeacher(int teacherId); // Done
+    public Task<List<SessionAttendance>> AddStudentsToSession(AddStudentsToSessionRequestDTO addStudentsToSessionRequestDTO); // DOne
+    public Task RemoveStudentsFromSession(List<int> studentIds, int sessionId);
+}
