@@ -1,0 +1,23 @@
+<div [className]="cardStyle" (click)="onClick()">
+  <div class="card-front" >
+    <img [src]="recipe?.image" class="card-img-top" [alt]="recipe?.name">
+    <div class="card-body">
+        <h5 class="card-title">{{recipe?.name}}</h5>
+        <p class="card-subtitle mb-2 text-body-secondary">Ingredients</p>
+        <p class="card-text ingredients">{{recipe?.ingredients?.slice(0,4)?.join(" | ")}}... <span class="italic">(Click to view full)</span></p>
+        <p class="card-subtitle mb-2 text-body-secondary">Cooking Time (in Minutes)</p>
+        <p class="card-text">{{recipe?.cookTimeMinutes}} Minutes</p>
+        <p class="card-subtitle mb-2 text-body-secondary">Cuisine</p>
+        <p class="card-text">{{recipe?.cuisine}}</p>
+    </div>
+  </div>
+  <div class="card-back" >
+    <h5 class="card-title">Ingredient List</h5>
+    <ul class="list-group list-group-flush">
+        @for (ingredient of recipe?.ingredients; track $index) {
+            <li class="list-group-item">{{ingredient}}</li>
+        }
+     </ul>
+  </div>
+  
+</div>

@@ -1,0 +1,57 @@
+.card
+{
+    width: 20rem; 
+    height: 42rem; 
+    margin: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover
+{
+    cursor: pointer;
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card > div
+{
+    width: 100%;
+    backface-visibility: hidden;
+    transition: transform 300ms;
+    transition-timing-function: linear;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.card-front
+{
+    transform: rotateY(0deg);
+}
+
+.card-back
+{
+  transform: rotateY(180deg);
+  position: absolute;
+  top: 0;
+}
+
+.flip .card-front {
+  transform: rotateY(-180deg);
+}
+  
+.flip .card-back {
+  transform: rotateY(0deg);
+}
+
+.ingredients
+{
+    text-align: justify;
+}
+
+.italic
+{
+    font-style: italic;
+}
