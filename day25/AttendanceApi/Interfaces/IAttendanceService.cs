@@ -4,8 +4,8 @@ namespace AttendanceApi.Interfaces;
 
 public interface IAttendanceService
 {
-    public SessionAttendance AddAttendanceToStudent(int studentId, int sessionId);
-    public SessionAttendance RemoveAttendanceFromStudent(int studentId, int sessionId);
-    public List<SessionAttendance> GetAttendanceOfStudent(int studentId);
-    public List<SessionAttendance> GetAttendanceOfSession(int sessionId);
+    public Task<SessionAttendance> AddAttendanceToStudent(int studentId, int sessionId);
+    public Task<SessionAttendance> RemoveAttendanceFromStudent(int studentId, int sessionId);
+    public Task<List<SessionAttendance>> GetAttendanceOfStudent(int studentId);
+    public Task<List<SessionAttendance>> GetAttendanceOfSession(int sessionId);
 }

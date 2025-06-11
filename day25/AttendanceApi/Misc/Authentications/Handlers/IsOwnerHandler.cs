@@ -29,9 +29,12 @@ public class IsOwnerHandler : AuthorizationHandler<IsOwnerRequirement>
             return;
         }
 
-        var resourceType = pathSegments[^2];
+        var reference = Array.IndexOf(pathSegments, "api");
+
+        var resourceType = pathSegments[reference+2];
+        
         int resourceId;
-        if (!int.TryParse(pathSegments[^1], out resourceId))
+        if (!int.TryParse(pathSegments[reference+3], out resourceId))
         {
             context.Fail();
             return;

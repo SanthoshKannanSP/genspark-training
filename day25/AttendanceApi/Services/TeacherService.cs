@@ -54,12 +54,16 @@ public class TeacherService : ITeacherService
         return teacher;
     }
 
-    public async Task<List<Teacher>> GetAllActiveTeachers()
+    public async Task<List<Teacher>> GetAllActiveTeachers(int? page, int? pageSize)
     {
+        page = page > 0 ? page : 1;
+        pageSize = pageSize > 0 ? pageSize : 10;
         var teachers = await _teacherRepository.GetAll();
         if (teachers == null)
             throw new Exception("No teachers found");
         teachers = teachers.Where(t => t.Status == "Active");
+        teachers = teachers.Skip((page!.Value - 1) * pageSize!.Value).Take(pageSize!.Value);
+
         return teachers.ToList();
     }
 

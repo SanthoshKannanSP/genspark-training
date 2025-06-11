@@ -7,6 +7,6 @@ public interface IStudentService
 {
     public Task<Student> AddStudent(AddStudentRequestDTO addStudentRequestDTO);
     public Task<Student> DeactivateStudent(int StudentId);
-    public Task<List<Student>> GetAllActiveStudents();
+    public Task<List<Student>> GetAllActiveStudents(int page, int pageSize);
     public Task<Student> GetStudent(int studentId);
 }

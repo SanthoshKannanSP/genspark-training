@@ -20,21 +20,29 @@ public class StudentService : IStudentService
     }
     public async Task<Student> AddStudent(AddStudentRequestDTO addStudentRequestDTO)
     {
-        var user = _mapper.Map<User>(addStudentRequestDTO);
-        user.Role = "Student";
-        var encryptedData = _encryptionService.EncryptData(new EncryptModel()
+        try
         {
-            Data = addStudentRequestDTO.Password
-        });
-        user.Password = encryptedData.EncryptedData;
-        user.HashKey = encryptedData.HashKey;
-        user = await _userRepository.Add(user);
+            var user = _mapper.Map<User>(addStudentRequestDTO);
+            user.Role = "Student";
+            var encryptedData = _encryptionService.EncryptData(new EncryptModel()
+            {
+                Data = addStudentRequestDTO.Password
+            });
+            user.Password = encryptedData.EncryptedData;
+            user.HashKey = encryptedData.HashKey;
+            user = await _userRepository.Add(user);
 
-        var student = _mapper.Map<Student>(addStudentRequestDTO);
-        student.Status = "Active";
-        student = await _studentRepository.Add(student);
+            var student = _mapper.Map<Student>(addStudentRequestDTO);
+            student.Status = "Active";
+            student = await _studentRepository.Add(student);
 
-        return student;
+            return student;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Unable to create Student");
+        }
+        
     }
 
     public async Task<Student> DeactivateStudent(int StudentId)
@@ -49,10 +57,15 @@ public class StudentService : IStudentService
         return student;
     }
 
-    public async Task<List<Student>> GetAllActiveStudents()
+    public async Task<List<Student>> GetAllActiveStudents(int page, int pageSize)
     {
+        page = page > 0 ? page : 1;
+        pageSize = pageSize > 0 ? pageSize : 10;
         var students = await _studentRepository.GetAll();
+        if (students == null)
+            throw new Exception("No students found");
         students = students.Where(s => s.Status == "Active");
+        students = students.Skip((page - 1) * pageSize).Take(pageSize);
         return students.ToList();
     }
 

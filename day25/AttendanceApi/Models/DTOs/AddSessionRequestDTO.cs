@@ -6,4 +6,5 @@ public class AddSessionRequestDTO
     public DateOnly Date { get; set; }
     public TimeOnly StartTime { get; set; }
     public TimeOnly EndTime { get; set; }
+    public int teacherId { get; set; }
 }

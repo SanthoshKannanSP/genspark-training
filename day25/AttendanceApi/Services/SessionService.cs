@@ -17,12 +17,12 @@ public class SessionService : ISessionService
         _sessionAttendanceRepository = sessionAttendanceRepository;
         _mapper = mapper;
     }
-    public async Task<List<SessionAttendance>> AddStudentsToSession(AddStudentsToSessionRequestDTO addStudentsToSessionRequestDTO)
+    public async Task<List<SessionAttendance>> AddStudentsToSession(AddStudentsToSessionRequestDTO addStudentsToSessionRequestDTO, int sessionId)
     {
         List<SessionAttendance> sessionAttendances = new();
         foreach (var studentId in addStudentsToSessionRequestDTO.StudentIds)
         {
-            var sessionAttendance = new SessionAttendance() { StudentId = studentId, SessionId = addStudentsToSessionRequestDTO.SessionId, Status = "NotAttended" };
+            var sessionAttendance = new SessionAttendance() { StudentId = studentId, SessionId = sessionId, Status = "NotAttended" };
             sessionAttendance = await _sessionAttendanceRepository.Add(sessionAttendance);
             sessionAttendances.Add(sessionAttendance);
         }
@@ -49,9 +49,12 @@ public class SessionService : ISessionService
         return session;
     }
 
-    public async Task<List<Session>> GetAllSession()
+    public async Task<List<Session>> GetAllSession(int page, int pageSize)
     {
+        page = page > 0 ? page : 1;
+        pageSize = pageSize > 0 ? pageSize : 10;
         var sessions = await _sessionRepository.GetAll();
+        sessions = sessions.Skip((page - 1) * pageSize).Take(pageSize);
         return sessions.ToList();
     }
 
@@ -79,21 +82,18 @@ public class SessionService : ISessionService
         return;
     }
 
-    public async Task<Session> ScheduleSession(AddSessionRequestDTO addSessionRequestDTO, int? teacherId)
+    public async Task<Session> ScheduleSession(AddSessionRequestDTO addSessionRequestDTO)
     {
-        if (teacherId == null)
-            throw new Exception("Teacher doesn't exist");
         var session = _mapper.Map<Session>(addSessionRequestDTO);
-        session.TeacherId = teacherId!.Value;
         session.Status = "Scheduled";
 
         session = await _sessionRepository.Add(session);
         return session;
     }
 
-    public async Task<Session> UpdateSession(UpdateSessionRequestDTO updateSessionRequestDTO)
+    public async Task<Session> UpdateSession(UpdateSessionRequestDTO updateSessionRequestDTO, int sessionId)
     {
-        var session = await _sessionRepository.Get(updateSessionRequestDTO.SessionId);
+        var session = await _sessionRepository.Get(sessionId);
         session.SessionName = updateSessionRequestDTO.SessionName;
         session.Date = updateSessionRequestDTO.Date;
         session.StartTime = updateSessionRequestDTO.StartTime;

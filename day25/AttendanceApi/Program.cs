@@ -1,6 +1,7 @@
 using System.Text;
 using AttendanceApi.Contexts;
 using AttendanceApi.Interfaces;
+using AttendanceApi.Misc;
 using AttendanceApi.Misc.Authentications.Handlers;
 using AttendanceApi.Misc.Authentications.Requirements;
 using AttendanceApi.Models;
@@ -8,6 +9,8 @@ using AttendanceApi.Repositories;
 using AttendanceApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -17,7 +20,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Logging.AddConsole();
 
-builder.Services.AddControllers()
+builder.Services.AddControllers(opts =>
+                {
+                    opts.Filters.Add<LogRequestFilter>();
+                    opts.Filters.Add<ApiResponseFilterAttribute>();
+
+                })
                 .AddJsonOptions(opts =>
                 {
                     opts.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
@@ -75,6 +83,7 @@ builder.Services.AddTransient<IEncryptionService, EncryptionService>();
 builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
 builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddTransient<IOwnerService, OwnerService>();
+builder.Services.AddTransient<IAttendanceService, AttendanceService>();
 #endregion
 
 #region AutoMapper
@@ -92,6 +101,10 @@ builder.Services.AddCors(options=>{
             .AllowCredentials();
     });
 });
+#endregion
+
+#region Misc
+builder.Logging.AddLog4Net();
 #endregion
 
 #region AuthenticationFilter
@@ -122,6 +135,13 @@ builder.Services.AddAuthorization(options =>
 #endregion
 
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddApiVersioning(opts =>
+{
+    opts.AssumeDefaultVersionWhenUnspecified = true;
+    opts.DefaultApiVersion = new ApiVersion(1, 0);
+    opts.ReportApiVersions = true;
+    opts.ApiVersionReader = new UrlSegmentApiVersionReader();
+});
 
 var app = builder.Build();
 

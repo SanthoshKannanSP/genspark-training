@@ -2,12 +2,15 @@ using System.Security.Claims;
 using AttendanceApi.Interfaces;
 using AttendanceApi.Models;
 using AttendanceApi.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AttendanceApi.Controllers;
 
 [ApiController]
-[Route("/api/[controller]")]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
 public class SessionController : ControllerBase
 {
     private readonly ISessionService _sessionService;
@@ -28,22 +31,21 @@ public class SessionController : ControllerBase
 
     [HttpGet]
     [Route("All")]
-    public async Task<ActionResult<List<Session>>> GetAllSessions()
+    public async Task<ActionResult<List<Session>>> GetAllSessions(int page, int pageSize)
     {
-        var sessions = await _sessionService.GetAllSession();
+        var sessions = await _sessionService.GetAllSession(page,pageSize);
         return Ok(sessions);
     }
 
+    [Authorize(Roles = "Teacher")]
     [HttpPost]
     public async Task<ActionResult<Session>> ScheduleSession(AddSessionRequestDTO addSessionRequestDTO)
     {
-        var username = User.FindFirst(ClaimTypes.Name)?.Value;
-        var teachers = await _teacherService.GetAllActiveTeachers();
-        var teacherId = teachers.FirstOrDefault(t => t.Email == username)?.TeacherId;
-        var session = await _sessionService.ScheduleSession(addSessionRequestDTO, teacherId);
+        var session = await _sessionService.ScheduleSession(addSessionRequestDTO);
         return Created("", session);
     }
 
+    [Authorize(Policy = "IsOwner")]
     [HttpPost]
     [Route("{sessionId}/Cancel")]
     public async Task<ActionResult<Session>> CancelSession(int sessionId)
@@ -52,6 +54,7 @@ public class SessionController : ControllerBase
         return Ok(session);
     }
 
+    [Authorize(Policy = "IsOwner")]
     [HttpPost]
     [Route("{sessionId}/Complete")]
     public async Task<ActionResult<Session>> CompleteSession(int sessionId)
@@ -60,11 +63,12 @@ public class SessionController : ControllerBase
         return session;
     }
 
+    [Authorize(Policy = "IsOwner")]
     [HttpPost]
-    [Route("Student/Add")]
-    public async Task<ActionResult<List<SessionAttendance>>> AddStudentToSession(AddStudentsToSessionRequestDTO addStudentsToSessionRequestDTO)
+    [Route("{sessionId}/AddStudent")]
+    public async Task<ActionResult<List<SessionAttendance>>> AddStudentToSession(AddStudentsToSessionRequestDTO addStudentsToSessionRequestDTO, int sessionId)
     {
-        var sessionAttendances = await _sessionService.AddStudentsToSession(addStudentsToSessionRequestDTO);
+        var sessionAttendances = await _sessionService.AddStudentsToSession(addStudentsToSessionRequestDTO, sessionId);
         return Created("", sessionAttendances);
     }
 
@@ -76,11 +80,12 @@ public class SessionController : ControllerBase
         return Ok(sessions);
     }
 
+    [Authorize(Policy = "IsOwner")]
     [HttpPost]
-    [Route("Update")]
-    public async Task<ActionResult<Session>> UpdateSession(UpdateSessionRequestDTO updateSessionRequestDTO)
+    [Route("{sessionId}/Update")]
+    public async Task<ActionResult<Session>> UpdateSession(UpdateSessionRequestDTO updateSessionRequestDTO, int sessionId)
     {
-        var session = await _sessionService.UpdateSession(updateSessionRequestDTO);
+        var session = await _sessionService.UpdateSession(updateSessionRequestDTO, sessionId);
         return Ok(session);
     }
 }

@@ -8,7 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace AttendanceApi.Controllers;
 
 [ApiController]
-[Route("/api/[controller]")]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
 public class TeacherController : ControllerBase
 {
     private readonly ITeacherService _teacherService;
@@ -18,9 +19,9 @@ public class TeacherController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Teacher>>> GetAllTeachers()
+    public async Task<ActionResult<List<Teacher>>> GetAllTeachers(int page, int pageSize)
     {
-        var teachers = await _teacherService.GetAllActiveTeachers();
+        var teachers = await _teacherService.GetAllActiveTeachers(page,pageSize);
         return teachers;
     }
 
