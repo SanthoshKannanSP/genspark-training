@@ -1,0 +1,12 @@
+<h1 class="title">Login Page</h1>
+@if (token.username) {
+  <div class="container">
+    <app-user-details [userData]="token" (updateToken)="handleToken($event)"/>
+  </div>
+  
+}
+@else {
+  <div class="container">
+    <app-login-form (updateToken)="handleToken($event)"/>
+  </div>
+}

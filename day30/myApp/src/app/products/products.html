@@ -1,0 +1,14 @@
+<p>Cart <span class="badge" style="color: black;">{{cartCount}}</span></p>
+
+@if (products!=null) {
+    <div>
+        @for (product of products; track product.pid) {
+            <app-product (addToCart)="increaseCartCount($event)" [product]="product" ></app-product>
+        }
+    </div>
+}
+@else {
+    <div>
+        No products available
+    </div>
+}
