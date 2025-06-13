@@ -12,7 +12,7 @@ public class SessionAttendanceRepository : AbstractRepository<int, SessionAttend
     }
     public override async Task<SessionAttendance> Get(int key)
     {
-        return await _attendenceContent.SessionAttendances.SingleOrDefaultAsync(t => t.SessionAttendanceId == key);
+        return await _attendenceContent.SessionAttendances.Include(s=> s.Student).Include(s=> s.Session).SingleOrDefaultAsync(t => t.SessionAttendanceId == key);
     }
 
     public override async Task<IEnumerable<SessionAttendance>> GetAll()

@@ -157,7 +157,89 @@ public class TeacherServiceTests
 
         var ex = Assert.ThrowsAsync<Exception>(async () =>
                 await teacherService.DeactivateTeacher(1));
-        
+
         Assert.That(ex.Message, Is.EqualTo("Teacher with given Id not found"));
+    }
+
+    [Test]
+    public async Task DeactivateTeacher_ShouldThrow_WhenTeacherAlreadyDeactivated()
+    {
+        Teacher teacher = new()
+        {
+            TeacherId = 1,
+            Name = "John Doe",
+            Email = "johndoe@gmail.com",
+            Status = "Deactivated"
+        };
+        _teacherRepositoryMock.Setup(t => t.Get(It.IsAny<int>())).ReturnsAsync(teacher);
+        var teacherService = new TeacherService(_teacherRepositoryMock.Object, _userRepositoryMock.Object, _encryptionServiceMock.Object, _mapperMock.Object);
+
+        var ex = Assert.ThrowsAsync<Exception>(async () => await teacherService.DeactivateTeacher(1));
+
+        Assert.That(ex.Message, Is.EqualTo("Teacher is already deactivated"));
+    }
+
+    [Test]
+    public async Task GetAllActiveTeachers_ShouldReturnAllTeachers()
+    {
+        List<Teacher> teachers = new()
+        {
+            new Teacher() {TeacherId=1, Name="John Doe",Email="johndoe@gmail.com",Status="Active"},
+            new Teacher() {TeacherId=2, Name="Jane Doe",Email="janedoe@gmail.com",Status="Deactivated"}
+        };
+        _teacherRepositoryMock.Setup(t => t.GetAll()).ReturnsAsync(teachers);
+        var teacherService = new TeacherService(_teacherRepositoryMock.Object, _userRepositoryMock.Object, _encryptionServiceMock.Object, _mapperMock.Object);
+
+        var result = await teacherService.GetAllActiveTeachers(1,10);
+
+        Assert.That(result.Count(), Is.EqualTo(1));
+        Assert.That(result[0].TeacherId, Is.EqualTo(1));
+        Assert.That(result[0].Name, Is.EqualTo("John Doe"));
+        Assert.That(result[0].Email, Is.EqualTo("johndoe@gmail.com"));
+        Assert.That(result[0].Status, Is.EqualTo("Active"));
+    }
+
+    [Test]
+    public async Task GetAllActiveTeachers_ShouldThrow_WhenTeacherListIsNull()
+    {
+        _teacherRepositoryMock.Setup(t => t.GetAll()).ReturnsAsync((List<Teacher>)null);
+        var teacherService = new TeacherService(_teacherRepositoryMock.Object, _userRepositoryMock.Object, _encryptionServiceMock.Object, _mapperMock.Object);
+
+        var ex = Assert.ThrowsAsync<Exception>(async () => await teacherService.GetAllActiveTeachers(1,10));
+
+        Assert.That(ex.Message, Is.EqualTo("No teachers found"));
+    }
+
+    [Test]
+    public async Task GetTeacher_ShouldReturnTeacherWithSpecifiedId()
+    {
+        Teacher teacher = new()
+        {
+            TeacherId = 1,
+            Name = "John Doe",
+            Email = "johndoe@gmail.com",
+            Status = "Active"
+        };
+        _teacherRepositoryMock.Setup(t => t.Get(1)).ReturnsAsync(teacher);
+        var teacherService = new TeacherService(_teacherRepositoryMock.Object, _userRepositoryMock.Object, _encryptionServiceMock.Object, _mapperMock.Object);
+
+        var result = await teacherService.GetTeacher(1);
+
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.TeacherId, Is.EqualTo(1));
+        Assert.That(result.Name, Is.EqualTo("John Doe"));
+        Assert.That(result.Email, Is.EqualTo("johndoe@gmail.com"));
+        Assert.That(result.Status, Is.EqualTo("Active"));
+    }
+
+    [Test]
+    public async Task GetTeacher_ShouldThrow_WhenTeacherWithSpecifiedIdIsNull()
+    {
+        _teacherRepositoryMock.Setup(t => t.Get(1)).ReturnsAsync((Teacher)null);
+        var teacherService = new TeacherService(_teacherRepositoryMock.Object, _userRepositoryMock.Object, _encryptionServiceMock.Object, _mapperMock.Object);
+
+        var ex = Assert.ThrowsAsync<Exception>(async () => await teacherService.GetTeacher(1));
+
+        Assert.That(ex.Message, Is.EqualTo("No teacher found"));
     }
 }

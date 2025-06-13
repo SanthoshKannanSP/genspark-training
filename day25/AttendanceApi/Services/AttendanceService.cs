@@ -1,15 +1,19 @@
 using System.Threading.Tasks;
 using AttendanceApi.Interfaces;
+using AttendanceApi.Misc;
 using AttendanceApi.Models;
+using Microsoft.AspNetCore.SignalR;
 
 namespace AttendanceApi.Services;
 
 public class AttendanceService : IAttendanceService
 {
     private readonly IRepository<int, SessionAttendance> _sessionAttendanceRepository;
-    public AttendanceService(IRepository<int, SessionAttendance> sessionAttendanceRepository)
+    private readonly IHubContext<NotificationHub> _hubContext;
+    public AttendanceService(IRepository<int, SessionAttendance> sessionAttendanceRepository, IHubContext<NotificationHub> hubContext)
     {
         _sessionAttendanceRepository = sessionAttendanceRepository;
+        _hubContext = hubContext;
     }
     public async Task<SessionAttendance> AddAttendanceToStudent(int studentId, int sessionId)
     {
@@ -25,6 +29,7 @@ public class AttendanceService : IAttendanceService
 
         attendance.Status = "Attended";
         attendance = await _sessionAttendanceRepository.Update(attendance.SessionAttendanceId, attendance);
+        await _hubContext.Clients.All.SendAsync("ReceiveMessage", attendance.Student.Name, attendance.Session.SessionName);
         return attendance;
     }
 

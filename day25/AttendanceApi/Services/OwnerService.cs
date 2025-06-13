@@ -25,8 +25,6 @@ public class OwnerService : IOwnerService
             _ => null
         };
 
-        System.Console.WriteLine(resource.OwnerName);
-
         return resource != null && resource.OwnerName == username;
     }
 }

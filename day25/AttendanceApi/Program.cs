@@ -1,10 +1,13 @@
+using System.Security.Claims;
 using System.Text;
+using System.Threading.RateLimiting;
 using AttendanceApi.Contexts;
 using AttendanceApi.Interfaces;
 using AttendanceApi.Misc;
 using AttendanceApi.Misc.Authentications.Handlers;
 using AttendanceApi.Misc.Authentications.Requirements;
 using AttendanceApi.Models;
+using AttendanceApi.Models.DTOs;
 using AttendanceApi.Repositories;
 using AttendanceApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -105,6 +108,46 @@ builder.Services.AddCors(options=>{
 
 #region Misc
 builder.Logging.AddLog4Net();
+builder.Services.AddSignalR();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddApiVersioning(opts =>
+{
+    opts.AssumeDefaultVersionWhenUnspecified = true;
+    opts.DefaultApiVersion = new ApiVersion(1, 0);
+    opts.ReportApiVersions = true;
+    opts.ApiVersionReader = new UrlSegmentApiVersionReader();
+});
+builder.Services.AddRateLimiter(opts =>
+{
+    opts.RejectionStatusCode = 429;
+    opts.OnRejected = async (context, token) =>
+    {
+        var response = new ApiResponseDTO { Data = null, ErrorMessage = "Rate limit exceeded", Success = false };
+        var json = System.Text.Json.JsonSerializer.Serialize(response);
+        context.HttpContext.Response.ContentType = "application/json";
+        await context.HttpContext.Response.WriteAsync(json, token);
+    };
+    opts.AddPolicy("PerUserOrIpPolicy", context =>
+    {
+        var username = context.User.Identity?.Name;
+
+        if (username == null)
+            username = context.Connection.RemoteIpAddress.ToString();
+
+        System.Console.WriteLine(username);
+        
+        return RateLimitPartition.GetTokenBucketLimiter(username, key => new TokenBucketRateLimiterOptions
+        {
+            TokenLimit = 1000,
+            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+            QueueLimit = 0,
+            ReplenishmentPeriod = TimeSpan.FromHours(1),
+            TokensPerPeriod = 1000,
+            AutoReplenishment = true
+        });
+        
+    });
+});;
 #endregion
 
 #region AuthenticationFilter
@@ -134,15 +177,6 @@ builder.Services.AddAuthorization(options =>
 });
 #endregion
 
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddApiVersioning(opts =>
-{
-    opts.AssumeDefaultVersionWhenUnspecified = true;
-    opts.DefaultApiVersion = new ApiVersion(1, 0);
-    opts.ReportApiVersions = true;
-    opts.ApiVersionReader = new UrlSegmentApiVersionReader();
-});
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -158,7 +192,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseCors();
+app.MapHub<NotificationHub>("/notification");
 
-app.MapControllers();
+app.UseRateLimiter();
+app.MapControllers().RequireRateLimiting("PerUserOrIpPolicy");
 
 app.Run();
