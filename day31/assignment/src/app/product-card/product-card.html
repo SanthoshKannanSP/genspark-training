@@ -1,0 +1,8 @@
+<div class="card" style="width: 20rem; height: 600px">
+  <img class="card-img-top" [src]="details.thumbnail" [alt]="details.title">
+  <div class="card-body">
+    <h5 class="card-title" [innerHTML]="details.title | highlightSearch: searchTerm"></h5>
+    <p class="card-text" [innerHTML]="details.description | highlightSearch: searchTerm"></p>
+    <p class="card-text">Price: {{details.price}}</p>
+  </div>
+</div>

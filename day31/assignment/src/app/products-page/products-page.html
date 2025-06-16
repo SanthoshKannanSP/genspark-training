@@ -1,0 +1,21 @@
+<div class="products-page">
+<div class="search-bar">
+Search: <input type="text" [(ngModel)]="searchString" (input)="handleSearchProducts()"/>
+@if (loading)
+{
+     <div>
+        <div class="spinner-border text-success" role="status">
+            <span class="sr-only"></span>
+        </div>
+    </div>
+}
+</div>
+
+@if (!loading) {
+    <div class="products-grid">
+        @for (item of products; track item.id) {
+            <app-product-card [details]="item" [searchTerm]="searchString"></app-product-card>
+        }
+    </div>
+}
+</div>
