@@ -1,0 +1,18 @@
+<p>Cart <span class="badge" style="color: black;">{{cartCount}}</span></p>
+<input type="text" name="search-bar" id="search-bar" [(ngModel)]="queryData" (input)="handleSearch()">
+@if (!loading) {
+    <div class="fade-in">
+        @for (product of products; track product.pid) {
+            <app-product (addToCart)="increaseCartCount($event)" [product]="product" ></app-product>
+        }
+    </div>
+}
+@else {
+     <div>
+        <div class="spinner-border text-success" role="status">
+            <span class="sr-only"></span>
+        </div>
+    </div>
+}
+
+<router-outlet></router-outlet>
