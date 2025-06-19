@@ -1,0 +1,9 @@
+.add-user-form {
+  width: 500px;
+  margin: 50px auto;
+}
+
+.validation-error {
+  font-size: 13px;
+  color: red;
+}

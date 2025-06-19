@@ -1,0 +1,17 @@
+<form class="filter-menu" [formGroup]="filterForm" (submit)="handleSubmit()">
+  Filters:
+  <div class="filter-grp">
+    <label>Username</label>
+    <input type="text" formControlName="username" />
+  </div>
+  <div class="filter-grp">
+    <label>Role</label>
+    <select class="form-select" formControlName="role">
+      <option value="">None</option>
+      <option value="guest">Guest</option>
+      <option value="user">User</option>
+      <option value="admin">Admin</option>
+    </select>
+  </div>
+  <button class="btn btn-primary">Filter</button>
+</form>

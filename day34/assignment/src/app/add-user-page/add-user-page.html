@@ -1,0 +1,76 @@
+<form
+  class="add-user-form"
+  [formGroup]="addUserForm"
+  (ngSubmit)="handleSubmit()"
+>
+  <div class="mb-3">
+    <label for="username" class="form-label"
+      >Username @if (username.errors?.bannedWordsError) {
+      <span class="validation-error"
+        >Contains unpermitted words. Try a different username</span
+      >
+      }</label
+    >
+    <input
+      type="text"
+      class="form-control"
+      id="username"
+      formControlName="username"
+    />
+  </div>
+  <div class="mb-3">
+    <label for="email" class="form-label"
+      >Email @if (email.errors?.email) {
+      <span class="validation-error">Enter a valid email address</span>
+      }</label
+    >
+    <input
+      type="text"
+      class="form-control"
+      id="email"
+      formControlName="email"
+    />
+  </div>
+  <div class="mb-3">
+    <label for="role">Role</label>
+    <select class="form-select" formControlName="role">
+      <option value="guest">Guest</option>
+      <option value="user">User</option>
+      <option value="admin">Admin</option>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label for="password" class="form-label"
+      >Password @if (password.errors?.minlength) {
+      <span class="validation-error">Should contain minimum 8 characters</span>}
+      @else if (password.errors?.passwordError) {
+      <span class="validation-error">{{password.errors?.passwordError}}</span>}
+    </label>
+    <input
+      type="text"
+      class="form-control"
+      id="password"
+      formControlName="password"
+    />
+  </div>
+  <div class="mb-3">
+    <label for="confirmPassword" class="form-label"
+      >Confirm Password@if (confirmPassword.touched &&
+      this.addUserForm.errors?.["passwordMismatch"]) {
+      <span class="validation-error">Password doesn't match</span>}</label
+    >
+    <input
+      type="text"
+      class="form-control"
+      id="confirmPassword"
+      formControlName="confirmPassword"
+    />
+  </div>
+  <button
+    type="submit"
+    class="btn btn-primary"
+    [disabled]="addUserForm.invalid"
+  >
+    Submit
+  </button>
+</form>

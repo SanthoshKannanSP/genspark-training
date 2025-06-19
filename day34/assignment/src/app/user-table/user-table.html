@@ -1,0 +1,20 @@
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Id</th>
+      <th scope="col">Username</th>
+      <th scope="col">Email</th>
+      <th scope="col">Role</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (item of users; track item.id) {
+    <tr>
+      <th scope="row">{{item.id}}</th>
+      <td>{{item.username}}</td>
+      <td>{{item.email}}</td>
+      <td>{{item.role}}</td>
+    </tr>
+    }
+  </tbody>
+</table>
