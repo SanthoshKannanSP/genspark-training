@@ -12,7 +12,7 @@ public class SessionRepository : AbstractRepository<int, Session>
     }
     public override async Task<Session> Get(int key)
     {
-        return await _attendenceContent.Sessions.Include(s=> s.MadeBy).SingleOrDefaultAsync(s => s.SessionId == key);
+        return await _attendenceContent.Sessions.Include(s => s.MadeBy).SingleOrDefaultAsync(s => s.SessionId == key);
     }
 
     public override async Task<IEnumerable<Session>> GetAll()

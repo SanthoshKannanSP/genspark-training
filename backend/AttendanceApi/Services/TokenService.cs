@@ -26,11 +26,27 @@ public class TokenService : ITokenService
         var tokenDescriptor = new SecurityTokenDescriptor()
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.Now.AddDays(1),
+            Expires = DateTime.Now.AddMinutes(15),
             SigningCredentials = creds
         };
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
+    }
+
+     public string GenerateRefreshToken()
+    {
+        return Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+    }
+
+    public bool ValidateRefreshToken(User user, string refreshToken)
+    {
+        return user.RefreshToken == refreshToken && user.RefreshTokenExpiryTime > DateTime.UtcNow;
+    }
+
+    public void InvalidateRefreshToken(User user)
+    {
+        user.RefreshToken = null;
+        user.RefreshTokenExpiryTime = null;
     }
 }

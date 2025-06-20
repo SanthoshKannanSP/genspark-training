@@ -23,9 +23,10 @@ public class AttendanceService : IAttendanceService
         {
             throw new Exception("Student not scheduled to attend session");
         }
-
         if (attendance.Status == "Attended")
             throw new Exception("Attendance already marked");
+        if (attendance.Session.Status == "Cancelled")
+            throw new Exception("Cannot add attendance to a cancelled session");
 
         attendance.Status = "Attended";
         attendance = await _sessionAttendanceRepository.Update(attendance.SessionAttendanceId, attendance);
@@ -44,7 +45,7 @@ public class AttendanceService : IAttendanceService
     public async Task<List<SessionAttendance>> GetAttendanceOfStudent(int studentId)
     {
         var attendances = await _sessionAttendanceRepository.GetAll();
-        attendances = attendances.Where(s => s.StudentId == studentId);
+        attendances = attendances.Where(s => s.StudentId == studentId && s.Session.Status!="Cancelled");
 
         return attendances.ToList();
     }
@@ -57,7 +58,6 @@ public class AttendanceService : IAttendanceService
         {
             throw new Exception("Student not scheduled to attend session");
         }
-
         if (attendance.Status == "NotAttended")
             throw new Exception("Attendance already unmarked");
 

@@ -160,6 +160,12 @@ namespace AttendanceApi.Migrations
                         .IsRequired()
                         .HasColumnType("bytea");
 
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("RefreshTokenExpiryTime")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("text");

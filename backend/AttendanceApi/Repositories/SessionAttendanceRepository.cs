@@ -17,7 +17,7 @@ public class SessionAttendanceRepository : AbstractRepository<int, SessionAttend
 
     public override async Task<IEnumerable<SessionAttendance>> GetAll()
     {
-        return await _attendenceContent.SessionAttendances.ToListAsync();
+        return await _attendenceContent.SessionAttendances.Include(s=>s.Session).ToListAsync();
     }
         
 }
