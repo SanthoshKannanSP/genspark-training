@@ -1,0 +1,25 @@
+<div class="login-page">
+  <h1>Login Page</h1>
+  <form class="login-form" [formGroup]="loginForm" (submit)="onSubmit()">
+    <div class="mb-3">
+      <label for="email" class="form-label">Email address</label>
+      <input
+        type="email"
+        class="form-control"
+        id="email"
+        aria-describedby="emailHelp"
+        formControlName="username"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password"
+        formControlName="password"
+      />
+    </div>
+    <button class="btn btn-primary">Submit</button>
+  </form>
+</div>

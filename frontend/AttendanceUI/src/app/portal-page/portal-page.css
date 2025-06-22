@@ -1,0 +1,8 @@
+.portal-page {
+  display: flex;
+  flex-direction: row;
+}
+
+.portal-components {
+  margin: 50px auto;
+}

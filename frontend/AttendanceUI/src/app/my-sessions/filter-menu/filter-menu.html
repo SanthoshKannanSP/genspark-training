@@ -1,0 +1,64 @@
+<div class="card p-3 shadow-sm mb-4">
+  <form [formGroup]="filterForm" (ngSubmit)="applyFilters()">
+    <div class="row g-3 align-items-end">
+      <!-- Title -->
+      <div class="col-lg-2 col-md-4 col-sm-6">
+        <label class="form-label">Title</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="title"
+          placeholder="Search title"
+        />
+      </div>
+
+      <!-- Status -->
+      <div class="col-lg-2 col-md-4 col-sm-6">
+        <label class="form-label">Status</label>
+        <select class="form-select" formControlName="status">
+          <option value="">All</option>
+          <option value="scheduled">Scheduled</option>
+          <option value="live">Live</option>
+          <option value="cancelled">Cancelled</option>
+          <option value="completed">Completed</option>
+        </select>
+      </div>
+
+      <!-- Start Date -->
+      <div class="col-lg-2 col-md-4 col-sm-6">
+        <label class="form-label">Start Date</label>
+        <input type="date" class="form-control" formControlName="startDate" />
+      </div>
+
+      <!-- End Date -->
+      <div class="col-lg-2 col-md-4 col-sm-6">
+        <label class="form-label">End Date</label>
+        <input type="date" class="form-control" formControlName="endDate" />
+      </div>
+
+      <!-- Start Time -->
+      <div class="col-lg-2 col-md-4 col-sm-6">
+        <label class="form-label">Start Time</label>
+        <input type="time" class="form-control" formControlName="startTime" />
+      </div>
+
+      <!-- End Time -->
+      <div class="col-lg-2 col-md-4 col-sm-6">
+        <label class="form-label">End Time</label>
+        <input type="time" class="form-control" formControlName="endTime" />
+      </div>
+
+      <!-- Buttons -->
+      <div class="col-lg-2 col-md-4 col-sm-6 d-flex gap-2">
+        <button type="submit" class="btn btn-primary w-100">Filter</button>
+        <button
+          type="button"
+          class="btn btn-outline-secondary w-100"
+          (click)="resetFilters()"
+        >
+          Reset
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

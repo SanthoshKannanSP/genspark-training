@@ -1,0 +1,60 @@
+<div
+  class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark"
+  style="width: 250px; height: 100vh"
+>
+  <a
+    href="/"
+    class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none"
+  >
+    <span class="fs-4">Student Portal</span>
+  </a>
+  <hr />
+  <ul class="nav nav-pills flex-column mb-auto">
+    <li class="nav-item">
+      <a
+        routerLink="/portal/dashboard"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="nav-link text-white"
+      >
+        Dashboard
+      </a>
+    </li>
+    <li>
+      <a
+        routerLink="/portal/sessions"
+        routerLinkActive="active"
+        class="nav-link text-white"
+      >
+        My Sessions
+      </a>
+    </li>
+    <li>
+      <a
+        routerLink="/portal/attendance"
+        routerLinkActive="active"
+        class="nav-link text-white"
+      >
+        Attendance Details
+      </a>
+    </li>
+    <li>
+      <a
+        routerLink="/portal/settings"
+        routerLinkActive="active"
+        class="nav-link text-white"
+      >
+        Settings
+      </a>
+    </li>
+  </ul>
+  <hr />
+  <div>
+    <button
+      (click)="authenticationService.logout()"
+      class="btn btn-outline-light w-100"
+    >
+      Logout
+    </button>
+  </div>
+</div>

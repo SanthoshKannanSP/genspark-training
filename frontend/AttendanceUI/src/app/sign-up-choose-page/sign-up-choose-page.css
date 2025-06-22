@@ -1,0 +1,28 @@
+.sign-up-choose-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.content {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.teacher-text {
+  margin-top: 4rem;
+  align-self: flex-start;
+}
+
+.student-text {
+  margin-bottom: 10rem;
+  align-self: flex-end;
+}
+
+.student-img {
+  align-self: flex-end;
+}
