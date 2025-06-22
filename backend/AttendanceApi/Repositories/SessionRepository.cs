@@ -15,9 +15,9 @@ public class SessionRepository : AbstractRepository<int, Session>
         return await _attendenceContent.Sessions.Include(s => s.MadeBy).SingleOrDefaultAsync(s => s.SessionId == key);
     }
 
-    public override async Task<IEnumerable<Session>> GetAll()
+    public override async Task<IQueryable<Session>> GetAll()
     {
-        return await _attendenceContent.Sessions.ToListAsync();
+        return _attendenceContent.Sessions.AsQueryable();
     }
         
 }

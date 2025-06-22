@@ -15,9 +15,9 @@ public class SessionAttendanceRepository : AbstractRepository<int, SessionAttend
         return await _attendenceContent.SessionAttendances.Include(s=> s.Student).Include(s=> s.Session).SingleOrDefaultAsync(t => t.SessionAttendanceId == key);
     }
 
-    public override async Task<IEnumerable<SessionAttendance>> GetAll()
+    public override async Task<IQueryable<SessionAttendance>> GetAll()
     {
-        return await _attendenceContent.SessionAttendances.Include(s=>s.Session).ToListAsync();
+        return _attendenceContent.SessionAttendances.Include(s=>s.Session).AsQueryable();
     }
         
 }

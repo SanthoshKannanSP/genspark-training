@@ -33,7 +33,7 @@ public class SessionController : ControllerBase
     [Route("All")]
     public async Task<ActionResult<List<Session>>> GetAllSessions(int page, int pageSize)
     {
-        var sessions = await _sessionService.GetAllSession(page,pageSize);
+        var sessions = await _sessionService.GetAllSession(page, pageSize);
         return Ok(sessions);
     }
 
@@ -87,5 +87,14 @@ public class SessionController : ControllerBase
     {
         var session = await _sessionService.UpdateSession(updateSessionRequestDTO, sessionId);
         return Ok(session);
+    }
+
+    [Authorize(Roles = "Teacher")]
+    [HttpGet]
+    [Route("Upcoming")]
+    public async Task<ActionResult<List<Session>>> GetUpcomingSessions()
+    {
+        var sessions = await _sessionService.GetUpcomingSessions();
+        return sessions;
     }
 }

@@ -31,7 +31,7 @@ public abstract class AbstractRepository<K, T> : IRepository<K, T> where T : cla
 
     public abstract Task<T> Get(K key);
 
-    public abstract Task<IEnumerable<T>> GetAll();
+    public abstract Task<IQueryable<T>> GetAll();
 
     public async Task<T> Update(K key, T item)
     {

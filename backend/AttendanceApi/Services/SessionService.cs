@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AttendanceApi.Interfaces;
 using AttendanceApi.Models;
@@ -10,11 +11,14 @@ public class SessionService : ISessionService
 {
     private readonly IRepository<int, Session> _sessionRepository;
     private readonly IRepository<int, SessionAttendance> _sessionAttendanceRepository;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
     private readonly IMapper _mapper;
-    public SessionService(IRepository<int, Session> sessionRepository, IRepository<int, SessionAttendance> sessionAttendanceRepository, IMapper mapper)
+    public SessionService(IRepository<int, Session> sessionRepository, IRepository<int, SessionAttendance> sessionAttendanceRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper)
     {
         _sessionRepository = sessionRepository;
         _sessionAttendanceRepository = sessionAttendanceRepository;
+        _httpContextAccessor = httpContextAccessor;
         _mapper = mapper;
     }
     public async Task<List<SessionAttendance>> AddStudentsToSession(AddStudentsToSessionRequestDTO addStudentsToSessionRequestDTO, int sessionId)
@@ -68,6 +72,14 @@ public class SessionService : ISessionService
     {
         var sessions = await _sessionRepository.GetAll();
         sessions = sessions.Where(s => s.TeacherId == teacherId);
+        return sessions.ToList();
+    }
+
+    public async Task<List<Session>> GetUpcomingSessions()
+    {
+        var username = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Name)?.Value;
+        var sessions = await _sessionRepository.GetAll();
+        sessions = sessions.Where(s => s.MadeBy.Email == username && s.Status == "Scheduled").OrderByDescending(s => s.Date).ThenByDescending(s => s.SessionId).Take(3);
         return sessions.ToList();
     }
 

@@ -14,4 +14,6 @@ public interface ISessionService
     public Task<List<Session>> GetSessionByTeacher(int teacherId); // Done
     public Task<List<SessionAttendance>> AddStudentsToSession(AddStudentsToSessionRequestDTO addStudentsToSessionRequestDTO, int sessionId); // DOne
     public Task RemoveStudentsFromSession(List<int> studentIds, int sessionId); // DOne
+
+    public Task<List<Session>> GetUpcomingSessions();
 }

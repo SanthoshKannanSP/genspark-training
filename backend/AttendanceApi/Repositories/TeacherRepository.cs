@@ -15,9 +15,9 @@ public class TeacherRepository : AbstractRepository<int, Teacher>
         return await _attendenceContent.Teachers.SingleOrDefaultAsync(t => t.TeacherId == key);
     }
 
-    public override async Task<IEnumerable<Teacher>> GetAll()
+    public override async Task<IQueryable<Teacher>> GetAll()
     {
-        return await _attendenceContent.Teachers.ToListAsync();
+        return _attendenceContent.Teachers.AsQueryable();
     }
         
 }

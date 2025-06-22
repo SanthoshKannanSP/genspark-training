@@ -15,9 +15,9 @@ public class UserRepository : AbstractRepository<string, User>
         return await _attendenceContent.Users.SingleOrDefaultAsync(t => t.Username == key);
     }
 
-    public override async Task<IEnumerable<User>> GetAll()
+    public override async Task<IQueryable<User>> GetAll()
     {
-        return await _attendenceContent.Users.ToListAsync();
+        return _attendenceContent.Users.AsQueryable();
     }
         
 }

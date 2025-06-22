@@ -98,7 +98,7 @@ builder.Services.AddAutoMapper(typeof(Student));
 #region CORS
 builder.Services.AddCors(options=>{
     options.AddDefaultPolicy(policy=>{
-        policy.WithOrigins("http://127.0.0.1:5500")
+        policy.WithOrigins("http://localhost:4200")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -133,8 +133,6 @@ builder.Services.AddRateLimiter(opts =>
 
         if (username == null)
             username = context.Connection.RemoteIpAddress.ToString();
-
-        System.Console.WriteLine(username);
         
         return RateLimitPartition.GetTokenBucketLimiter(username, key => new TokenBucketRateLimiterOptions
         {
