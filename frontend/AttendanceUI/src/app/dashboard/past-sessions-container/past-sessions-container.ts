@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { PastSessionCard } from '../past-session-card/past-session-card';
+import { SessionService } from '../../services/session-service';
+import { SessionModel } from '../../models/session-model';
 
 @Component({
   selector: 'app-past-sessions-container',
@@ -8,16 +10,16 @@ import { PastSessionCard } from '../past-session-card/past-session-card';
   styleUrl: './past-sessions-container.css',
 })
 export class PastSessionsContainer {
-  sessions = [
-    {
-      title: 'Angular Basics Workshop',
-      date: 'June 25, 2025',
-      time: '10:00 AM - 11:30 AM',
-    },
-    {
-      title: 'TypeScript Deep Dive',
-      date: 'June 26, 2025',
-      time: '12:00 PM - 1:30 PM',
-    },
-  ];
+  sessionService = inject(SessionService);
+  pastSessions!: SessionModel[];
+
+  constructor() {
+    this.sessionService.pastSessions$.subscribe({
+      next: (data) => {
+        this.pastSessions = data as SessionModel[];
+        console.log(data);
+      },
+    });
+    this.sessionService.updatePastSessions();
+  }
 }

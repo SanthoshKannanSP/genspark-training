@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { SessionService } from '../../services/session-service';
 
 @Component({
   selector: 'app-filter-menu',
@@ -8,32 +9,28 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
   styleUrl: './filter-menu.css',
 })
 export class FilterMenu {
-  filtersChanged = new EventEmitter<any>();
+  sessionService = inject(SessionService);
 
   filterForm: FormGroup;
 
-  statuses = ['Scheduled', 'Cancelled', 'Completed', 'Live'];
-
   constructor(private fb: FormBuilder) {
     this.filterForm = this.fb.group({
-      title: [''],
+      sessionName: [''],
       status: [''],
       startDate: [''],
       endDate: [''],
       startTime: [''],
       endTime: [''],
     });
-
-    this.filterForm.valueChanges.subscribe((value) => {
-      this.filtersChanged.emit(value);
-    });
   }
 
   applyFilters() {
-    this.filtersChanged.emit(this.filterForm.value);
+    this.sessionService.updateAllSessions(null, null, this.filterForm.value);
+    console.log('Ok');
   }
 
   resetFilters() {
     this.filterForm.reset();
+    this.applyFilters();
   }
 }

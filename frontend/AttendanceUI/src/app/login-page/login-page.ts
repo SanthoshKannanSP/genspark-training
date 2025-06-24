@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { AuthenticationService } from '../services/authentication-service';
 import {
   FormControl,
   FormGroup,
@@ -7,6 +6,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { HttpClientService } from '../services/http-client-service';
 
 @Component({
   selector: 'app-login-page',
@@ -15,7 +16,7 @@ import { Router } from '@angular/router';
   styleUrl: './login-page.css',
 })
 export class LoginPage {
-  authenticationService = inject(AuthenticationService);
+  api = inject(HttpClientService);
   router = inject(Router);
   loginForm: FormGroup;
 
@@ -31,7 +32,7 @@ export class LoginPage {
 
   onSubmit() {
     if (this.loginForm.valid)
-      this.authenticationService.login(this.loginForm.value).subscribe({
+      this.api.login(this.loginForm.value).subscribe({
         next: (data) => {
           alert('Successfully logged in. Redirecting...');
           this.router.navigateByUrl('portal/dashboard');

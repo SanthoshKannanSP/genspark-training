@@ -31,9 +31,16 @@ public class SessionController : ControllerBase
 
     [HttpGet]
     [Route("All")]
-    public async Task<ActionResult<List<Session>>> GetAllSessions(int page, int pageSize)
+    public async Task<ActionResult<List<Session>>> GetAllSessions(int page,
+    int pageSize,
+    string? sessionName = null,
+    DateOnly? startDate = null,
+    DateOnly? endDate = null,
+    TimeOnly? startTime = null,
+    TimeOnly? endTime = null,
+    string? status = null)
     {
-        var sessions = await _sessionService.GetAllSession(page, pageSize);
+        var sessions = await _sessionService.GetAllSession(page, pageSize, sessionName, startDate, endDate, startTime, endTime, status);
         return Ok(sessions);
     }
 
@@ -95,6 +102,15 @@ public class SessionController : ControllerBase
     public async Task<ActionResult<List<Session>>> GetUpcomingSessions()
     {
         var sessions = await _sessionService.GetUpcomingSessions();
-        return sessions;
+        return Ok(sessions);
+    }
+
+    [Authorize(Roles = "Teacher")]
+    [HttpGet]
+    [Route("Past")]
+    public async Task<ActionResult<List<Session>>> GetPastSessions()
+    {
+        var sessions = await _sessionService.GetPastSessions();
+        return Ok(sessions);
     }
 }

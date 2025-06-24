@@ -1,12 +1,18 @@
 <div class="bg-dark p-4 rounded text-white mt-5">
   <h4 class="mb-4">Upcoming Sessions</h4>
-  @for (session of sessions; track $index) {
-  <app-upcoming-session-card
-    [title]="session.title"
-    [date]="session.date"
-    [time]="session.time"
-  ></app-upcoming-session-card>
-  } @for (index of [1,2,3].slice(sessions.length); track $index) {
+  @if (upcomingSessions.length == 0) {
   <div class="card mb-0 shadow-sm opacity-25" style="min-height: 63px"></div>
-  }
+  <div class="card mb-0 shadow-sm opacity-25" style="min-height: 63px">
+    No sessions found
+  </div>
+  <div class="card mb-0 shadow-sm opacity-25" style="min-height: 63px"></div>
+  } @else { @for (session of upcomingSessions; track $index) {
+  <app-upcoming-session-card
+    [title]="session.sessionName"
+    [date]="session.date"
+    [time]="session.startTime"
+  ></app-upcoming-session-card>
+  } @for (index of [1,2,3].slice(upcomingSessions.length); track $index) {
+  <div class="card mb-0 shadow-sm opacity-25" style="min-height: 63px"></div>
+  } }
 </div>

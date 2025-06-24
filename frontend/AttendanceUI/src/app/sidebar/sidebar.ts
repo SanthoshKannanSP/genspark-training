@@ -1,6 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { AuthenticationService } from '../services/authentication-service';
+import { HttpClientService } from '../services/http-client-service';
 
 @Component({
   selector: 'app-sidebar',
@@ -9,5 +10,5 @@ import { AuthenticationService } from '../services/authentication-service';
   styleUrl: './sidebar.css',
 })
 export class Sidebar {
-  authenticationService = inject(AuthenticationService);
+  api = inject(HttpClientService);
 }

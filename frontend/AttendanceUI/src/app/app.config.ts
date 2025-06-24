@@ -7,8 +7,8 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
-import { AuthenticationService } from './services/authentication-service';
 import { HttpClientService } from './services/http-client-service';
+import { SessionService } from './services/session-service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,7 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(),
-    AuthenticationService,
     HttpClientService,
+    SessionService,
   ],
 };

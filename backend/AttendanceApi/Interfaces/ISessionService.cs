@@ -9,11 +9,13 @@ public interface ISessionService
     public Task<Session> CancelSession(int sessionId); // Done
     public Task<Session> CompleteSession(int sessionId); // Done
     public Task<Session> UpdateSession(UpdateSessionRequestDTO updateSessionRequestDTO, int sessionId); // Done
-    public Task<List<Session>> GetAllSession(int page, int pageSize); // Done
+    public Task<PaginatedResponseDTO<List<Session>>> GetAllSession(int page, int pageSize, string? sessionName = null, DateOnly? startDate = null, DateOnly? endDate = null, TimeOnly? startTime = null, TimeOnly? endTime = null, string? status = null); // Done
     public Task<Session> GetSession(int sessionId); // Done
     public Task<List<Session>> GetSessionByTeacher(int teacherId); // Done
     public Task<List<SessionAttendance>> AddStudentsToSession(AddStudentsToSessionRequestDTO addStudentsToSessionRequestDTO, int sessionId); // DOne
     public Task RemoveStudentsFromSession(List<int> studentIds, int sessionId); // DOne
 
     public Task<List<Session>> GetUpcomingSessions();
+
+    public Task<List<Session>> GetPastSessions();
 }

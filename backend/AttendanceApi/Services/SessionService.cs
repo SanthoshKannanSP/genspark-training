@@ -53,12 +53,64 @@ public class SessionService : ISessionService
         return session;
     }
 
-    public async Task<List<Session>> GetAllSession(int page, int pageSize)
+    public async Task<PaginatedResponseDTO<List<Session>>> GetAllSession(
+    int page,
+    int pageSize,
+    string? sessionName = null,
+    DateOnly? startDate = null,
+    DateOnly? endDate = null,
+    TimeOnly? startTime = null,
+    TimeOnly? endTime = null,
+    string? status = null)
+{
+    page = page > 0 ? page : 1;
+    pageSize = pageSize > 0 ? pageSize : 10;
+
+    var sessions = await _sessionRepository.GetAll();
+
+    // Apply filters
+    if (!string.IsNullOrWhiteSpace(sessionName))
+        sessions = sessions.Where(s => s.SessionName.ToLower().Contains(sessionName.ToLower()));
+
+    if (startDate.HasValue)
+        sessions = sessions.Where(s => s.Date >= startDate.Value);
+
+    if (endDate.HasValue)
+        sessions = sessions.Where(s => s.Date <= endDate.Value);
+
+    if (startTime.HasValue)
+        sessions = sessions.Where(s => s.StartTime >= startTime.Value);
+
+    if (endTime.HasValue)
+        sessions = sessions.Where(s => s.EndTime <= endTime.Value);
+
+    if (!string.IsNullOrWhiteSpace(status))
+        sessions = sessions.Where(s => s.Status.ToLower() == status.ToLower());
+
+    var totalRecords = sessions.Count();
+    var paginatedSessions = sessions.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+    var response = new PaginatedResponseDTO<List<Session>>
     {
-        page = page > 0 ? page : 1;
-        pageSize = pageSize > 0 ? pageSize : 10;
+        Data = paginatedSessions,
+        Pagination = new PaginationModel
+        {
+            TotalRecords = totalRecords,
+            Page = page,
+            PageSize = pageSize,
+            TotalPages = (int)Math.Ceiling((double)totalRecords / pageSize)
+        }
+    };
+
+    return response;
+}
+
+
+    public async Task<List<Session>> GetPastSessions()
+    {
+        var username = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Name)?.Value;
         var sessions = await _sessionRepository.GetAll();
-        sessions = sessions.Skip((page - 1) * pageSize).Take(pageSize);
+        sessions = sessions.Where(s => s.MadeBy.Email == username && s.Status == "Completed").OrderByDescending(s => s.Date).ThenByDescending(s => s.SessionId).Take(3);
         return sessions.ToList();
     }
 
