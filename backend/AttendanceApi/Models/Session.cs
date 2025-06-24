@@ -11,10 +11,10 @@ public class Session : IOwnableResource
     public TimeOnly StartTime { get; set; }
     public TimeOnly EndTime { get; set; }
     public string Status { get; set; } = string.Empty; // Scheduled, Completed, Cancelled
-    public int TeacherId;
+    public string TeacherEmail = string.Empty;
 
     public Teacher? MadeBy { get; set; }
     public List<SessionAttendance> StudentAttendance { get; set; }
 
-    public string OwnerName => (MadeBy==null) ? "" : MadeBy.Email;
+    public string OwnerName => TeacherEmail;
 }

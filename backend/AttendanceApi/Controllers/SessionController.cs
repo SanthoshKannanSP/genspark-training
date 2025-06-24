@@ -48,6 +48,7 @@ public class SessionController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Session>> ScheduleSession(AddSessionRequestDTO addSessionRequestDTO)
     {
+        Console.WriteLine(addSessionRequestDTO.SessionName);
         var session = await _sessionService.ScheduleSession(addSessionRequestDTO);
         return Created("", session);
     }

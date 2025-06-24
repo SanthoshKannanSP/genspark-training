@@ -5,6 +5,7 @@ import { SessionModel } from '../models/session-model';
 import { PaginatedResponse } from '../models/paginated-response';
 import { FilterModel } from '../models/filter-model';
 import { HttpParams } from '@angular/common/http';
+import { ScheduleSessionModel } from '../models/schedule-session-model';
 
 @Injectable()
 export class SessionService {
@@ -60,6 +61,17 @@ export class SessionService {
         result.data = data.data.data.$values;
         this.allSessions.next(result);
         console.log(data);
+      },
+      error: (error) => console.log(error),
+    });
+  }
+
+  scheduleSession(session: ScheduleSessionModel) {
+    console.log(session);
+    this.api.post('/api/v1/Session', session, true).subscribe({
+      next: (data: any) => {
+        this.currentFilters = null;
+        this.updateAllSessions();
       },
       error: (error) => console.log(error),
     });

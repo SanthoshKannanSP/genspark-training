@@ -110,7 +110,7 @@ public class SessionService : ISessionService
     {
         var username = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Name)?.Value;
         var sessions = await _sessionRepository.GetAll();
-        sessions = sessions.Where(s => s.MadeBy.Email == username && s.Status == "Completed").OrderByDescending(s => s.Date).ThenByDescending(s => s.SessionId).Take(3);
+        sessions = sessions.Where(s => s.TeacherEmail == username && s.Status == "Completed").OrderByDescending(s => s.Date).ThenByDescending(s => s.SessionId).Take(3);
         return sessions.ToList();
     }
 
@@ -123,7 +123,7 @@ public class SessionService : ISessionService
     public async Task<List<Session>> GetSessionByTeacher(int teacherId)
     {
         var sessions = await _sessionRepository.GetAll();
-        sessions = sessions.Where(s => s.TeacherId == teacherId);
+        sessions = sessions.Where(s => s.MadeBy.TeacherId == teacherId);
         return sessions.ToList();
     }
 
@@ -150,6 +150,8 @@ public class SessionService : ISessionService
     {
         var session = _mapper.Map<Session>(addSessionRequestDTO);
         session.Status = "Scheduled";
+        var username = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Name)?.Value;
+        session.TeacherEmail = username;
 
         session = await _sessionRepository.Add(session);
         return session;

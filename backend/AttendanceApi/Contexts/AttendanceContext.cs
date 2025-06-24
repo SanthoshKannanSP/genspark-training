@@ -18,7 +18,8 @@ public class AttendanceContext : DbContext
         modelBuilder.Entity<Session>().HasKey(s => s.SessionId);
         modelBuilder.Entity<Session>().HasOne(s => s.MadeBy)
                                 .WithMany(t => t.Sessions)
-                                .HasForeignKey(s => s.TeacherId)
+                                .HasForeignKey(s => s.TeacherEmail)
+                                .HasPrincipalKey(t => t.Email)
                                 .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<SessionAttendance>().HasKey(sa => sa.SessionAttendanceId);
