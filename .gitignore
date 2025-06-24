@@ -134,3 +134,5 @@ $RECYCLE.BIN/
 _NCrunch*
 
 node_modules
+
+appsettings.json
