@@ -1,0 +1,8 @@
+<app-add-user></app-add-user>
+<hr />
+<div *ngIf="" loading$ | async>Loading Data</div>
+<div *ngIf="!(loading$ | async)">
+  <ul>
+    <li *ngFor="let user of users$ | async">{{ user.username }}</li>
+  </ul>
+</div>

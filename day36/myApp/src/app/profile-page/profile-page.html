@@ -1,0 +1,28 @@
+<div class="container mt-5 d-flex justify-content-center">
+  <div class="card p-3">
+    <div class="d-flex align-items-center">
+      <div class="image">
+        <img [src]="user.image" class="rounded" width="155" />
+      </div>
+
+      <div class="ml-3 w-100">
+        <h4 class="mb-0 mt-0">{{user.firstName}} {{user.lastName}}</h4>
+        <span>{{user.email}}</span>
+
+        <div
+          class="p-2 mt-2 bg-primary d-flex justify-content-between rounded text-white stats"
+        >
+          <div class="d-flex flex-column">
+            <span class="articles">Username</span>
+            <span class="number1">{{user.username}}</span>
+          </div>
+
+          <div class="d-flex flex-column">
+            <span class="followers">Gender</span>
+            <span class="number2">{{user.gender}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
