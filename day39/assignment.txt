@@ -1,0 +1,29 @@
+Questions:
+1. You have a file with permissions -rw-r--r--, and you run chmod +x file.sh. What happens?
+The executable permission will be given to all users for the file.sh. The new permissions will be -rwxr-xr-x
+
+2. What is the difference between chmod 744 file.txt and chmod u=rwx,go=r file.txt?
+Both commands gives the same permissions but in different notations - octal notation and symbolic notation. They both give the owner all permissions and read-only permission to the group and others.
+
+3. What is the sticky bit, and when should you use it?
+Special permission to prevent users from deleting or renameing files in a directory, Only owner or root user can delete/rename the files.
+Command - chmod +t directory (or) chmod 1744 directory
+
+4. You are told to give the owner full access, group only execute, and others no permissions. What symbolic command achieves this?
+chmod u=rwx,g=x file.txt
+
+5. What is umask, and why is it important?
+Remove permissions by specifying the mask to the default file permission. The mask value is subtracted from the default permission. Permissions can only be subtracted and not added
+
+6. If the umask is 022, what are the default permissions for a new file and a new directory?
+FIle = default permission 666 = masked 644
+Directory = default permission 777 = masked 755
+
+7. Why is umask often set to 002 in development environments but 027 or 077 in production?
+Umask 002 = remove write permission for others. Only owner and group members can write to source code, enabling collaboration
+Umask 027 = remove write permission to group and all permission for others. Protect production from other users, prevent users in group from modifying the data in production
+Umask 077 = remove all permissions from group and others. Only owner or root user can read, write and execute
+
+8. useradd vs adduser
+Useradd - minimal configuration command to create a new user. Options have to specified by flags.
+Adducer - Script to create a new user that uses useradd command under hood. More interactive way to create a new user.
