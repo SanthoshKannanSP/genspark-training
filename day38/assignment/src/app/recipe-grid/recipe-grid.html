@@ -1,0 +1,9 @@
+@if (recipes().length == 0) {
+<div style="text-align: center">No recipes found</div>
+} @else {
+<div class="recipe-grid">
+  @for (item of recipes(); track item.id) {
+  <app-recipe-card [recipe]="item" />
+  }
+</div>
+}

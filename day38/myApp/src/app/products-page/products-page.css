@@ -1,0 +1,27 @@
+.products-page
+{
+    margin-top: 20px;
+}
+
+.products-grid
+{
+    margin: 10px auto;
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    place-items: center;
+}
+
+.search-bar
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+input
+{
+    width: 400px;
+    border: 2px solid grey;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+}

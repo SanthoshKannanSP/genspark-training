@@ -1,0 +1,6 @@
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  margin: 0 auto;
+  place-items: center;
+}

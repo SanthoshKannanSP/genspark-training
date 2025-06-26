@@ -1,0 +1,20 @@
+<div class="card">
+  <div>
+    <img [src]="recipe?.image" class="card-img-top" [alt]="recipe?.name" />
+    <div class="card-body">
+      <h5 class="card-title">{{recipe?.name}}</h5>
+      <p class="card-subtitle mb-2 text-body-secondary">Ingredients</p>
+      <p class="card-text ingredients">
+        {{recipe?.ingredients?.slice(0,4)?.join(" | ")}}
+      </p>
+      <p class="card-subtitle mb-2 text-body-secondary">
+        Cooking Time (in Minutes)
+      </p>
+      <p class="card-text cook-time-minutes">
+        {{recipe?.cookTimeMinutes}} Minutes
+      </p>
+      <p class="card-subtitle mb-2 text-body-secondary">Cuisine</p>
+      <p class="card-text cuisine">{{recipe?.cuisine}}</p>
+    </div>
+  </div>
+</div>
