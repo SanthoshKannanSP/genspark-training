@@ -1,5 +1,6 @@
 using AttendanceApi.Interfaces;
 using AttendanceApi.Models;
+using AttendanceApi.Models.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +20,7 @@ public class AttendanceController : ControllerBase
     [Authorize]
     [HttpGet]
     [Route("{studentId}")]
-    public async Task<ActionResult<List<SessionAttendance>>> GetAttendanceOfStudent(int studentId)
+    public async Task<ActionResult<List<Models.SessionAttendance>>> GetAttendanceOfStudent(int studentId)
     {
         var students = await _attendanceService.GetAttendanceOfStudent(studentId);
         return Ok(students);
@@ -36,9 +37,9 @@ public class AttendanceController : ControllerBase
     [Authorize(Roles = "Teacher")]
     [HttpGet]
     [Route("Session/{sesssionId}")]
-    public async Task<ActionResult<List<SessionAttendance>>> GetAttendanceBySession(int sesssionId)
+    public async Task<ActionResult<PaginatedResponseDTO<SessionAttendanceDTO>>> GetAttendanceBySession(int sesssionId, int page, int pageSize, string? studentName = null, bool? attended = null)
     {
-        var attendance = await _attendanceService.GetAttendanceOfSession(sesssionId);
+        var attendance = await _attendanceService.GetAttendanceOfSession(sesssionId, page, pageSize, studentName, attended);
         return Ok(attendance);
     }
 

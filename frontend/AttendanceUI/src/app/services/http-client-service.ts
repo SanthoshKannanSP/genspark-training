@@ -14,6 +14,7 @@ import {
 } from 'rxjs';
 import { Environment } from '../../environment/environment';
 import { LoginModel } from '../models/login-model';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable()
 export class HttpClientService {
@@ -40,7 +41,6 @@ export class HttpClientService {
         catchError((error: HttpErrorResponse) => {
           console.log(error);
           if (credentials) {
-            console.log('hello');
             return this.tryRefresh(() =>
               this.http.get(url, { headers: this.headers })
             );
@@ -84,10 +84,10 @@ export class HttpClientService {
       )
       .pipe(
         switchMap((res) => {
-          console.log(res);
           if (!res.data.accessToken)
             return throwError(() => new Error('No new access token received'));
           this.token.next(res.data.accessToken);
+
           localStorage.setItem('access_token', res.data.accessToken);
           return retryCallback();
         }),
@@ -109,7 +109,6 @@ export class HttpClientService {
             localStorage.setItem('access_token', res.data.token);
             localStorage.setItem('refresh_token', res.data.refreshToken);
           } else {
-            console.log(res);
             throw new Error('Invalid login response');
           }
         }),
@@ -118,19 +117,39 @@ export class HttpClientService {
   }
 
   logout() {
-    this.http.post('/auth/logout', {}).subscribe({
-      next: () => {},
-      error: () => {},
-    });
+    return this.http
+      .post(
+        Environment.BASE_URL + '/api/v1/Authentication/Logout',
+        {},
+        { headers: this.headers }
+      )
+      .pipe(
+        tap((res: any) => {
+          if (res.success != null && res.success) {
+            this.token.next(null);
+            this.refreshToken.next(null);
 
-    this.token.next(null);
-    this.refreshToken.next(null);
-
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
+          } else {
+            throw new Error('Invalid logit response');
+          }
+        }),
+        catchError((err) => throwError(() => err))
+      );
   }
 
   isAuthenticated(): boolean {
     return !!this.token.value;
+  }
+
+  hasRole(role: string) {
+    if (this.token.value == null) return false;
+
+    const decoded: any = jwtDecode(this.token.value);
+
+    if (decoded?.role == role) return true;
+
+    return false;
   }
 }

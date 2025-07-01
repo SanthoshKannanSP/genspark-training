@@ -1,0 +1,97 @@
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="createSessionModal"
+  tabindex="-1"
+  aria-labelledby="createSessionModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createSessionModalLabel">Create Session</h5>
+        <button
+          type="button"
+          #closeButton
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <form
+          [formGroup]="sessionForm"
+          (ngSubmit)="onSubmit()"
+          class="p-4 border rounded shadow-sm"
+        >
+          <div class="row gap-3">
+            <!-- Session Name -->
+            <div class="row">
+              <label class="form-label">Session Name</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="sessionName"
+                placeholder="Enter session name"
+              />
+            </div>
+
+            <div class="row">
+              <!-- Date -->
+              <div class="col">
+                <label class="form-label">Date</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  formControlName="date"
+                />
+              </div>
+              <!-- Start Time -->
+              <div class="col">
+                <label class="form-label">Start Time</label>
+                <input
+                  type="time"
+                  class="form-control"
+                  formControlName="startTime"
+                />
+              </div>
+              <!-- End Time -->
+              <div class="col">
+                <label class="form-label">End Time</label>
+                <input
+                  type="time"
+                  class="form-control"
+                  formControlName="endTime"
+                />
+              </div>
+            </div>
+
+            <!-- Session Link -->
+            <div class="row">
+              <label class="form-label">Session Link</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="sessionLink"
+                placeholder="Enter session link"
+              />
+            </div>
+
+            <!-- Buttons -->
+            <div class="row-12 d-flex gap-2">
+              <button type="submit" class="btn btn-primary">Submit</button>
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="this.sessionForm.reset()"
+              >
+                Reset
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

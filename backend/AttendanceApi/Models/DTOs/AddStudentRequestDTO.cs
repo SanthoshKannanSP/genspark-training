@@ -6,8 +6,7 @@ public class AddStudentRequestDTO
 {
     [MinLength(1, ErrorMessage = "Enter a valid Name")]
     public string Name { get; set; } = string.Empty;
-    [Range(5,100, ErrorMessage = "Enter a valid Age")]
-    public int Age { get; set; }
+    public DateOnly DateOfBirth { get; set; }
     [AllowedValues(["Male","Female"], ErrorMessage = "Should be either Male or Female only")]
     public string Gender { get; set; } = string.Empty;
     [EmailAddress]

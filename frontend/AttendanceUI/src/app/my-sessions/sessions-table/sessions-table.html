@@ -6,11 +6,15 @@
         <th>Date</th>
         <th>Timing</th>
         <th>Status</th>
+        @if (student) {
+        <th class="text-center">Attendance</th>
+        } @else {
         <th>Details</th>
+        }
       </tr>
     </thead>
     <tbody>
-      @for (session of allSessions.data; track $index) {
+      @for (session of sessions.data; track $index) {
       <tr>
         <td class="text-truncate" style="min-width: 400px">
           {{ session.sessionName }}
@@ -18,54 +22,78 @@
         <td>{{ session.date }}</td>
         <td>{{ session.startTime }} - {{ session.endTime }}</td>
         <td>
-          <span class="badge bg-secondary p-2">{{ session.status }}</span>
+          <span class="badge bg-secondary">{{ session.status }}</span>
         </td>
-        <td>
-          <a class="btn btn-sm btn-outline-primary">View</a>
+        @if (student) {
+        <td class="text-center">
+          @if (session.status == "Completed") {
+          <span class="badge bg-secondary"
+            >{{ session.attended ? "Attended" : "Not Attended" }}</span
+          >
+          } @else {
+          <span>-</span>
+          }
         </td>
+        } @else {
+        <td class="d-flex gap-4">
+          <i
+            class="bi bi-pencil"
+            data-bs-toggle="modal"
+            data-bs-target="#editSessionModal"
+            (click)="editSessionModal.openModal(session)"
+          ></i>
+          <i class="bi bi-upload"></i>
+          <i
+            class="bi bi-share"
+            (click)="copySessionInviteToClipboard(session.sessionCode!)"
+          ></i>
+        </td>
+        }
       </tr>
       } @for (row of emptyRows; track $index) {
       <tr class="opacity-75" style="height: 54px">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      } @if (allSessions.data?.length == 0) {
-      <tr>
-        <td colspan="5" class="text-center text-muted py-4">
-          No sessions found.
+        @if ($index==4 && sessions.data?.length == 0) {
+        <td colspan="5" class="text-center align-middle">
+          <div class="d-flex justify-content-center align-items-center h-100">
+            <span class="text-muted fs-5">No Sessions Found</span>
+          </div>
         </td>
+        } @else {
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        }
       </tr>
       }
     </tbody>
   </table>
+  <!-- Pagination -->
+  @if (sessions.pagination != null && sessions.pagination.pageSize > 1) {
+  <nav class="mt-3 d-flex justify-content-end">
+    <ul class="pagination pagination-sm mb-0">
+      <li class="page-item" [class.disabled]="sessions.pagination.page == 1">
+        <a class="page-link" (click)="goToPage(sessions.pagination.page - 1)"
+          >Prev</a
+        >
+      </li>
+      @for (page of pageNumbers; track $index) {
+      <li class="page-item" [class.active]="page === sessions.pagination.page">
+        <a class="page-link" (click)="goToPage(page)">{{ page }}</a>
+      </li>
+      }
+      <li
+        class="page-item"
+        [class.disabled]="sessions.pagination.page === sessions.pagination.totalPages"
+      >
+        <a class="page-link" (click)="goToPage(sessions.pagination.page + 1)"
+          >Next</a
+        >
+      </li>
+    </ul>
+  </nav>
+  }
 </div>
 
-<!-- Pagination -->
-@if (allSessions.pagination != null && allSessions.pagination.pageSize > 1) {
-<nav class="mt-3 d-flex justify-content-end">
-  <ul class="pagination pagination-sm mb-0">
-    <li class="page-item" [class.disabled]="allSessions.pagination.page == 1">
-      <a class="page-link" (click)="goToPage(allSessions.pagination.page - 1)"
-        >Prev</a
-      >
-    </li>
-    @for (page of pageNumbers; track $index) {
-    <li class="page-item" [class.active]="page === allSessions.pagination.page">
-      <a class="page-link" (click)="goToPage(page)">{{ page }}</a>
-    </li>
-    }
-    <li
-      class="page-item"
-      [class.disabled]="allSessions.pagination.page === allSessions.pagination.totalPages"
-    >
-      <a class="page-link" (click)="goToPage(allSessions.pagination.page + 1)"
-        >Next</a
-      >
-    </li>
-  </ul>
-</nav>
-
-}
+<app-edit-session-modal #editSessionModal></app-edit-session-modal>

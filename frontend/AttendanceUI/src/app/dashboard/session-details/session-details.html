@@ -1,0 +1,68 @@
+<!-- Modal -->
+<div
+  class="modal fade"
+  [id]="modalId"
+  tabindex="-1"
+  aria-labelledby="sessionDetailsModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="sessionDetailsModalLabel">
+          Session Details
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <div class="modal-body p-4 border rounded shadow-sm">
+        <div class="row mb-3">
+          <label class="fw-bold fs-4">Session Name:</label>
+          <div class="fs-5">{{ session?.sessionName }}</div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col">
+            <label class="fw-bold fs-4">Date:</label>
+            <div class="fs-5">{{ session?.date }}</div>
+          </div>
+          <div class="col">
+            <label class="fw-bold fs-4">Start Time:</label>
+            <div class="fs-5">{{ session?.startTime }}</div>
+          </div>
+          <div class="col">
+            <label class="fw-bold fs-4">End Time:</label>
+            <div class="fs-5">{{ session?.endTime }}</div>
+          </div>
+        </div>
+
+        @if (student) {
+        <hr />
+        <div class="row mb-3">
+          <label class="fw-bold fs-4">Teacher:</label>
+          <div class="fs-5">{{ session?.teacherDetails?.teacherName }}</div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="fw-bold fs-4">Organization:</label>
+          <div class="fs-5">{{ session?.teacherDetails?.organization }}</div>
+        </div>
+        } @else {
+        <div class="row mb-3">
+          <label class="fw-bold fs-4">Session Link:</label>
+          <div class="fs-5 text-break">
+            <a [href]="session?.sessionLink" target="_blank"
+              >{{ session?.sessionLink }}</a
+            >
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

@@ -17,7 +17,7 @@ public class SessionAttendanceRepository : AbstractRepository<int, SessionAttend
 
     public override async Task<IQueryable<SessionAttendance>> GetAll()
     {
-        return _attendenceContent.SessionAttendances.Include(s=>s.Session).AsQueryable();
+        return _attendenceContent.SessionAttendances.Include(s=> s.Student).Include(s=>s.Session).ThenInclude(s => s.MadeBy).AsQueryable();
     }
         
 }

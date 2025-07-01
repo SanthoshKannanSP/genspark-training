@@ -11,7 +11,9 @@ public class Session : IOwnableResource
     public TimeOnly StartTime { get; set; }
     public TimeOnly EndTime { get; set; }
     public string Status { get; set; } = string.Empty; // Scheduled, Completed, Cancelled
-    public string TeacherEmail = string.Empty;
+    public string TeacherEmail { get; set; } = string.Empty;
+    public string SessionLink { get; set; } = string.Empty;
+    public string SessionCode { get; set; } = string.Empty;
 
     public Teacher? MadeBy { get; set; }
     public List<SessionAttendance> StudentAttendance { get; set; }

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { HttpClientService } from '../services/http-client-service';
 
 @Component({
@@ -11,4 +11,12 @@ import { HttpClientService } from '../services/http-client-service';
 })
 export class Sidebar {
   api = inject(HttpClientService);
+  router = inject(Router);
+
+  logout() {
+    this.api.logout().subscribe({
+      next: (data) => this.router.navigateByUrl('/'),
+      error: (error) => console.log(error),
+    });
+  }
 }

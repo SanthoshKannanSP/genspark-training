@@ -1,0 +1,168 @@
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="sessionAttendanceModal"
+  tabindex="-1"
+  aria-labelledby="sessionAttendanceModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Session Attendance</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Session Details -->
+        <div class="row mb-4">
+          <div class="row">
+            <p><strong>Session:</strong> {{ session?.sessionName }}</p>
+          </div>
+
+          <div class="row">
+            <p class="col"><strong>Date:</strong> {{ session?.date }}</p>
+            <p class="col">
+              <strong>Time:</strong> {{ session?.startTime }} - {{
+              session?.endTime }}
+            </p>
+          </div>
+          <div class="row">
+            <p class="col">
+              <strong>Registered:</strong> {{ students.data?.registeredCount }}
+            </p>
+            <p class="col">
+              <strong>Attended:</strong> {{ students.data?.attendedCount }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <form [formGroup]="filterForm" (submit)="applyFilter()">
+          <div class="d-flex mb-3 gap-3">
+            <input
+              type="text"
+              class="form-control w-50"
+              placeholder="Search by student name"
+              formControlName="studentName"
+            />
+
+            <select class="form-select w-auto" formControlName="attended">
+              <option [value]="null">All</option>
+              <option [value]="true">Attended</option>
+              <option [value]="false">Not Attended</option>
+            </select>
+
+            <button type="submit" class="btn btn-primary">Filter</button>
+            <button class="btn btn-secondary" (click)="resetFilter()">
+              Reset
+            </button>
+          </div>
+        </form>
+
+        <!-- Table -->
+        <div class="table-responsive">
+          <table class="table align-middle" style="table-layout: fixed">
+            <thead class="table-light">
+              <tr>
+                <th>Student Name</th>
+                <th>Attended</th>
+                <th>Toggle Attendance</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (student of students.data?.sessionAttendance; track $index) {
+              <tr>
+                <td>{{ student.studentName }}</td>
+                <td>
+                  <span
+                    class="badge"
+                    [class]="student.attended ? 'bg-success' : 'bg-danger'"
+                  >
+                    {{ student.attended ? "Attended":"Not Attended"}}
+                  </span>
+                </td>
+                <td>
+                  <div class="form-check form-switch">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      [checked]="student.attended"
+                      (change)="toggleAttendance($index)"
+                    />
+                  </div>
+                </td>
+              </tr>
+              } @for (row of emptyRows; track $index) {
+              <tr class="opacity-75" style="height: 54px">
+                @if ($index==4 && students.data?.sessionAttendance?.length == 0)
+                {
+                <td colspan="3" class="text-center align-middle">
+                  <div
+                    class="d-flex justify-content-center align-items-center h-100"
+                  >
+                    <span class="text-muted fs-5"
+                      >No Attendance Details Found</span
+                    >
+                  </div>
+                </td>
+                } @else {
+                <td></td>
+                <td></td>
+                <td></td>
+                }
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <!-- Pagination -->
+        @if (students.pagination != null && students.pagination.pageSize > 1) {
+        <nav class="mt-3 d-flex justify-content-end">
+          <ul class="pagination pagination-sm mb-0">
+            <li
+              class="page-item"
+              [class.disabled]="students.pagination.page == 1"
+            >
+              <a
+                class="page-link"
+                (click)="goToPage(students.pagination.page - 1)"
+                >Prev</a
+              >
+            </li>
+            @for (page of pageNumbers; track $index) {
+            <li
+              class="page-item"
+              [class.active]="page === students.pagination.page"
+            >
+              <a class="page-link" (click)="goToPage(page)">{{ page }}</a>
+            </li>
+            }
+            <li
+              class="page-item"
+              [class.disabled]="students.pagination.page === students.pagination.totalPages"
+            >
+              <a
+                class="page-link"
+                (click)="goToPage(students.pagination.page + 1)"
+                >Next</a
+              >
+            </li>
+          </ul>
+        </nav>
+        }
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

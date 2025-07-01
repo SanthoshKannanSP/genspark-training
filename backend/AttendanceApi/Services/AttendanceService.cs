@@ -2,20 +2,21 @@ using System.Threading.Tasks;
 using AttendanceApi.Interfaces;
 using AttendanceApi.Misc;
 using AttendanceApi.Models;
+using AttendanceApi.Models.DTOs;
 using Microsoft.AspNetCore.SignalR;
 
 namespace AttendanceApi.Services;
 
 public class AttendanceService : IAttendanceService
 {
-    private readonly IRepository<int, SessionAttendance> _sessionAttendanceRepository;
+    private readonly IRepository<int, Models.SessionAttendance> _sessionAttendanceRepository;
     private readonly IHubContext<NotificationHub> _hubContext;
-    public AttendanceService(IRepository<int, SessionAttendance> sessionAttendanceRepository, IHubContext<NotificationHub> hubContext)
+    public AttendanceService(IRepository<int, Models.SessionAttendance> sessionAttendanceRepository, IHubContext<NotificationHub> hubContext)
     {
         _sessionAttendanceRepository = sessionAttendanceRepository;
         _hubContext = hubContext;
     }
-    public async Task<SessionAttendance> AddAttendanceToStudent(int studentId, int sessionId)
+    public async Task<Models.SessionAttendance> AddAttendanceToStudent(int studentId, int sessionId)
     {
         var attendances = await _sessionAttendanceRepository.GetAll();
         var attendance = attendances.FirstOrDefault(s => s.StudentId == studentId && s.SessionId == sessionId);
@@ -34,15 +35,46 @@ public class AttendanceService : IAttendanceService
         return attendance;
     }
 
-    public async Task<List<SessionAttendance>> GetAttendanceOfSession(int sessionId)
+    public async Task<PaginatedResponseDTO<SessionAttendanceResponseDTO>> GetAttendanceOfSession(int sessionId, int page, int pageSize, string? studentName = null, bool? attended = null)
     {
+        page = page > 0 ? page : 1;
+        pageSize = pageSize > 0 ? pageSize : 10;
+
         var attendances = await _sessionAttendanceRepository.GetAll();
         attendances = attendances.Where(s => s.SessionId == sessionId);
 
-        return attendances.ToList();
+        var response = attendances.Select(a => new SessionAttendanceDTO() { StudentId = a.StudentId, StudentName = a.Student.Name, Attended = a.Status == "Attended" });
+
+        if (!string.IsNullOrWhiteSpace(studentName))
+            response = response.Where(a => a.StudentName.ToLower().Contains(studentName.ToLower()));
+
+        if (attended.HasValue)
+            response = response.Where(a => a.Attended==attended);
+
+        var totalRecords = response.Count();
+        var paginatedAttendance = response.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+        var paginatedResponse = new PaginatedResponseDTO<SessionAttendanceResponseDTO>
+        {
+            Data = new SessionAttendanceResponseDTO
+            {
+                RegisteredCount = response.Count(),
+                AttendedCount = response.Where(a => a.Attended).Count(),
+                SessionAttendance = paginatedAttendance
+            },
+            Pagination = new PaginationModel
+            {
+                TotalRecords = totalRecords,
+                Page = page,
+                PageSize = pageSize,
+                TotalPages = (int)Math.Ceiling((double)totalRecords / pageSize)
+            }
+        };
+
+        return paginatedResponse;
     }
 
-    public async Task<List<SessionAttendance>> GetAttendanceOfStudent(int studentId)
+    public async Task<List<Models.SessionAttendance>> GetAttendanceOfStudent(int studentId)
     {
         var attendances = await _sessionAttendanceRepository.GetAll();
         attendances = attendances.Where(s => s.StudentId == studentId && s.Session.Status!="Cancelled");
@@ -50,7 +82,7 @@ public class AttendanceService : IAttendanceService
         return attendances.ToList();
     }
 
-    public async Task<SessionAttendance> RemoveAttendanceFromStudent(int studentId, int sessionId)
+    public async Task<Models.SessionAttendance> RemoveAttendanceFromStudent(int studentId, int sessionId)
     {
         var attendances = await _sessionAttendanceRepository.GetAll();
         var attendance = attendances.FirstOrDefault(s => s.StudentId == studentId && s.SessionId == sessionId);

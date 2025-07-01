@@ -9,6 +9,8 @@ import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpClientService } from './services/http-client-service';
 import { SessionService } from './services/session-service';
+import { NotificationService } from './services/notification-service';
+import { AttendanceService } from './services/attendance-service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,5 +20,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     HttpClientService,
     SessionService,
+    NotificationService,
+    AttendanceService,
   ],
 };

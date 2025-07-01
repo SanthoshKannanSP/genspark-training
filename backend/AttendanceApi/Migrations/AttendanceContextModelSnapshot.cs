@@ -36,6 +36,14 @@ namespace AttendanceApi.Migrations
                     b.Property<TimeOnly>("EndTime")
                         .HasColumnType("time without time zone");
 
+                    b.Property<string>("SessionCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("SessionLink")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("SessionName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -93,8 +101,8 @@ namespace AttendanceApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StudentId"));
 
-                    b.Property<int>("Age")
-                        .HasColumnType("integer");
+                    b.Property<DateOnly>("DateOfBirth")
+                        .HasColumnType("date");
 
                     b.Property<string>("Email")
                         .IsRequired()

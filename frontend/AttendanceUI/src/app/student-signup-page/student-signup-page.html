@@ -1,0 +1,100 @@
+<div
+  class="min-vh-100 d-flex justify-content-center align-items-center bg-light px-3"
+>
+  <div class="w-100" style="max-width: 420px">
+    <div class="bg-white shadow-sm rounded-4 p-4">
+      <h3 class="text-center mb-4 fw-semibold text-primary">Student Signup</h3>
+
+      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+        <!-- Name -->
+        <div class="mb-3">
+          <label class="form-label text-muted small">Full Name</label>
+          <input
+            type="text"
+            class="form-control form-control-lg rounded-3"
+            formControlName="name"
+            placeholder="Jane Doe"
+          />
+          @if (name.invalid && name.touched) {
+          <small class="text-danger">Enter a valid name</small>
+          }
+        </div>
+
+        <!-- Gender -->
+        <div class="mb-3">
+          <label class="form-label text-muted small">Gender</label>
+          <select
+            class="form-select form-select-lg rounded-3"
+            formControlName="gender"
+          >
+            <option value="">Select gender</option>
+            @for (g of genders; track g) {
+            <option [value]="g">{{ g }}</option>
+            }
+          </select>
+          @if (gender.invalid && gender.touched) {
+          <small class="text-danger">Select Male or Female</small>
+          }
+        </div>
+
+        <!-- Date of Birth  -->
+        <div class="mb-3">
+          <label class="form-label text-muted small">Date of Birth</label>
+          <input
+            type="date"
+            class="form-control form-control-lg rounded-3"
+            formControlName="dateOfBirth"
+          />
+
+          @if (dateOfBirth?.invalid && dateOfBirth?.touched) { @if
+          (dateOfBirth?.errors?.['required']) {
+          <small class="text-danger">Date of Birth is required</small>
+          } @if (dateOfBirth?.errors?.['invalidDate']) {
+          <small class="text-danger">Invalid date</small>
+          } @if (dateOfBirth?.errors?.['notInPast']) {
+          <small class="text-danger">Date must be in the past</small>
+          } @if (dateOfBirth?.errors?.['tooYoung']) {
+          <small class="text-danger">You must be at least 12 years old</small>
+          } }
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+          <label class="form-label text-muted small">Email</label>
+          <input
+            type="email"
+            class="form-control form-control-lg rounded-3"
+            formControlName="email"
+            placeholder="student@example.com"
+          />
+          @if (email.invalid && email.touched) {
+          <small class="text-danger">Enter a valid email</small>
+          }
+        </div>
+
+        <!-- Password -->
+        <div class="mb-4">
+          <label class="form-label text-muted small">Password</label>
+          <input
+            type="password"
+            class="form-control form-control-lg rounded-3"
+            formControlName="password"
+            placeholder="********"
+          />
+          @if (password.invalid && password.touched) {
+          <small class="text-danger">Must be at least 8 characters</small>
+          }
+        </div>
+
+        <!-- Submit -->
+        <button
+          class="btn btn-primary w-100 rounded-pill py-2 fw-semibold"
+          type="submit"
+          [disabled]="signupForm.invalid"
+        >
+          Sign Up
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

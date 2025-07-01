@@ -1,39 +1,15 @@
-import { Component, inject } from '@angular/core';
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { FilterMenu } from '../filter-menu/filter-menu';
 import { SessionsTable } from '../sessions-table/sessions-table';
-import { SessionService } from '../../services/session-service';
-import { PaginatedResponse } from '../../models/paginated-response';
-import { SessionModel } from '../../models/session-model';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { ScheduleSessionModel } from '../../models/schedule-session-model';
+import { ScheduleSessionModal } from '../schedule-session-modal/schedule-session-modal';
+import { HttpClientService } from '../../services/http-client-service';
 
 @Component({
   selector: 'app-my-sessions-page',
-  imports: [FilterMenu, SessionsTable, ReactiveFormsModule],
+  imports: [FilterMenu, SessionsTable, ScheduleSessionModal],
   templateUrl: './my-sessions-page.html',
   styleUrl: './my-sessions-page.css',
 })
 export class MySessionsPage {
-  sessionService = inject(SessionService);
-  sessionForm: FormGroup;
-
-  constructor(private fb: FormBuilder) {
-    this.sessionForm = this.fb.group({
-      sessionName: ['', Validators.required],
-      date: ['', Validators.required],
-      startTime: ['', Validators.required],
-      endTime: ['', Validators.required],
-    });
-  }
-
-  onSubmit() {
-    this.sessionService.scheduleSession(
-      this.sessionForm.value as ScheduleSessionModel
-    );
-  }
+  api = inject(HttpClientService);
 }

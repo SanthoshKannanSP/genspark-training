@@ -29,6 +29,7 @@ public class SessionController : ControllerBase
         return session;
     }
 
+    [Authorize]
     [HttpGet]
     [Route("All")]
     public async Task<ActionResult<List<Session>>> GetAllSessions(int page,
@@ -71,12 +72,12 @@ public class SessionController : ControllerBase
         return session;
     }
 
-    [Authorize(Policy = "IsOwner")]
+    [Authorize(Roles = "Student")]
     [HttpPost]
-    [Route("{sessionId}/AddStudent")]
-    public async Task<ActionResult<List<SessionAttendance>>> AddStudentToSession(AddStudentsToSessionRequestDTO addStudentsToSessionRequestDTO, int sessionId)
+    [Route("AddStudent")]
+    public async Task<ActionResult<List<SessionAttendance>>> AddStudentToSession(AddStudentToSessionRequestDTO addStudentsToSessionRequestDTO)
     {
-        var sessionAttendances = await _sessionService.AddStudentsToSession(addStudentsToSessionRequestDTO, sessionId);
+        var sessionAttendances = await _sessionService.AddStudentToSession(addStudentsToSessionRequestDTO);
         return Created("", sessionAttendances);
     }
 
@@ -97,21 +98,36 @@ public class SessionController : ControllerBase
         return Ok(session);
     }
 
-    [Authorize(Roles = "Teacher")]
+    [Authorize(Roles = "Teacher, Student")]
     [HttpGet]
     [Route("Upcoming")]
-    public async Task<ActionResult<List<Session>>> GetUpcomingSessions()
+    public async Task<ActionResult<List<UpcomingSessionsResponseDTO>>> GetUpcomingSessions()
     {
         var sessions = await _sessionService.GetUpcomingSessions();
         return Ok(sessions);
     }
 
-    [Authorize(Roles = "Teacher")]
+    [Authorize(Roles = "Teacher, Student")]
     [HttpGet]
     [Route("Past")]
-    public async Task<ActionResult<List<Session>>> GetPastSessions()
+    public async Task<ActionResult<List<PastSessionResponseDTO>>> GetPastSessions()
     {
         var sessions = await _sessionService.GetPastSessions();
+        return Ok(sessions);
+    }
+
+    [Authorize(Roles = "Teacher")]
+    [HttpGet]
+    [Route("Attendance")]
+    public async Task<ActionResult<List<AttendanceDetailsResponseDTO>>> GetAttendanceDetails(int page,
+    int pageSize,
+    string? sessionName = null,
+    DateOnly? startDate = null,
+    DateOnly? endDate = null,
+    TimeOnly? startTime = null,
+    TimeOnly? endTime = null)
+    {
+        var sessions = await _sessionService.GetAttendanceDetails(page, pageSize, sessionName, startDate, endDate, startTime, endTime);
         return Ok(sessions);
     }
 }

@@ -29,6 +29,7 @@
         My Sessions
       </a>
     </li>
+    @if (api.hasRole("Teacher")) {
     <li>
       <a
         routerLink="/portal/attendance"
@@ -38,6 +39,8 @@
         Attendance Details
       </a>
     </li>
+    }
+
     <li>
       <a
         routerLink="/portal/settings"
@@ -50,7 +53,7 @@
   </ul>
   <hr />
   <div>
-    <button (click)="api.logout()" class="btn btn-outline-light w-100">
+    <button (click)="logout()" class="btn btn-outline-light w-100">
       Logout
     </button>
   </div>

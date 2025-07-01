@@ -83,14 +83,21 @@ public class AuthenticationService : IAuthenticationService
         };
     }
 
-    public async Task Logout(string username)
+    public async Task Logout()
     {
+        var username = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Name)?.Value;
+        if (string.IsNullOrEmpty(username))
+            throw new Exception("Username not found");
         var user = await _userRepository.Get(username);
         if (user != null)
         {
             user.RefreshToken = null;
             user.RefreshTokenExpiryTime = null;
             await _userRepository.Update(user.Username, user);
+        }
+        else
+        {
+            throw new Exception("User not found");
         }
     }
     

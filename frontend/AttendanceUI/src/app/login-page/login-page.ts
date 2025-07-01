@@ -39,7 +39,6 @@ export class LoginPage {
         },
         error: (error) => {
           alert('Error: Invalid email or password');
-          console.log(error);
         },
       });
   }

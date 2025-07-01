@@ -1,6 +1,8 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SessionService } from '../../services/session-service';
+import { Router, RouterState } from '@angular/router';
+import { AttendanceService } from '../../services/attendance-service';
 
 @Component({
   selector: 'app-filter-menu',
@@ -10,6 +12,9 @@ import { SessionService } from '../../services/session-service';
 })
 export class FilterMenu {
   sessionService = inject(SessionService);
+  attendanceService = inject(AttendanceService);
+  router = inject(Router);
+  route = this.router.url;
 
   filterForm: FormGroup;
 
@@ -25,8 +30,15 @@ export class FilterMenu {
   }
 
   applyFilters() {
-    this.sessionService.updateAllSessions(null, null, this.filterForm.value);
-    console.log('Ok');
+    if (this.route == '/portal/sessions') {
+      this.sessionService.updateAllSessions(null, null, this.filterForm.value);
+    } else if (this.route == '/portal/attendance') {
+      this.attendanceService.updateAllSessions(
+        null,
+        null,
+        this.filterForm.value
+      );
+    }
   }
 
   resetFilters() {

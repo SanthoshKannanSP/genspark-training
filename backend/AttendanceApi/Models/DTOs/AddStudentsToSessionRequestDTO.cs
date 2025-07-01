@@ -1,6 +1,6 @@
 namespace AttendanceApi.Models.DTOs;
 
-public class AddStudentsToSessionRequestDTO
+public class AddStudentToSessionRequestDTO
 {
-        public List<int> StudentIds { get; set; } = [];
+        public string SessionCode { get; set; } = string.Empty;
 }

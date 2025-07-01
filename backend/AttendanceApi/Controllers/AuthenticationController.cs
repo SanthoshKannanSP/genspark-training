@@ -38,9 +38,9 @@ public class AuthenticationController : ControllerBase
     }
 
     [HttpPost("Logout")]
-    public async Task<IActionResult> Logout([FromBody] string username)
+    public async Task<IActionResult> Logout()
     {
-        await _authenticationService.Logout(username);
+        await _authenticationService.Logout();
         return Ok("Logged out successfully");
     }
 }

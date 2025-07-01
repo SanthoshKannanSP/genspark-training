@@ -2,15 +2,36 @@
   <div class="card-body">
     <!-- Session Title: large flex-grow area with ellipsis -->
     <div class="title mb-0 text-truncate">
-      <h5 class="mb-0 text-truncate">{{ title }}</h5>
+      <h5 class="mb-0 text-truncate">{{ session.sessionName }}</h5>
     </div>
 
     <!-- Date -->
-    <div class="date text-nowrap text-muted">{{ date }}</div>
+    <div class="date text-nowrap text-muted">{{ session.date }}</div>
 
     <!-- Time -->
-    <div class="time text-nowrap text-muted">{{ time }}</div>
+    <div class="time text-nowrap text-muted">
+      {{ session.startTime }} - {{session.endTime}}
+    </div>
 
+    @if (student) {
+    <!-- Attendance -->
+    <div>
+      <span class="badge bg-success"
+        >{{session.attended ? "Attended": "Not Attended"}}</span
+      >
+    </div>
+    <!-- View Details -->
+    <div class="view">
+      <a
+        href="#"
+        class="btn btn-sm btn-link w-100 text-nowrap"
+        data-bs-toggle="modal"
+        data-bs-target="#pastSessionDetailsModal"
+        (click)="showDetails()"
+        >View Details</a
+      >
+    </div>
+    } @else {
     <!-- View Attendance Button -->
     <div class="attendance">
       <button class="btn btn-sm btn-primary w-100">View Attendance</button>
@@ -22,5 +43,6 @@
         >Export Attendance</a
       >
     </div>
+    }
   </div>
 </div>

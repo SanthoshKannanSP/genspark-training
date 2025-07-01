@@ -1,0 +1,39 @@
+<div class="card mb-3 shadow-sm">
+  <div class="card-body">
+    <!-- Session Title: large flex-grow area with ellipsis -->
+    <div class="title mb-0 text-truncate">
+      <h5 class="mb-0 text-truncate">{{ session.sessionName }}</h5>
+    </div>
+
+    <!-- Date -->
+    <div class="date text-nowrap text-muted">{{ session.date }}</div>
+
+    <!-- Time -->
+    <div class="time text-nowrap text-muted">
+      {{ session.startTime }} - {{session.endTime}}
+    </div>
+
+    <!-- Join Button -->
+    <div class="join">
+      <button
+        class="btn btn-sm btn-primary w-100"
+        [disabled]="!isSessionLive()"
+        (click)="joinLive()"
+      >
+        Join Live
+      </button>
+    </div>
+
+    <!-- View Details -->
+    <div class="view">
+      <a
+        href="#"
+        class="btn btn-sm btn-link w-100 text-nowrap"
+        data-bs-toggle="modal"
+        data-bs-target="#upcomingSessionDetailsModal"
+        (click)="showDetails()"
+        >View Details</a
+      >
+    </div>
+  </div>
+</div>

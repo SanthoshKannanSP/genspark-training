@@ -1,5 +1,7 @@
 <div class="components">
+  <h1>My Sessions</h1>
   <app-filter-menu></app-filter-menu>
+  @if (api.hasRole("Teacher")) {
   <div class="d-flex mb-4">
     <button
       class="btn btn-primary align-self-start"
@@ -9,91 +11,7 @@
       Schedule New Session
     </button>
   </div>
+  }
   <app-sessions-table></app-sessions-table>
-</div>
-
-<!-- Modal -->
-<div
-  class="modal fade"
-  id="createSessionModal"
-  tabindex="-1"
-  aria-labelledby="createSessionModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="createSessionModalLabel">Create Session</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
-      </div>
-
-      <div class="modal-body">
-        <form
-          [formGroup]="sessionForm"
-          (ngSubmit)="onSubmit()"
-          class="p-4 border rounded shadow-sm"
-        >
-          <div class="row gap-3">
-            <!-- Session Name -->
-            <div class="row">
-              <label class="form-label">Session Name</label>
-              <input
-                type="text"
-                class="form-control"
-                formControlName="sessionName"
-                placeholder="Enter session name"
-              />
-            </div>
-
-            <div class="row">
-              <!-- Date -->
-              <div class="col">
-                <label class="form-label">Date</label>
-                <input
-                  type="date"
-                  class="form-control"
-                  formControlName="date"
-                />
-              </div>
-              <!-- Start Time -->
-              <div class="col">
-                <label class="form-label">Start Time</label>
-                <input
-                  type="time"
-                  class="form-control"
-                  formControlName="startTime"
-                />
-              </div>
-              <!-- End Time -->
-              <div class="col">
-                <label class="form-label">End Time</label>
-                <input
-                  type="time"
-                  class="form-control"
-                  formControlName="endTime"
-                />
-              </div>
-            </div>
-
-            <!-- Buttons -->
-            <div class="row-12 d-flex gap-2">
-              <button type="submit" class="btn btn-primary">Submit</button>
-              <button
-                type="button"
-                class="btn btn-outline-secondary"
-                (click)="this.sessionForm.reset()"
-              >
-                Reset
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
+  <app-schedule-session-button></app-schedule-session-button>
 </div>

@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClientService } from './http-client-service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, catchError, tap, throwError } from 'rxjs';
 import { SessionModel } from '../models/session-model';
 import { PaginatedResponse } from '../models/paginated-response';
 import { FilterModel } from '../models/filter-model';
@@ -57,23 +57,38 @@ export class SessionService {
     this.api.get('/api/v1/Session/All', true, { params }).subscribe({
       next: (data: any) => {
         let result = new PaginatedResponse<SessionModel[]>();
+        console.log(data);
         result.pagination = data.data.pagination;
         result.data = data.data.data.$values;
         this.allSessions.next(result);
-        console.log(data);
       },
       error: (error) => console.log(error),
     });
   }
 
   scheduleSession(session: ScheduleSessionModel) {
-    console.log(session);
-    this.api.post('/api/v1/Session', session, true).subscribe({
-      next: (data: any) => {
+    return this.api.post('/api/v1/Session', session, true).pipe(
+      tap(() => {
         this.currentFilters = null;
         this.updateAllSessions();
-      },
-      error: (error) => console.log(error),
-    });
+      }),
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  }
+
+  editSession(sessionId: number, session: SessionModel) {
+    return this.api
+      .post(`/api/v1/Session/${sessionId}/Update`, session, true)
+      .pipe(tap(() => this.updateAllSessions()));
+  }
+
+  addStudentToSession(sessionCode: string) {
+    return this.api.post(
+      '/api/v1/Session/AddStudent',
+      { sessionCode: sessionCode },
+      true
+    );
   }
 }
