@@ -1,0 +1,4 @@
+.card-header[role="button"] {
+  cursor: pointer;
+  user-select: none;
+}

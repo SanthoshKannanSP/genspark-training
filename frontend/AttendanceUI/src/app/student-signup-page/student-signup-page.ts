@@ -9,6 +9,7 @@ import {
 import { Router } from '@angular/router';
 import { HttpClientService } from '../services/http-client-service';
 import { dateOfBirthValidator } from '../misc/date-of-birth-validator';
+import { confirmPasswordValidator } from '../misc/confirm-password-validator';
 
 @Component({
   selector: 'app-student-signup-page',
@@ -24,13 +25,17 @@ export class StudentSignupPage {
   genders = ['Male', 'Female'];
 
   constructor(private fb: FormBuilder) {
-    this.signupForm = this.fb.group({
-      name: ['', [Validators.minLength(1)]],
-      gender: ['', [Validators.required]],
-      dateOfBirth: ['', [Validators.required, dateOfBirthValidator]],
-      email: ['', [Validators.email]],
-      password: ['', [Validators.minLength(8)]],
-    });
+    this.signupForm = this.fb.group(
+      {
+        name: ['', [Validators.minLength(3), Validators.required]],
+        gender: ['', [Validators.required]],
+        dateOfBirth: ['', [Validators.required, dateOfBirthValidator]],
+        email: ['', [Validators.email, Validators.required]],
+        password: ['', [Validators.minLength(8), Validators.required]],
+        confirmPassword: ['', Validators.required],
+      },
+      { validators: confirmPasswordValidator }
+    );
   }
 
   onSubmit() {
@@ -41,7 +46,10 @@ export class StudentSignupPage {
           alert('Created account successfully. Now log into your account');
           this.router.navigateByUrl('/login');
         },
-        error: (error) => console.log(error),
+        error: (error) => {
+          console.log(error);
+          alert(error.error.errorMessage);
+        },
       });
     }
   }
@@ -64,5 +72,8 @@ export class StudentSignupPage {
 
   get password() {
     return this.signupForm.get('password')!;
+  }
+  get confirmPassword() {
+    return this.signupForm.get('confirmPassword');
   }
 }

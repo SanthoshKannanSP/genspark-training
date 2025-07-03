@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SessionService } from '../../services/session-service';
 import { Router, RouterState } from '@angular/router';
@@ -10,13 +10,28 @@ import { AttendanceService } from '../../services/attendance-service';
   templateUrl: './filter-menu.html',
   styleUrl: './filter-menu.css',
 })
-export class FilterMenu {
+export class FilterMenu implements OnInit {
   sessionService = inject(SessionService);
   attendanceService = inject(AttendanceService);
   router = inject(Router);
   route = this.router.url;
 
   filterForm: FormGroup;
+
+  isFilterCollapsed: boolean = true;
+  screenIsSmall = false;
+
+  toggleFilter() {
+    this.isFilterCollapsed = !this.isFilterCollapsed;
+  }
+
+  ngOnInit() {
+    this.screenIsSmall = window.innerWidth < 768;
+    window.addEventListener('resize', () => {
+      this.screenIsSmall = window.innerWidth < 768;
+      if (!this.screenIsSmall) this.isFilterCollapsed = false;
+    });
+  }
 
   constructor(private fb: FormBuilder) {
     this.filterForm = this.fb.group({

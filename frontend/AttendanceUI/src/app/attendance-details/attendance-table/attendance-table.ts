@@ -1,12 +1,13 @@
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, Input, ViewChild } from '@angular/core';
 import { AttendanceService } from '../../services/attendance-service';
 import { PaginatedResponse } from '../../models/paginated-response';
 import { AttendanceDetailsModel } from '../../models/attendance-details-modal';
 import { SessionAttendanceDetailsModal } from '../session-attendance-details-modal/session-attendance-details-modal';
+import { FormatDatePipe } from '../../misc/format-date-pipe';
 
 @Component({
   selector: 'app-attendance-table',
-  imports: [SessionAttendanceDetailsModal],
+  imports: [SessionAttendanceDetailsModal, FormatDatePipe],
   templateUrl: './attendance-table.html',
   styleUrl: './attendance-table.css',
 })

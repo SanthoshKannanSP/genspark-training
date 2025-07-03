@@ -85,4 +85,20 @@ export class AttendanceService {
         error: (error) => console.log(error),
       });
   }
+
+  markAttendance(studentId: number, sessionId: number) {
+    return this.api.post(
+      '/api/v1/Attendance/Mark',
+      { studentId: studentId, sessionId: sessionId },
+      true
+    );
+  }
+
+  unmarkAttendance(studentId: number, sessionId: number) {
+    return this.api.post(
+      '/api/v1/Attendance/Unmark',
+      { studentId: studentId, sessionId: sessionId },
+      true
+    );
+  }
 }

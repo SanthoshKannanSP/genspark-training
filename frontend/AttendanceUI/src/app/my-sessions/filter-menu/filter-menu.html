@@ -1,6 +1,18 @@
 <div class="card p-3 shadow-sm mb-4">
+  <div class="d-md-none mb-3">
+    <button class="btn btn-outline-primary w-100" (click)="toggleFilter()">
+      {{ isFilterCollapsed ? 'Show Filters' : 'Hide Filters' }}
+    </button>
+  </div>
+
   <form [formGroup]="filterForm" (ngSubmit)="applyFilters()">
-    <div class="row g-3 align-items-end">
+    <div
+      class="row g-3 align-items-end flex-wrap"
+      [class]="{
+        'd-none': isFilterCollapsed && screenIsSmall,
+        'd-flex': !isFilterCollapsed || !screenIsSmall,
+      }"
+    >
       <!-- Title -->
       <div class="col-lg-2 col-md-4 col-sm-6">
         <label class="form-label">Title</label>

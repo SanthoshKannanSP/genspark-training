@@ -21,7 +21,7 @@ public class TeacherController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<Teacher>>> GetAllTeachers(int page, int pageSize)
     {
-        var teachers = await _teacherService.GetAllActiveTeachers(page,pageSize);
+        var teachers = await _teacherService.GetAllActiveTeachers(page, pageSize);
         return teachers;
     }
 
@@ -37,15 +37,32 @@ public class TeacherController : ControllerBase
     public async Task<ActionResult<Teacher>> AddTeacher(AddTeacherRequestDTO addTeacherRequestDTO)
     {
         var teacher = await _teacherService.AddTeacher(addTeacherRequestDTO);
-        return Created("",teacher);
+        return Created("", teacher);
     }
 
-    [Authorize(Policy = "IsOwner")]
+    [Authorize(Roles = "Teacher")]
     [HttpDelete]
-    [Route("{teacherId}")]
-    public async Task<ActionResult<Teacher>> DeactivateTeacher(int teacherId)
+    public async Task<ActionResult<Teacher>> DeactivateTeacher()
     {
-        var teacher = await _teacherService.DeactivateTeacher(teacherId);
+        var teacher = await _teacherService.DeactivateTeacher();
         return Ok(teacher);
+    }
+
+    [Authorize(Roles = "Teacher")]
+    [HttpGet]
+    [Route("Me")]
+    public async Task<ActionResult<TeacherDetailsDTO>> GetMyDetails()
+    {
+        var teacher = await _teacherService.GetMyDetails();
+        return teacher;
+    }
+
+    [Authorize(Roles = "Teacher")]
+    [HttpPost]
+    [Route("Update")]
+    public async Task<ActionResult<TeacherDetailsDTO>> UpdateDetails(TeacherDetailsDTO teacherDetailsDTO)
+    {
+        var teacher = await _teacherService.UpdateDetails(teacherDetailsDTO);
+        return teacher;
     }
 }

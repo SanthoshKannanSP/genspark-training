@@ -1,18 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditSessionModal } from './edit-session-modal';
+import { EditSessionComponent } from './edit-session-modal';
 
 describe('EditSessionModal', () => {
-  let component: EditSessionModal;
-  let fixture: ComponentFixture<EditSessionModal>;
+  let component: EditSessionComponent;
+  let fixture: ComponentFixture<EditSessionComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EditSessionModal]
-    })
-    .compileComponents();
+      imports: [EditSessionComponent],
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(EditSessionModal);
+    fixture = TestBed.createComponent(EditSessionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

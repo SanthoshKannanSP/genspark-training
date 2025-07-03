@@ -1,7 +1,7 @@
 <div
   class="min-vh-100 d-flex justify-content-center align-items-center bg-light px-3"
 >
-  <div class="w-100" style="max-width: 420px">
+  <div class="w-100" style="max-width: 800px">
     <div class="bg-white shadow-sm rounded-4 p-4">
       <h3 class="text-center mb-4 fw-semibold text-primary">Student Signup</h3>
 
@@ -83,6 +83,21 @@
           />
           @if (password.invalid && password.touched) {
           <small class="text-danger">Must be at least 8 characters</small>
+          }
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="mb-4">
+          <label class="form-label text-muted small">Confirm Password</label>
+          <input
+            type="password"
+            class="form-control form-control-lg rounded-3"
+            formControlName="confirmPassword"
+            placeholder="********"
+          />
+          @if (signupForm.errors?.["passwordMismatch"] &&
+          confirmPassword?.touched) {
+          <small class="text-danger">Passwords do not match</small>
           }
         </div>
 

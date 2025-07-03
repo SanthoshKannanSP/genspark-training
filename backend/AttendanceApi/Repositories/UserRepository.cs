@@ -12,7 +12,7 @@ public class UserRepository : AbstractRepository<string, User>
     }
     public override async Task<User> Get(string key)
     {
-        return await _attendenceContent.Users.SingleOrDefaultAsync(t => t.Username == key);
+        return await _attendenceContent.Users.Include(u => u.Teacher).Include(u => u.Student).SingleOrDefaultAsync(t => t.Username == key);
     }
 
     public override async Task<IQueryable<User>> GetAll()

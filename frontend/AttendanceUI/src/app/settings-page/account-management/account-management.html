@@ -1,0 +1,50 @@
+<div class="container mt-5">
+  <h2 class="mb-4">Account Management</h2>
+
+  <form
+    [formGroup]="accountForm"
+    (ngSubmit)="onSubmit()"
+    class="d-flex flex-column gap-3 g-3"
+  >
+    <div class="col-md-6">
+      <label class="form-label">Name</label>
+      <input type="text" class="form-control" formControlName="name" />
+    </div>
+
+    @if (api.hasRole("Student")) {
+    <div class="col-md-6">
+      <label class="form-label">Date of Birth</label>
+      <input type="date" class="form-control" formControlName="dateOfBirth" />
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Gender</label>
+      <select class="form-select" formControlName="gender">
+        <option>Male</option>
+        <option>Female</option>
+      </select>
+    </div>
+    } @else {
+    <div class="col-md-6">
+      <label class="form-label">Organization</label>
+      <input type="text" class="form-control" formControlName="organization" />
+    </div>
+    }
+
+    <div class="col-12">
+      <button
+        class="btn btn-primary me-2"
+        type="submit"
+        [disabled]="accountForm.invalid"
+      >
+        Save Changes
+      </button>
+      <button
+        class="btn btn-outline-danger"
+        type="button"
+        (click)="onDeleteAccount()"
+      >
+        Delete Account
+      </button>
+    </div>
+  </form>
+</div>

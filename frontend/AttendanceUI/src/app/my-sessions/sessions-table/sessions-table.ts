@@ -5,10 +5,11 @@ import { SessionService } from '../../services/session-service';
 import { EditSessionComponent } from '../edit-session-modal/edit-session-modal';
 import { NotificationService } from '../../services/notification-service';
 import { HttpClientService } from '../../services/http-client-service';
+import { FormatDatePipe } from '../../misc/format-date-pipe';
 
 @Component({
   selector: 'app-sessions-table',
-  imports: [EditSessionComponent],
+  imports: [EditSessionComponent, FormatDatePipe],
   templateUrl: './sessions-table.html',
   styleUrl: './sessions-table.css',
 })

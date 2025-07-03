@@ -11,6 +11,10 @@ import { HttpClientService } from './services/http-client-service';
 import { SessionService } from './services/session-service';
 import { NotificationService } from './services/notification-service';
 import { AttendanceService } from './services/attendance-service';
+import { SettingsService } from './services/settings-service';
+import { DatePipe } from '@angular/common';
+import { AccountService } from './services/account-service';
+import { LiveSessionService } from './services/live-session-service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,5 +26,9 @@ export const appConfig: ApplicationConfig = {
     SessionService,
     NotificationService,
     AttendanceService,
+    DatePipe,
+    SettingsService,
+    AccountService,
+    LiveSessionService,
   ],
 };

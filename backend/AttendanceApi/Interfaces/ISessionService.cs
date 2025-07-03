@@ -18,5 +18,8 @@ public interface ISessionService
     public Task<List<UpcomingSessionsResponseDTO>> GetUpcomingSessions();
 
     public Task<List<PastSessionResponseDTO>> GetPastSessions();
+    public Task<Session> MakeSessionLive(SessionIdDTO sessionIdDTO);
+
+    public Task<LiveSessionResponseDTO> GetLiveSession();
     public Task<PaginatedResponseDTO<List<AttendanceDetailsResponseDTO>>> GetAttendanceDetails(int page, int pageSize, string? sessionName = null, DateOnly? startDate = null, DateOnly? endDate = null, TimeOnly? startTime = null, TimeOnly? endTime = null);
 }

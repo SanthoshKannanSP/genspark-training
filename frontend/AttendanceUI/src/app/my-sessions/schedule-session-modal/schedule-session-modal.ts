@@ -8,6 +8,8 @@ import {
 import { ScheduleSessionModel } from '../../models/schedule-session-model';
 import { SessionService } from '../../services/session-service';
 import { NotificationService } from '../../services/notification-service';
+import { futureDateValidator } from '../../misc/future-date-validator';
+import { endAfterStartValidator } from '../../misc/end-time-validator';
 
 @Component({
   selector: 'app-schedule-session-button',
@@ -22,13 +24,18 @@ export class ScheduleSessionModal {
   @ViewChild('closeButton') closeButton!: ElementRef<HTMLButtonElement>;
 
   constructor(private fb: FormBuilder) {
-    this.sessionForm = this.fb.group({
-      sessionName: ['', Validators.required],
-      date: ['', Validators.required],
-      startTime: ['', Validators.required],
-      endTime: ['', Validators.required],
-      sessionLink: ['', Validators.required],
-    });
+    this.sessionForm = this.fb.group(
+      {
+        sessionName: ['', [Validators.required, Validators.minLength(1)]],
+        date: ['', [Validators.required, futureDateValidator]],
+        startTime: ['', Validators.required],
+        endTime: ['', Validators.required],
+        sessionLink: ['', Validators.required],
+      },
+      {
+        validators: [endAfterStartValidator],
+      }
+    );
   }
 
   onSubmit() {
@@ -45,7 +52,13 @@ export class ScheduleSessionModal {
             type: 'success',
           });
         },
-        error: (err) => console.log(err),
+        error: (err) => {
+          console.log(err);
+          this.notificationService.addNotification({
+            message: 'Unable to create session',
+            type: 'danger',
+          });
+        },
       });
   }
 }

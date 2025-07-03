@@ -56,9 +56,25 @@ export class HttpClientService {
       .post(url, body, { headers: credentials ? this.headers : undefined })
       .pipe(
         catchError((error: HttpErrorResponse) => {
-          if (error.status === 401 && credentials) {
+          if (credentials) {
             return this.tryRefresh(() =>
               this.http.post(url, body, { headers: this.headers })
+            );
+          }
+          return throwError(() => error);
+        })
+      );
+  }
+
+  delete(route: string, credentials: boolean = false) {
+    const url = Environment.BASE_URL + route;
+    return this.http
+      .delete(url, { headers: credentials ? this.headers : undefined })
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          if (credentials) {
+            return this.tryRefresh(() =>
+              this.http.delete(url, { headers: this.headers })
             );
           }
           return throwError(() => error);

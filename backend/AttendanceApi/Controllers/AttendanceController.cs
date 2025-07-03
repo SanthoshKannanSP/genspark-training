@@ -27,10 +27,12 @@ public class AttendanceController : ControllerBase
     }
 
     [Authorize(Roles = "Teacher")]
-    [HttpPost]
-    public async Task<ActionResult<SessionAttendance>> MarkAttendanceToStudent(int studentId, int sessionId)
+    [HttpPost("Mark")]
+    public async Task<ActionResult<SessionAttendance>> MarkAttendanceToStudent(AttendanceUpdateDTO attendanceUpdateDTO)
     {
-        var attendance = await _attendanceService.AddAttendanceToStudent(studentId, sessionId);
+        Console.WriteLine(attendanceUpdateDTO.SessionId);
+        System.Console.WriteLine(attendanceUpdateDTO.StudentId);
+        var attendance = await _attendanceService.AddAttendanceToStudent(attendanceUpdateDTO);
         return Created("", attendance);
     }
 
@@ -46,9 +48,9 @@ public class AttendanceController : ControllerBase
     [Authorize(Roles = "Teacher")]
     [HttpPost]
     [Route("Unmark")]
-    public async Task<ActionResult<SessionAttendance>> UnmarkAttendanceToStudent(int studentId, int sessionId)
+    public async Task<ActionResult<SessionAttendance>> UnmarkAttendanceToStudent(AttendanceUpdateDTO attendanceUpdateDTO)
     {
-        var attendance = await _attendanceService.RemoveAttendanceFromStudent(studentId, sessionId);
+        var attendance = await _attendanceService.RemoveAttendanceFromStudent(attendanceUpdateDTO);
         return Ok(attendance);
     }
 }

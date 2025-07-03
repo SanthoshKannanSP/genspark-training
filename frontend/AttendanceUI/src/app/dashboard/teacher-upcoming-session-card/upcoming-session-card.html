@@ -1,39 +1,76 @@
 <div class="card mb-3 shadow-sm">
   <div class="card-body">
-    <!-- Session Title: large flex-grow area with ellipsis -->
-    <div class="title mb-0 text-truncate">
-      <h5 class="mb-0 text-truncate">{{ session.sessionName }}</h5>
+    <!-- Large screen -->
+    <div class="d-none d-md-grid card-grid">
+      <!-- Session Title -->
+      <div class="title mb-0 text-truncate">
+        <h5 class="mb-0 text-truncate">{{ session.sessionName }}</h5>
+      </div>
+
+      <!-- Date -->
+      <div class="date text-nowrap text-muted">
+        {{ session.date | formatDate }}
+      </div>
+
+      <!-- Time -->
+      <div class="time text-nowrap text-muted">
+        {{ session.startTime }} - {{session.endTime}}
+      </div>
+
+      <!-- Join Button -->
+      <div class="join">
+        <button
+          class="btn btn-sm btn-primary w-100"
+          [disabled]="!isSessionLive()"
+          (click)="joinLive()"
+        >
+          Join Live
+        </button>
+      </div>
+
+      <!-- View Details -->
+      <div class="view">
+        <a
+          href="#"
+          class="btn btn-sm btn-link w-100 text-nowrap"
+          data-bs-toggle="modal"
+          data-bs-target="#upcomingSessionDetailsModal"
+          (click)="showDetails()"
+          >View Details</a
+        >
+      </div>
     </div>
 
-    <!-- Date -->
-    <div class="date text-nowrap text-muted">{{ session.date }}</div>
+    <!-- Small screen -->
+    <div class="d-block d-md-none small">
+      <div><strong>Session Name:</strong> {{ session.sessionName }}</div>
+      <div>
+        <strong>Date & Time:</strong>
+        {{ session.date | formatDate }} {{ session.startTime }} - {{
+        session.endTime }}
+      </div>
 
-    <!-- Time -->
-    <div class="time text-nowrap text-muted">
-      {{ session.startTime }} - {{session.endTime}}
-    </div>
+      <div class="mt-2">
+        <button
+          class="btn btn-sm btn-primary w-100"
+          [disabled]="!isSessionLive()"
+          (click)="joinLive()"
+        >
+          Join Live
+        </button>
+      </div>
 
-    <!-- Join Button -->
-    <div class="join">
-      <button
-        class="btn btn-sm btn-primary w-100"
-        [disabled]="!isSessionLive()"
-        (click)="joinLive()"
-      >
-        Join Live
-      </button>
-    </div>
-
-    <!-- View Details -->
-    <div class="view">
-      <a
-        href="#"
-        class="btn btn-sm btn-link w-100 text-nowrap"
-        data-bs-toggle="modal"
-        data-bs-target="#upcomingSessionDetailsModal"
-        (click)="showDetails()"
-        >View Details</a
-      >
+      <div class="mt-2">
+        <a
+          href="#"
+          class="btn btn-sm btn-link w-100"
+          data-bs-toggle="modal"
+          data-bs-target="#upcomingSessionDetailsModal"
+          (click)="showDetails()"
+        >
+          View Details
+        </a>
+      </div>
     </div>
   </div>
 </div>

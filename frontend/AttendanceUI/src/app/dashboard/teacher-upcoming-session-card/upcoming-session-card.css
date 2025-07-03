@@ -1,4 +1,4 @@
-.card-body {
+.card-grid {
   display: grid;
   grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
   place-items: center;

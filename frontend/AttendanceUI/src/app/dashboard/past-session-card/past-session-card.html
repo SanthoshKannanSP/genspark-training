@@ -1,48 +1,100 @@
 <div class="card mb-3 shadow-sm">
   <div class="card-body">
-    <!-- Session Title: large flex-grow area with ellipsis -->
-    <div class="title mb-0 text-truncate">
-      <h5 class="mb-0 text-truncate">{{ session.sessionName }}</h5>
+    <!-- Larger Screens -->
+    <div class="d-none d-md-grid card-grid">
+      <!-- Session Title -->
+      <div class="title mb-0 text-truncate">
+        <h5 class="mb-0 text-truncate">{{ session.sessionName }}</h5>
+      </div>
+
+      <!-- Date -->
+      <div class="date text-nowrap text-muted">
+        {{ session.date | formatDate }}
+      </div>
+
+      <!-- Time -->
+      <div class="time text-nowrap text-muted">
+        {{ session.startTime }} - {{session.endTime}}
+      </div>
+
+      @if (student) {
+      <!-- Attendance -->
+      <div>
+        <span
+          class="badge"
+          [class]="{
+          'bg-success': session.attended,
+          'bg-danger': !session.attended
+        }"
+          >{{session.attended ? "Attended": "Not Attended"}}</span
+        >
+      </div>
+      <!-- View Details -->
+      <div class="view">
+        <a
+          href="#"
+          class="btn btn-sm btn-link w-100 text-nowrap"
+          data-bs-toggle="modal"
+          data-bs-target="#pastSessionDetailsModal"
+          (click)="showDetails()"
+          >View Details</a
+        >
+      </div>
+      } @else {
+      <!-- View Attendance Button -->
+      <!-- <div class="attendance">
+        <button class="btn btn-sm btn-primary w-100" (click)="showAttendance()">
+          View Attendance
+        </button>
+      </div> -->
+      <div></div>
+
+      <!-- Export Attendance Details -->
+      <div class="export">
+        <p class="btn btn-sm btn-link w-100 text-nowrap">Export Attendance</p>
+      </div>
+      }
     </div>
 
-    <!-- Date -->
-    <div class="date text-nowrap text-muted">{{ session.date }}</div>
+    <!-- Smaller screens -->
+    <div class="d-block d-md-none small">
+      <!-- Session Title -->
+      <div><strong>Session Name:</strong> {{ session.sessionName }}</div>
+      <!-- Date & Time -->
+      <div>
+        <strong>Date & Time:</strong>
+        {{ session.date | formatDate }} {{ session.startTime }} - {{
+        session.endTime }}
+      </div>
 
-    <!-- Time -->
-    <div class="time text-nowrap text-muted">
-      {{ session.startTime }} - {{session.endTime}}
+      @if (student) {
+      <!-- Attendance -->
+      <div>
+        <strong>Status:</strong> {{ session.attended ? "Attended" : "Not
+        Attended" }}
+      </div>
+      <!-- View Details -->
+      <div class="mt-2">
+        <a
+          href="#"
+          class="btn btn-sm btn-link w-100"
+          data-bs-toggle="modal"
+          data-bs-target="#pastSessionDetailsModal"
+          (click)="showDetails()"
+          >View Details</a
+        >
+      </div>
+      } @else {
+      <!-- View Attendance Button -->
+      <!-- <div class="mt-2">
+        <button class="btn btn-sm btn-primary w-100">View Attendance</button>
+      </div> -->
+      <!-- Export Attendance Details -->
+      <div></div>
+      <div class="mt-2">
+        <p class="btn btn-sm btn-link w-100">Export Attendance</p>
+      </div>
+      }
     </div>
-
-    @if (student) {
-    <!-- Attendance -->
-    <div>
-      <span class="badge bg-success"
-        >{{session.attended ? "Attended": "Not Attended"}}</span
-      >
-    </div>
-    <!-- View Details -->
-    <div class="view">
-      <a
-        href="#"
-        class="btn btn-sm btn-link w-100 text-nowrap"
-        data-bs-toggle="modal"
-        data-bs-target="#pastSessionDetailsModal"
-        (click)="showDetails()"
-        >View Details</a
-      >
-    </div>
-    } @else {
-    <!-- View Attendance Button -->
-    <div class="attendance">
-      <button class="btn btn-sm btn-primary w-100">View Attendance</button>
-    </div>
-
-    <!-- Export Attendance Details -->
-    <div class="export">
-      <a href="#" class="btn btn-sm btn-link w-100 text-nowrap"
-        >Export Attendance</a
-      >
-    </div>
-    }
   </div>
 </div>

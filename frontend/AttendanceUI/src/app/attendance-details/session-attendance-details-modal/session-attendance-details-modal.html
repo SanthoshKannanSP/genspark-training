@@ -1,7 +1,7 @@
 <!-- Modal -->
 <div
   class="modal fade"
-  id="sessionAttendanceModal"
+  [id]="modalId"
   tabindex="-1"
   aria-labelledby="sessionAttendanceModalLabel"
   aria-hidden="true"
@@ -22,21 +22,25 @@
         <!-- Session Details -->
         <div class="row mb-4">
           <div class="row">
-            <p><strong>Session:</strong> {{ session?.sessionName }}</p>
+            <p class="sessionName">
+              <strong>Session:</strong> {{ session?.sessionName }}
+            </p>
           </div>
 
           <div class="row">
-            <p class="col"><strong>Date:</strong> {{ session?.date }}</p>
-            <p class="col">
+            <p class="col sessionDate">
+              <strong>Date:</strong> {{ session?.date | formatDate }}
+            </p>
+            <p class="col sessionTime">
               <strong>Time:</strong> {{ session?.startTime }} - {{
               session?.endTime }}
             </p>
           </div>
           <div class="row">
-            <p class="col">
+            <p class="col sessionRegistered">
               <strong>Registered:</strong> {{ students.data?.registeredCount }}
             </p>
-            <p class="col">
+            <p class="col sessionAttended">
               <strong>Attended:</strong> {{ students.data?.attendedCount }}
             </p>
           </div>
@@ -93,7 +97,7 @@
                       class="form-check-input"
                       type="checkbox"
                       [checked]="student.attended"
-                      (change)="toggleAttendance($index)"
+                      (change)="toggleAttendance($event, student, $index)"
                     />
                   </div>
                 </td>
@@ -106,7 +110,7 @@
                   <div
                     class="d-flex justify-content-center align-items-center h-100"
                   >
-                    <span class="text-muted fs-5"
+                    <span class="text-muted fs-6"
                       >No Attendance Details Found</span
                     >
                   </div>

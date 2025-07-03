@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using AttendanceApi.Interfaces;
 using AttendanceApi.Models;
 using AttendanceApi.Models.DTOs;
@@ -11,17 +12,21 @@ public class StudentService : IStudentService
     private readonly IRepository<string, User> _userRepository;
     private readonly IEncryptionService _encryptionService;
     private readonly IMapper _mapper;
-    public StudentService(IRepository<int, Student> studentRepository, IRepository<string, User> userRepository, IEncryptionService encryptionService, IMapper mapper)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public StudentService(IRepository<int, Student> studentRepository, IRepository<string, User> userRepository, IEncryptionService encryptionService, IMapper mapper, IHttpContextAccessor httpContextAccessor)
     {
         _studentRepository = studentRepository;
         _userRepository = userRepository;
         _encryptionService = encryptionService;
+        _httpContextAccessor = httpContextAccessor;
         _mapper = mapper;
     }
     public async Task<Student> AddStudent(AddStudentRequestDTO addStudentRequestDTO)
     {
-        try
-        {
+            var students = await _studentRepository.GetAll();
+            var existingStudent = students.FirstOrDefault(t => t.Email == addStudentRequestDTO.Email);
+            if (existingStudent != null )
+                throw new Exception("An account with the given email already exists");
             var user = _mapper.Map<User>(addStudentRequestDTO);
             user.Role = "Student";
             var encryptedData = _encryptionService.EncryptData(new EncryptModel()
@@ -37,23 +42,24 @@ public class StudentService : IStudentService
             student = await _studentRepository.Add(student);
 
             return student;
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("Unable to create Student");
-        }
-        
     }
 
-    public async Task<Student> DeactivateStudent(int StudentId)
+    public async Task<Student> DeactivateStudent()
     {
-        var student = await _studentRepository.Get(StudentId);
+        var username = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Name)?.Value;
+        if (string.IsNullOrWhiteSpace(username))
+            throw new Exception("Username not found");
+
+        var students = await _studentRepository.GetAll();
+        var student = students.FirstOrDefault(s => s.Email == username);
+
         if (student == null)
             throw new Exception("Student not found");
+
         if (student.Status == "Deactivated")
             throw new Exception("Student already deactivated");
         student.Status = "Deactivated";
-        student = await _studentRepository.Update(student.StudentId,student);
+        student = await _studentRepository.Update(student.StudentId, student);
         return student;
     }
 
@@ -69,11 +75,56 @@ public class StudentService : IStudentService
         return students.ToList();
     }
 
+    public async Task<StudentDetailsDTO> GetMyDetails()
+    {
+        var username = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Name)?.Value;
+        if (string.IsNullOrWhiteSpace(username))
+            throw new Exception("Username not found");
+
+        var students = await _studentRepository.GetAll();
+        var student = students.FirstOrDefault(s => s.Email == username);
+
+        if (student == null)
+            throw new Exception("Student not found");
+
+        var resposne = new StudentDetailsDTO()
+        {
+            Name = student.Name,
+            DateOfBirth = student.DateOfBirth,
+            Gender = student.Gender
+        };
+        return resposne;
+    }
+
     public async Task<Student> GetStudent(int studentId)
     {
         var student = await _studentRepository.Get(studentId);
         if (student == null)
             throw new Exception("Student not found");
         return student;
+    }
+    
+    public async Task<StudentDetailsDTO> UpdateDetails(StudentDetailsDTO studentDetailsDTO)
+    {
+        var username = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Name)?.Value;
+        if (string.IsNullOrWhiteSpace(username))
+            throw new Exception("Username not found");
+        var students = await _studentRepository.GetAll();
+        var student = students.FirstOrDefault(s => s.Email == username);
+
+        if (student == null)
+            throw new Exception("student not found");
+
+        student.Name = studentDetailsDTO.Name;
+        student.DateOfBirth = studentDetailsDTO.DateOfBirth;
+        student.Gender = studentDetailsDTO.Gender;
+        student = await _studentRepository.Update(student.StudentId, student);
+
+        return new StudentDetailsDTO()
+        {
+            Name = student.Name,
+            DateOfBirth = student.DateOfBirth,
+            Gender = student.Gender
+        };
     }
 }

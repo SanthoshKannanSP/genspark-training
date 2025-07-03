@@ -130,4 +130,22 @@ public class SessionController : ControllerBase
         var sessions = await _sessionService.GetAttendanceDetails(page, pageSize, sessionName, startDate, endDate, startTime, endTime);
         return Ok(sessions);
     }
+
+    [Authorize(Roles = "Teacher")]
+    [HttpPost]
+    [Route("Make/Live")]
+    public async Task<ActionResult<Session>> MakeSessionLive(SessionIdDTO sessionIdDTO)
+    {
+        var session = await _sessionService.MakeSessionLive(sessionIdDTO);
+        return Ok(session);
+    }
+
+    [Authorize(Roles = "Teacher")]
+    [HttpGet]
+    [Route("Live")]
+    public async Task<ActionResult<LiveSessionResponseDTO>> GetLiveSession()
+    {
+        var session = await _sessionService.GetLiveSession();
+        return Ok(session);
+    }
 }

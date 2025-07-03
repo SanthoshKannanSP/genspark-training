@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { HttpClientService } from '../services/http-client-service';
 
@@ -12,10 +12,15 @@ import { HttpClientService } from '../services/http-client-service';
 export class Sidebar {
   api = inject(HttpClientService);
   router = inject(Router);
+  @ViewChild('sidebarCloseButton')
+  sidebarCloseButton!: ElementRef<HTMLButtonElement>;
 
   logout() {
     this.api.logout().subscribe({
-      next: (data) => this.router.navigateByUrl('/'),
+      next: (data) => {
+        console.log(this.sidebarCloseButton.nativeElement.click());
+        this.router.navigateByUrl('/');
+      },
       error: (error) => console.log(error),
     });
   }

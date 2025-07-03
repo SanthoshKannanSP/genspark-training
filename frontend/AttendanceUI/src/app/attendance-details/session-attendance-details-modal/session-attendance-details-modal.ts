@@ -3,12 +3,17 @@ import { SessionModel } from '../../models/session-model';
 import { AttendanceDetailsModel } from '../../models/attendance-details-modal';
 import { PaginatedResponse } from '../../models/paginated-response';
 import { AttendanceService } from '../../services/attendance-service';
-import { SessionAttendanceModel } from '../../models/session-attendance-modal';
+import {
+  SessionAttendanceModel,
+  StudentAttendance,
+} from '../../models/session-attendance-modal';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormatDatePipe } from '../../misc/format-date-pipe';
+import { NotificationService } from '../../services/notification-service';
 
 @Component({
   selector: 'app-session-attendance-details-modal',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, FormatDatePipe],
   templateUrl: './session-attendance-details-modal.html',
   styleUrl: './session-attendance-details-modal.css',
 })
@@ -16,6 +21,8 @@ export class SessionAttendanceDetailsModal {
   session: AttendanceDetailsModel | null = null;
   students = new PaginatedResponse<SessionAttendanceModel>();
   attendanceService = inject(AttendanceService);
+  notificationService = inject(NotificationService);
+  @Input() modalId!: string;
 
   filterForm: FormGroup;
 
@@ -33,9 +40,57 @@ export class SessionAttendanceDetailsModal {
     });
   }
 
-  toggleAttendance(index: number) {
-    this.students.data!.sessionAttendance[index].attended =
-      !this.students.data!.sessionAttendance[index].attended;
+  toggleAttendance(event: Event, student: StudentAttendance, index: number) {
+    const checkbox = event.target as HTMLInputElement;
+    const currentAttended = student.attended;
+    const changeAttended = checkbox.checked;
+
+    student.attended = changeAttended;
+
+    let studentId = student.studentId;
+    let sessionId = student.sessionId;
+    console.log(student);
+    if (currentAttended) {
+      this.attendanceService.unmarkAttendance(studentId, sessionId).subscribe({
+        next: (data) => {
+          const message = `Successfully unmarked attendance to ${this.students.data?.sessionAttendance[index].studentName} for session ${this.session?.sessionName}`;
+          this.notificationService.addNotification({
+            message: message,
+            type: 'success',
+          });
+        },
+        error: (error) => {
+          console.log(error);
+          student.attended = currentAttended;
+          checkbox.checked = currentAttended;
+          const message = `Failed to unmark attendance to ${this.students.data?.sessionAttendance[index].studentName} for session ${this.session?.sessionName}`;
+          this.notificationService.addNotification({
+            message: message,
+            type: 'danger',
+          });
+        },
+      });
+    } else {
+      this.attendanceService.markAttendance(studentId, sessionId).subscribe({
+        next: (data) => {
+          const message = `Successfully marked attendance to ${this.students.data?.sessionAttendance[index].studentName} for session ${this.session?.sessionName}`;
+          this.notificationService.addNotification({
+            message: message,
+            type: 'success',
+          });
+        },
+        error: (error) => {
+          console.log(error);
+          student.attended = currentAttended;
+          checkbox.checked = currentAttended;
+          const message = `Failed to mark attendance to ${this.students.data?.sessionAttendance[index].studentName} for session ${this.session?.sessionName}`;
+          this.notificationService.addNotification({
+            message: message,
+            type: 'danger',
+          });
+        },
+      });
+    }
   }
 
   openModal(session: AttendanceDetailsModel) {

@@ -62,6 +62,20 @@
           }
         </div>
 
+        <!-- Confirm Password -->
+        <div class="mb-4">
+          <label class="form-label text-muted small">Confirm Password</label>
+          <input
+            type="password"
+            class="form-control form-control-lg rounded-3"
+            formControlName="confirmPassword"
+            placeholder="********"
+          />
+          @if (signupForm.errors?.["passwordMismatch"] &&
+          confirmPassword?.touched) {
+          <small class="text-danger">Passwords do not match</small>
+          }
+        </div>
         <!-- Submit -->
         <button
           class="btn btn-primary w-100 rounded-pill py-2 fw-semibold"

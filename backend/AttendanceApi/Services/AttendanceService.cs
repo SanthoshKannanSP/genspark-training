@@ -16,10 +16,10 @@ public class AttendanceService : IAttendanceService
         _sessionAttendanceRepository = sessionAttendanceRepository;
         _hubContext = hubContext;
     }
-    public async Task<Models.SessionAttendance> AddAttendanceToStudent(int studentId, int sessionId)
+    public async Task<SessionAttendance> AddAttendanceToStudent(AttendanceUpdateDTO attendanceUpdateDTO)
     {
         var attendances = await _sessionAttendanceRepository.GetAll();
-        var attendance = attendances.FirstOrDefault(s => s.StudentId == studentId && s.SessionId == sessionId);
+        var attendance = attendances.FirstOrDefault(s => s.StudentId == attendanceUpdateDTO.StudentId && s.SessionId == attendanceUpdateDTO.SessionId);
         if (attendance == null)
         {
             throw new Exception("Student not scheduled to attend session");
@@ -43,7 +43,7 @@ public class AttendanceService : IAttendanceService
         var attendances = await _sessionAttendanceRepository.GetAll();
         attendances = attendances.Where(s => s.SessionId == sessionId);
 
-        var response = attendances.Select(a => new SessionAttendanceDTO() { StudentId = a.StudentId, StudentName = a.Student.Name, Attended = a.Status == "Attended" });
+        var response = attendances.Select(a => new SessionAttendanceDTO() { StudentId = a.StudentId, StudentName = a.Student.Name, Attended = a.Status == "Attended", SessionId = a.SessionId });
 
         if (!string.IsNullOrWhiteSpace(studentName))
             response = response.Where(a => a.StudentName.ToLower().Contains(studentName.ToLower()));
@@ -82,10 +82,10 @@ public class AttendanceService : IAttendanceService
         return attendances.ToList();
     }
 
-    public async Task<Models.SessionAttendance> RemoveAttendanceFromStudent(int studentId, int sessionId)
+    public async Task<Models.SessionAttendance> RemoveAttendanceFromStudent(AttendanceUpdateDTO attendanceUpdateDTO)
     {
         var attendances = await _sessionAttendanceRepository.GetAll();
-        var attendance = attendances.FirstOrDefault(s => s.StudentId == studentId && s.SessionId == sessionId);
+        var attendance = attendances.FirstOrDefault(s => s.StudentId == attendanceUpdateDTO.StudentId && s.SessionId == attendanceUpdateDTO.SessionId);
         if (attendance == null)
         {
             throw new Exception("Student not scheduled to attend session");

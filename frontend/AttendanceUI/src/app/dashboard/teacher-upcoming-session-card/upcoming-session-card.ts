@@ -1,15 +1,26 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { SessionModel } from '../../models/session-model';
+import { FormatDatePipe } from '../../misc/format-date-pipe';
+import { HttpClientService } from '../../services/http-client-service';
+import { AttendanceService } from '../../services/attendance-service';
+import { SessionService } from '../../services/session-service';
+import { NotificationService } from '../../services/notification-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-upcoming-session-card',
-  imports: [],
+  imports: [FormatDatePipe],
   templateUrl: './upcoming-session-card.html',
   styleUrl: './upcoming-session-card.css',
 })
 export class UpcomingSessionCard {
   @Input() session!: SessionModel;
   @Output() viewSession = new EventEmitter<SessionModel>();
+  api = inject(HttpClientService);
+  attendanceService = inject(AttendanceService);
+  sessionService = inject(SessionService);
+  notificationService = inject(NotificationService);
+  router = inject(Router);
 
   showDetails() {
     this.viewSession.emit(this.session);
@@ -39,8 +50,32 @@ export class UpcomingSessionCard {
   }
 
   joinLive() {
-    if (this.session.status == 'Scheduled' || this.session.status == 'Live') {
+    if (this.api.hasRole('Teacher') && this.session.status == 'Scheduled') {
+      this.sessionService.makeSessionLive(this.session.sessionId).subscribe({
+        next: () => {
+          this.notificationService.addNotification({
+            message: 'Started Live Session. Joining...',
+            type: 'success',
+          });
+          window.open(this.session.sessionLink!, '_blank');
+          this.router.navigateByUrl('/session/live');
+        },
+        error: (error) => {
+          console.log(error);
+          this.notificationService.addNotification({
+            message: 'Unable to start session',
+            type: 'danger',
+          });
+        },
+      });
+    } else if (this.api.hasRole('Student') && this.session.status == 'Live') {
       window.open(this.session.sessionLink!, '_blank');
+    } else {
+      this.notificationService.addNotification({
+        message:
+          'Teacher has not started the session yet. Please try again after some time',
+        type: 'danger',
+      });
     }
   }
 }

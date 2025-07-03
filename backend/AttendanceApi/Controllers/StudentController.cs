@@ -41,12 +41,29 @@ public class StudentController : ControllerBase
         return Created("", student);
     }
 
-    [Authorize(Policy = "IsOwner")]
+    [Authorize(Roles = "Student")]
     [HttpDelete]
-    [Route("{studentId}")]
-    public async Task<ActionResult<Student>> DeactivateStudent(int studentId)
+    public async Task<ActionResult<Student>> DeactivateStudent()
     {
-        var student = await _studentService.DeactivateStudent(studentId);
+        var student = await _studentService.DeactivateStudent();
         return student;
+    }
+
+    [Authorize(Roles = "Student")]
+    [HttpGet]
+    [Route("Me")]
+    public async Task<ActionResult<StudentDetailsDTO>> GetMyDetails()
+    {
+        var student = await _studentService.GetMyDetails();
+        return student;
+    }
+
+    [Authorize(Roles = "Student")]
+    [HttpPost]
+    [Route("Update")]
+    public async Task<ActionResult<StudentDetailsDTO>> UpdateDetails(StudentDetailsDTO studentDetailsDTO)
+    {
+        var teacher = await _studentService.UpdateDetails(studentDetailsDTO);
+        return teacher;
     }
 }

@@ -29,6 +29,10 @@ public class AuthenticationService : IAuthenticationService
         var user = await _userRepository.Get(loginRequestDTO.Username);
         if (user == null)
             throw new Exception("User not found");
+        if (user.Teacher != null && user.Teacher.Status == "Deactivated")
+            throw new Exception("Account Deleted");
+        if (user.Student != null && user.Student.Status == "Deactivated")
+            throw new Exception("Account Deleted");
         var encryptedData = _encryptionService.EncryptData(new EncryptModel()
         {
             Data = loginRequestDTO.Password,

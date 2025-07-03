@@ -14,6 +14,7 @@ import { anyAuthGuard } from './any-auth-guard';
 import { TeacherSignupPage } from './teacher-signup-page/teacher-signup-page';
 import { StudentSignupPage } from './student-signup-page/student-signup-page';
 import { InvitePage } from './invite-page/invite-page';
+import { LiveSessionControl } from './live-session-control/live-session-control';
 
 export const routes: Routes = [
   { path: '', component: HeroPage },
@@ -23,6 +24,7 @@ export const routes: Routes = [
   { path: 'signup/teacher', component: TeacherSignupPage },
   { path: 'signup/student', component: StudentSignupPage },
   { path: 'invite/:sessionCode', component: InvitePage },
+  { path: 'session/live', component: LiveSessionControl },
   {
     path: 'portal',
     component: PortalPage,

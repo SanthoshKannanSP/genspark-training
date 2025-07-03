@@ -91,4 +91,12 @@ export class SessionService {
       true
     );
   }
+
+  makeSessionLive(sessionId: number) {
+    return this.api.post(
+      '/api/v1/Session/Make/Live',
+      { sessionId: sessionId },
+      true
+    );
+  }
 }

@@ -1,8 +1,16 @@
+.portal-components {
+  margin: 100px 20px;
+  width: 100%;
+}
+
 .portal-page {
   display: flex;
   flex-direction: row;
 }
 
-.portal-components {
-  margin: 50px auto;
+@media (min-width: 1200px) {
+  .portal-components {
+    width: 75%;
+    margin: 50px auto;
+  }
 }

@@ -148,7 +148,7 @@ public class SessionService : ISessionService
             allSessions = allSessions.Where(s => s.Status.ToLower() == status.ToLower());
 
         var totalRecords = allSessions.Count();
-        var paginatedSessions = allSessions.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+        var paginatedSessions = allSessions.OrderByDescending(s => s.Date).Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
         var response = new PaginatedResponseDTO<List<AllSessionRequestDTO>>
         {
@@ -252,7 +252,7 @@ public class SessionService : ISessionService
         if (role == "Teacher")
         {
             var sessions = await _sessionRepository.GetAll();
-            sessions = sessions.Where(s => s.MadeBy.Email == username && s.Status == "Scheduled").OrderByDescending(s => s.Date).ThenByDescending(s => s.SessionId).Take(3);
+            sessions = sessions.Where(s => s.MadeBy.Email == username && s.Status == "Scheduled" && s.Date >= DateOnly.FromDateTime(DateTime.Now)).OrderBy(s => s.Date).ThenBy(s => s.StartTime).Take(3);
 
             foreach (var session in sessions)
             {
@@ -273,7 +273,7 @@ public class SessionService : ISessionService
         else if (role == "Student")
         {
             var attendances = await _sessionAttendanceRepository.GetAll();
-            var sessions = attendances.Where(s => s.Student.Email == username && s.Session.Status == "Scheduled").OrderByDescending(s => s.Session.Date).ThenByDescending(s => s.SessionId).Take(3).Select(s => s.Session);
+            var sessions = attendances.Where(s => s.Student.Email == username && s.Session.Date >= DateOnly.FromDateTime(DateTime.Now)  && (s.Session.Status == "Scheduled" || s.Session.Status == "Live")).OrderBy(s => s.Session.Date).ThenBy(s => s.Session.StartTime).Take(3).Select(s => s.Session);
 
             foreach (var session in sessions)
             {
@@ -419,6 +419,48 @@ public class SessionService : ISessionService
 
         return paginatedResponse;
     }
+
+    public async Task<Session> MakeSessionLive(SessionIdDTO sessionIdDTO)
+    {
+        var session = await _sessionRepository.Get(sessionIdDTO.SessionId);
+        if (session == null)
+            throw new Exception("Session not found");
+        if (session.Status != "Scheduled")
+            throw new Exception("Unable to make session live");
+        session.Status = "Live";
+        session = await _sessionRepository.Update(session.SessionId, session);
+        return session;
+    }
+
+    public async Task<LiveSessionResponseDTO> GetLiveSession()
+    {
+        var username = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Name)?.Value;
+        if (string.IsNullOrEmpty(username))
+            throw new Exception("Username nor found");
+
+        var response = new LiveSessionResponseDTO();
+        var sessions = await _sessionRepository.GetAll();
+        var liveSession = sessions.FirstOrDefault(s => s.Status == "Live");
+        if (liveSession == null)
+            return response;
+
+        response.SessionId = liveSession.SessionId;
+        response.SessionName = liveSession.SessionName;
+        var attendances = await _sessionAttendanceRepository.GetAll();
+        attendances = attendances.Where(a => a.SessionId == liveSession.SessionId);
+        response.AttendingStudents = attendances.Where(a => a.Status == "Attended").Select(a => new LiveSessionStudentsDTO()
+        {
+            StudentId = a.StudentId,
+            StudentName = a.Student.Name
+        }).ToList();
+        response.NotJoinedStudents = attendances.Where(a => a.Status == "NotAttended").Select(a => new LiveSessionStudentsDTO()
+        {
+            StudentId = a.StudentId,
+            StudentName = a.Student.Name
+        }).ToList();
+        return response;
+    }
+
 
     private string GenerateSessionCode()
     {

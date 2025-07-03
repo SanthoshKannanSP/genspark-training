@@ -4,7 +4,7 @@ export class SessionAttendanceModel {
   sessionAttendance: StudentAttendance[] = [];
 }
 
-class StudentAttendance {
+export class StudentAttendance {
   studentId: number = 0;
   studentName: string = '';
   sessionId: number = 0;
