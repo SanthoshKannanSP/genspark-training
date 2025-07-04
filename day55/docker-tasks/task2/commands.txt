@@ -1,0 +1,11 @@
+docker pull mysql:oraclelinux9
+docker run --name task-2 -e MYSQL_ROOT_PASSWORD=admin123 -e MYSQL_DATABASE=sampledb -d -v mydbdata:/var/lib/mysql mysql:oraclelinux9
+
+Terminal inside docker container
+
+mysql -p sampledb
+CREATE TABLE user(userid int, username VARCHAR(30));
+INSERT INTO user VALUES (1,'John Doe');
+INSERT INTO user VALUES (1,'Jane Doe');
+select * from user;
+

@@ -1,0 +1,2 @@
+docker build -t task-1 .
+docker run -d -p 3000:3000 task-1
