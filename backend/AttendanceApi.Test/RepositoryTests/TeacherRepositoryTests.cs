@@ -72,13 +72,13 @@ public class TeacherRepositoryTests
         _context.Teachers.Add(teacher);
         _context.SaveChanges();
 
-        var updatedTeacher = new Teacher { Name = "Jane Doe", Email = "janedoe@gmail.com", Status = "Deactivated", TeacherId = 1 };
+        var updatedTeacher = new Teacher { Name = "John Doe Smith", Email = "johndoe@gmail.com", Status = "Deactivated", TeacherId = 1 };
         var result = await _repository.Update(updatedTeacher.TeacherId, updatedTeacher);
 
         Assert.That(result,Is.Not.Null);
         Assert.That(result.TeacherId, Is.EqualTo(1));
-        Assert.That(result.Name, Is.EqualTo("Jane Doe"));
-        Assert.That(result.Email, Is.EqualTo("janedoe@gmail.com"));
+        Assert.That(result.Name, Is.EqualTo("John Doe Smith"));
+        Assert.That(result.Email, Is.EqualTo("johndoe@gmail.com"));
         Assert.That(result.Status, Is.EqualTo("Deactivated"));
     }
 

@@ -22,7 +22,7 @@ public class SessionRepositoryTests
     [Test]
     public async Task Add_AddsSessionSuccessfully()
     {
-        var session = new Session {  Date = DateOnly.FromDateTime(DateTime.Parse("2025-06-10")), TeacherId = 1, SessionName = "C# basics", Status="Scheduled"};
+        var session = new Session {  Date = DateOnly.FromDateTime(DateTime.Parse("2025-06-10")), TeacherEmail = "johndoe@gmail.com", SessionName = "C# basics", Status="Scheduled"};
 
         var result = await _repository.Add(session);
 
@@ -30,21 +30,21 @@ public class SessionRepositoryTests
         Assert.That(result.SessionId, Is.EqualTo(1));
         Assert.That(result.SessionName, Is.EqualTo("C# basics"));
         Assert.That(result.Date, Is.EqualTo(DateOnly.FromDateTime(DateTime.Parse("2025-06-10"))));
-        Assert.That(result.TeacherId, Is.EqualTo(1));
+        Assert.That(result.TeacherEmail, Is.EqualTo( "johndoe@gmail.com"));
         Assert.That(_context.Sessions.Count(), Is.EqualTo(1));
     }
 
     [Test]
     public async Task Get_ReturnsCorrectSession()
     {
-        var session = new Session {  Date = DateOnly.FromDateTime(DateTime.Parse("2025-06-10")), TeacherId = 1, SessionName = "C# basics", Status="Scheduled", MadeBy = new Teacher() {TeacherId=1}};
+        var session = new Session {  SessionId=1, Date = DateOnly.FromDateTime(DateTime.Parse("2025-06-10")), TeacherEmail = "johndoe@gmail.com", SessionName = "C# basics", Status="Scheduled", MadeBy = new Teacher() {TeacherId=1}};
         _context.Sessions.Add(session);
         _context.SaveChanges();
 
         var s = _context.Sessions.Where(s => true);
         foreach (var w in s.ToList())
         {
-            System.Console.WriteLine(w.SessionId);
+            System.Console.WriteLine("asdasd"+w.TeacherEmail);
         }
 
         var result = await _repository.Get(1);
@@ -53,15 +53,14 @@ public class SessionRepositoryTests
         Assert.That(result.SessionId, Is.EqualTo(1));
         Assert.That(result.SessionName, Is.EqualTo("C# basics"));
         Assert.That(result.Date, Is.EqualTo(DateOnly.FromDateTime(DateTime.Parse("2025-06-10"))));
-        Assert.That(result.TeacherId, Is.EqualTo(1));
     }
 
     [Test]
     public async Task GetAll_ReturnsAllSessions()
     {
         _context.Sessions.AddRange(
-            new Session { Date = DateOnly.FromDateTime(DateTime.Parse("2025-06-10")), TeacherId = 1, SessionName = "C# basics", Status="Scheduled"},
-            new Session { Date = DateOnly.FromDateTime(DateTime.Parse("2025-06-22")), TeacherId = 2, SessionName = "Python basics", Status="Completed"}
+            new Session { Date = DateOnly.FromDateTime(DateTime.Parse("2025-06-10")), TeacherEmail = "johndoe@gmail.com", SessionName = "C# basics", Status="Scheduled"},
+            new Session { Date = DateOnly.FromDateTime(DateTime.Parse("2025-06-22")), TeacherEmail = "johndoe@gmail.com", SessionName = "Python basics", Status="Completed"}
         );
         _context.SaveChanges();
 
@@ -74,24 +73,24 @@ public class SessionRepositoryTests
     [Test]
     public async Task Update_UpdatesSessionSuccessfully()
     {
-        var session = new Session { SessionId = 1, Date = DateOnly.FromDateTime(DateTime.Parse("2025-06-10")), TeacherId = 1, SessionName = "C# basics", Status="Scheduled", MadeBy = new Teacher() {TeacherId=1}};
+        var session = new Session { SessionId = 1, Date = DateOnly.FromDateTime(DateTime.Parse("2025-06-10")), TeacherEmail = "johndoe@gmail.com", SessionName = "C# basics", Status="Scheduled", MadeBy = new Teacher() {TeacherId=1}};
         _context.Sessions.Add(session);
         _context.SaveChanges();
 
-        var updatedSession = new Session {SessionId=1, Date = DateOnly.FromDateTime(DateTime.Parse("2025-06-22")), TeacherId = 1, SessionName = "Python basics", Status="Scheduled", MadeBy = new Teacher() {TeacherId=1}};
+        var updatedSession = new Session {SessionId=1, Date = DateOnly.FromDateTime(DateTime.Parse("2025-06-22")), TeacherEmail = "johndoe@gmail.com", SessionName = "Python basics", Status="Scheduled", MadeBy = new Teacher() {TeacherId=1}};
         var result = await _repository.Update(updatedSession.SessionId, updatedSession);
 
         Assert.That(result, Is.Not.Null);
         Assert.That(result.SessionId, Is.EqualTo(1));
         Assert.That(result.SessionName, Is.EqualTo("Python basics"));
         Assert.That(result.Date, Is.EqualTo(DateOnly.FromDateTime(DateTime.Parse("2025-06-22"))));
-        Assert.That(result.TeacherId, Is.EqualTo(1));
+        Assert.That(result.TeacherEmail, Is.EqualTo("johndoe@gmail.com"));
     }
 
     [Test]
     public async Task Delete_RemovesSessionSuccessfully()
     {
-        var session = new Session { Date = DateOnly.FromDateTime(DateTime.Parse("2025-06-10")), TeacherId = 1, SessionName = "C# basics", Status="Scheduled", MadeBy = new Teacher() {TeacherId=1}};
+        var session = new Session { Date = DateOnly.FromDateTime(DateTime.Parse("2025-06-10")), TeacherEmail = "johndoe@gmail.com", SessionName = "C# basics", Status="Scheduled", MadeBy = new Teacher() {TeacherId=1}};
         _context.Sessions.Add(session);
         _context.SaveChanges();
 
@@ -101,7 +100,6 @@ public class SessionRepositoryTests
         Assert.That(result.SessionId, Is.EqualTo(1));
         Assert.That(result.SessionName, Is.EqualTo("C# basics"));
         Assert.That(result.Date, Is.EqualTo(DateOnly.FromDateTime(DateTime.Parse("2025-06-10"))));
-        Assert.That(result.TeacherId, Is.EqualTo(1));
         Assert.That(_context.Sessions.Count(), Is.EqualTo(0));
     }
 

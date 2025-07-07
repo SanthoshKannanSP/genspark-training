@@ -22,7 +22,7 @@ public class StudentRepositoryTests
     [Test]
     public async Task Add_AddsStudentSuccessfully()
     {
-        var student = new Student { Name = "John Doe", Email="johndoe@gmail.com",Status="Active",StudentId=1, Age=20, Gender="Male" };
+        var student = new Student { Name = "John Doe", Email="johndoe@gmail.com",Status="Active",StudentId=1, DateOfBirth = DateOnly.FromDateTime(DateTime.Parse("2025-01-02")), Gender="Male" };
 
         var result = await _repository.Add(student);
 
@@ -31,7 +31,7 @@ public class StudentRepositoryTests
         Assert.That(result.Name, Is.EqualTo("John Doe"));
         Assert.That(result.Email, Is.EqualTo("johndoe@gmail.com"));
         Assert.That(result.Status, Is.EqualTo("Active"));
-        Assert.That(result.Age, Is.EqualTo(20));
+        Assert.That(result.DateOfBirth, Is.EqualTo( DateOnly.FromDateTime(DateTime.Parse("2025-01-02"))));
         Assert.That(result.Gender, Is.EqualTo("Male"));
         Assert.That(_context.Students.Count(), Is.EqualTo(1));
     }
@@ -39,7 +39,7 @@ public class StudentRepositoryTests
     [Test]
     public async Task Get_ReturnsCorrectStudent()
     {
-        var student = new Student { Name = "John Doe", Email = "johndoe@gmail.com", Status = "Active", StudentId = 1, Age = 20, Gender = "Male" };
+        var student = new Student { Name = "John Doe", Email = "johndoe@gmail.com", Status = "Active", StudentId = 1, DateOfBirth = DateOnly.FromDateTime(DateTime.Parse("2025-01-02")), Gender = "Male" };
         _context.Students.Add(student);
         _context.SaveChanges();
 
@@ -50,7 +50,7 @@ public class StudentRepositoryTests
         Assert.That(result.Name, Is.EqualTo("John Doe"));
         Assert.That(result.Email, Is.EqualTo("johndoe@gmail.com"));
         Assert.That(result.Status, Is.EqualTo("Active"));
-        Assert.That(result.Age, Is.EqualTo(20));
+        Assert.That(result.DateOfBirth, Is.EqualTo(DateOnly.FromDateTime(DateTime.Parse("2025-01-02"))));
         Assert.That(result.Gender, Is.EqualTo("Male"));
     }
 
@@ -58,8 +58,8 @@ public class StudentRepositoryTests
     public async Task GetAll_ReturnsAllStudents()
     {
         _context.Students.AddRange(
-            new Student { Name = "John Doe", Email="johndoe@gmail.com",Status="Active",StudentId=1, Age = 20, Gender = "Male" },
-            new Student { Name = "Jane Doe", Email="janedoe@gmail.com",Status="Deactivated",StudentId=2, Age = 22, Gender = "Female" }
+            new Student { Name = "John Doe", Email="johndoe@gmail.com",Status="Active",StudentId=1, DateOfBirth = DateOnly.FromDateTime(DateTime.Parse("2025-01-02")), Gender = "Male" },
+            new Student { Name = "Jane Doe", Email="janedoe@gmail.com",Status="Deactivated",StudentId=2, DateOfBirth = DateOnly.FromDateTime(DateTime.Parse("2025-01-02")), Gender = "Female" }
         );
         _context.SaveChanges();
 
@@ -72,11 +72,11 @@ public class StudentRepositoryTests
     [Test]
     public async Task Update_UpdatesStudentSuccessfully()
     {
-        var student = new Student { Name = "John Doe", Email = "johndoe@gmail.com", Status = "Active", StudentId = 1, Age = 20, Gender = "Male" };
+        var student = new Student { Name = "John Doe", Email = "johndoe@gmail.com", Status = "Active", StudentId = 1, DateOfBirth = DateOnly.FromDateTime(DateTime.Parse("2025-01-02")), Gender = "Male" };
         _context.Students.Add(student);
         _context.SaveChanges();
 
-        var updatedStudent = new Student { Name = "Jane Doe", Email = "janedoe@gmail.com", Status = "Deactivated", StudentId = 1, Age = 22, Gender = "Female" };
+        var updatedStudent = new Student { Name = "Jane Doe", Email = "janedoe@gmail.com", Status = "Deactivated", StudentId = 1,DateOfBirth = DateOnly.FromDateTime(DateTime.Parse("2025-01-02")), Gender = "Female" };
         var result = await _repository.Update(updatedStudent.StudentId, updatedStudent);
 
         Assert.That(result, Is.Not.Null);
@@ -84,14 +84,14 @@ public class StudentRepositoryTests
         Assert.That(result.Name, Is.EqualTo("Jane Doe"));
         Assert.That(result.Email, Is.EqualTo("janedoe@gmail.com"));
         Assert.That(result.Status, Is.EqualTo("Deactivated"));
-        Assert.That(result.Age, Is.EqualTo(22));
+        Assert.That(result.DateOfBirth, Is.EqualTo(DateOnly.FromDateTime(DateTime.Parse("2025-01-02"))));
         Assert.That(result.Gender, Is.EqualTo("Female"));
     }
 
     [Test]
     public async Task Delete_RemovesStudentSuccessfully()
     {
-        var student = new Student { Name = "John Doe", Email = "johndoe@gmail.com", Status = "Active", StudentId = 1, Age = 20, Gender = "Male" };
+        var student = new Student { Name = "John Doe", Email = "johndoe@gmail.com", Status = "Active", StudentId = 1, DateOfBirth = DateOnly.FromDateTime(DateTime.Parse("2025-01-02")), Gender = "Male" };
         _context.Students.Add(student);
         _context.SaveChanges();
 
@@ -102,7 +102,7 @@ public class StudentRepositoryTests
         Assert.That(result.Name, Is.EqualTo("John Doe"));
         Assert.That(result.Email, Is.EqualTo("johndoe@gmail.com"));
         Assert.That(result.Status, Is.EqualTo("Active"));
-        Assert.That(result.Age, Is.EqualTo(20));
+        Assert.That(result.DateOfBirth, Is.EqualTo(DateOnly.FromDateTime(DateTime.Parse("2025-01-02"))));
         Assert.That(result.Gender, Is.EqualTo("Male"));
         Assert.That(_context.Students.Count(), Is.EqualTo(0));
     }

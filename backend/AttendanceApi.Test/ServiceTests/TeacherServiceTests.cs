@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AttendanceApi.Contexts;
 using AttendanceApi.Interfaces;
@@ -6,6 +7,7 @@ using AttendanceApi.Models.DTOs;
 using AttendanceApi.Repositories;
 using AttendanceApi.Services;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
@@ -17,6 +19,7 @@ public class TeacherServiceTests
     private Mock<IRepository<string, User>> _userRepositoryMock;
     private Mock<IEncryptionService> _encryptionServiceMock;
     private Mock<IMapper> _mapperMock;
+    private Mock<IHttpContextAccessor> _httpContextAccessor;
 
     [SetUp]
     public async Task Setup()
@@ -24,6 +27,7 @@ public class TeacherServiceTests
         _teacherRepositoryMock = new();
         _userRepositoryMock = new();
         _encryptionServiceMock = new();
+        _httpContextAccessor = new();
         _mapperMock = new();
     }
 
@@ -70,7 +74,7 @@ public class TeacherServiceTests
         _mapperMock.Setup(m => m.Map<User>(addTeacherRequestDTO)).Returns(mappedUser);
         _mapperMock.Setup(m => m.Map<Teacher>(addTeacherRequestDTO)).Returns(mappedTeacher);
         _encryptionServiceMock.Setup(e => e.EncryptData(It.IsAny<EncryptModel>())).Returns(encryptedData);
-        var teacherService = new TeacherService(_teacherRepositoryMock.Object, _userRepositoryMock.Object, _encryptionServiceMock.Object, _mapperMock.Object);
+        var teacherService = new TeacherService(_teacherRepositoryMock.Object, _userRepositoryMock.Object, _encryptionServiceMock.Object, _mapperMock.Object, _httpContextAccessor.Object);
 
         var teacher = await teacherService.AddTeacher(addTeacherRequestDTO);
 
@@ -111,24 +115,36 @@ public class TeacherServiceTests
         _encryptionServiceMock.Setup(e => e.EncryptData(It.IsAny<EncryptModel>())).Returns(encryptedData);
         _userRepositoryMock.Setup(r => r.Add(It.IsAny<User>()))
                 .ThrowsAsync(new Exception("Unable to add User"));
-        var teacherService = new TeacherService(_teacherRepositoryMock.Object, _userRepositoryMock.Object, _encryptionServiceMock.Object, _mapperMock.Object);
+        var teacherService = new TeacherService(_teacherRepositoryMock.Object, _userRepositoryMock.Object, _encryptionServiceMock.Object, _mapperMock.Object, _httpContextAccessor.Object);
 
         var ex = Assert.ThrowsAsync<Exception>(async () =>
                 await teacherService.AddTeacher(addTeacherRequestDTO));
 
-        Assert.That(ex.Message, Is.EqualTo("Unable to create Teacher"));
+        Assert.That(ex.Message, Is.EqualTo("Unable to add User"));
     }
 
     [Test]
     public async Task DeactivateTeacher_ShouldSetStatusToDeactivated()
     {
-        var createdTeacher = new Teacher()
+        var username = "johndoe@gmail.com";
+        var role = "Teacher";
+
+        var claims = new List<Claim>
         {
+            new Claim(ClaimTypes.Name, username),
+            new Claim(ClaimTypes.Role, role)
+        };
+        var identity = new ClaimsIdentity(claims, "mock");
+        var principal = new ClaimsPrincipal(identity);
+        var context = new DefaultHttpContext { User = principal };
+
+
+        var createdTeacher = new List<Teacher>() { new Teacher(){
             Email = "johndoe@gmail.com",
             Name = "John Doe",
             Status = "Active",
             TeacherId = 1
-        };
+        } };
         var updatedTeacher = new Teacher()
         {
             Email = "johndoe@gmail.com",
@@ -136,12 +152,14 @@ public class TeacherServiceTests
             Status = "Deactivated",
             TeacherId = 1
         };
-        _teacherRepositoryMock.Setup(t => t.Get(1)).ReturnsAsync(createdTeacher);
+
+        _httpContextAccessor.Setup(x => x.HttpContext).Returns(context);
+        _teacherRepositoryMock.Setup(t => t.GetAll()).ReturnsAsync(createdTeacher.AsQueryable());
         _teacherRepositoryMock.Setup(t => t.Update(1, It.IsAny<Teacher>())).ReturnsAsync(updatedTeacher);
-        var teacherService = new TeacherService(_teacherRepositoryMock.Object, _userRepositoryMock.Object, _encryptionServiceMock.Object, _mapperMock.Object);
+        var teacherService = new TeacherService(_teacherRepositoryMock.Object, _userRepositoryMock.Object, _encryptionServiceMock.Object, _mapperMock.Object, _httpContextAccessor.Object);
 
 
-        var teacher = await teacherService.DeactivateTeacher(1);
+        var teacher = await teacherService.DeactivateTeacher();
 
         Assert.That(teacher.TeacherId, Is.EqualTo(1));
         Assert.That(teacher.Name, Is.EqualTo("John Doe"));
@@ -152,18 +170,44 @@ public class TeacherServiceTests
     [Test]
     public async Task DeactivateTeacher_ShouldThrow_WhenTeacherIsNull()
     {
+        var username = "johndoe@gmail.com";
+        var role = "Teacher";
+
+         var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, username),
+            new Claim(ClaimTypes.Role, role)
+        };
+        var identity = new ClaimsIdentity(claims, "mock");
+        var principal = new ClaimsPrincipal(identity);
+        var context = new DefaultHttpContext { User = principal };
+
+        _httpContextAccessor.Setup(x => x.HttpContext).Returns(context);
+
         _teacherRepositoryMock.Setup(t => t.Get(It.IsAny<int>())).ReturnsAsync((Teacher?)null);
-        var teacherService = new TeacherService(_teacherRepositoryMock.Object, _userRepositoryMock.Object, _encryptionServiceMock.Object, _mapperMock.Object);
+        var teacherService = new TeacherService(_teacherRepositoryMock.Object, _userRepositoryMock.Object, _encryptionServiceMock.Object, _mapperMock.Object, _httpContextAccessor.Object);
 
         var ex = Assert.ThrowsAsync<Exception>(async () =>
-                await teacherService.DeactivateTeacher(1));
+                await teacherService.DeactivateTeacher());
 
-        Assert.That(ex.Message, Is.EqualTo("Teacher with given Id not found"));
+        Assert.That(ex.Message, Is.EqualTo("Teacher not found"));
     }
 
     [Test]
     public async Task DeactivateTeacher_ShouldThrow_WhenTeacherAlreadyDeactivated()
     {
+        var username = "johndoe@gmail.com";
+        var role = "Teacher";
+
+         var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, username),
+            new Claim(ClaimTypes.Role, role)
+        };
+        var identity = new ClaimsIdentity(claims, "mock");
+        var principal = new ClaimsPrincipal(identity);
+        var context = new DefaultHttpContext { User = principal };
+
         Teacher teacher = new()
         {
             TeacherId = 1,
@@ -171,12 +215,14 @@ public class TeacherServiceTests
             Email = "johndoe@gmail.com",
             Status = "Deactivated"
         };
+
+        _httpContextAccessor.Setup(x => x.HttpContext).Returns(context);
         _teacherRepositoryMock.Setup(t => t.Get(It.IsAny<int>())).ReturnsAsync(teacher);
-        var teacherService = new TeacherService(_teacherRepositoryMock.Object, _userRepositoryMock.Object, _encryptionServiceMock.Object, _mapperMock.Object);
+        var teacherService = new TeacherService(_teacherRepositoryMock.Object, _userRepositoryMock.Object, _encryptionServiceMock.Object, _mapperMock.Object, _httpContextAccessor.Object);
 
-        var ex = Assert.ThrowsAsync<Exception>(async () => await teacherService.DeactivateTeacher(1));
+        var ex = Assert.ThrowsAsync<Exception>(async () => await teacherService.DeactivateTeacher());
 
-        Assert.That(ex.Message, Is.EqualTo("Teacher is already deactivated"));
+        Assert.That(ex.Message, Is.EqualTo("Teacher not found"));
     }
 
     [Test]
@@ -187,8 +233,8 @@ public class TeacherServiceTests
             new Teacher() {TeacherId=1, Name="John Doe",Email="johndoe@gmail.com",Status="Active"},
             new Teacher() {TeacherId=2, Name="Jane Doe",Email="janedoe@gmail.com",Status="Deactivated"}
         };
-        _teacherRepositoryMock.Setup(t => t.GetAll()).ReturnsAsync(teachers);
-        var teacherService = new TeacherService(_teacherRepositoryMock.Object, _userRepositoryMock.Object, _encryptionServiceMock.Object, _mapperMock.Object);
+        _teacherRepositoryMock.Setup(t => t.GetAll()).ReturnsAsync(teachers.AsQueryable());
+        var teacherService = new TeacherService(_teacherRepositoryMock.Object, _userRepositoryMock.Object, _encryptionServiceMock.Object, _mapperMock.Object, _httpContextAccessor.Object);
 
         var result = await teacherService.GetAllActiveTeachers(1,10);
 
@@ -202,8 +248,8 @@ public class TeacherServiceTests
     [Test]
     public async Task GetAllActiveTeachers_ShouldThrow_WhenTeacherListIsNull()
     {
-        _teacherRepositoryMock.Setup(t => t.GetAll()).ReturnsAsync((List<Teacher>)null);
-        var teacherService = new TeacherService(_teacherRepositoryMock.Object, _userRepositoryMock.Object, _encryptionServiceMock.Object, _mapperMock.Object);
+        _teacherRepositoryMock.Setup(t => t.GetAll()).ReturnsAsync(() => null);
+        var teacherService = new TeacherService(_teacherRepositoryMock.Object, _userRepositoryMock.Object, _encryptionServiceMock.Object, _mapperMock.Object, _httpContextAccessor.Object);
 
         var ex = Assert.ThrowsAsync<Exception>(async () => await teacherService.GetAllActiveTeachers(1,10));
 
@@ -221,7 +267,7 @@ public class TeacherServiceTests
             Status = "Active"
         };
         _teacherRepositoryMock.Setup(t => t.Get(1)).ReturnsAsync(teacher);
-        var teacherService = new TeacherService(_teacherRepositoryMock.Object, _userRepositoryMock.Object, _encryptionServiceMock.Object, _mapperMock.Object);
+        var teacherService = new TeacherService(_teacherRepositoryMock.Object, _userRepositoryMock.Object, _encryptionServiceMock.Object, _mapperMock.Object, _httpContextAccessor.Object);
 
         var result = await teacherService.GetTeacher(1);
 
@@ -236,7 +282,7 @@ public class TeacherServiceTests
     public async Task GetTeacher_ShouldThrow_WhenTeacherWithSpecifiedIdIsNull()
     {
         _teacherRepositoryMock.Setup(t => t.Get(1)).ReturnsAsync((Teacher)null);
-        var teacherService = new TeacherService(_teacherRepositoryMock.Object, _userRepositoryMock.Object, _encryptionServiceMock.Object, _mapperMock.Object);
+        var teacherService = new TeacherService(_teacherRepositoryMock.Object, _userRepositoryMock.Object, _encryptionServiceMock.Object, _mapperMock.Object, _httpContextAccessor.Object);
 
         var ex = Assert.ThrowsAsync<Exception>(async () => await teacherService.GetTeacher(1));
 
