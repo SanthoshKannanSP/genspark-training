@@ -2,14 +2,14 @@ import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { SessionModel } from '../../models/session-model';
 import { FormatDatePipe } from '../../misc/format-date-pipe';
 import { HttpClientService } from '../../services/http-client-service';
-import { AttendanceService } from '../../services/attendance-service';
 import { SessionService } from '../../services/session-service';
 import { NotificationService } from '../../services/notification-service';
 import { Router } from '@angular/router';
+import { FormatTimePipe } from '../../misc/format-time-pipe';
 
 @Component({
   selector: 'app-upcoming-session-card',
-  imports: [FormatDatePipe],
+  imports: [FormatDatePipe, FormatTimePipe],
   templateUrl: './upcoming-session-card.html',
   styleUrl: './upcoming-session-card.css',
 })
@@ -17,7 +17,6 @@ export class UpcomingSessionCard {
   @Input() session!: SessionModel;
   @Output() viewSession = new EventEmitter<SessionModel>();
   api = inject(HttpClientService);
-  attendanceService = inject(AttendanceService);
   sessionService = inject(SessionService);
   notificationService = inject(NotificationService);
   router = inject(Router);

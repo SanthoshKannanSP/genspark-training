@@ -101,4 +101,13 @@ export class AttendanceService {
       true
     );
   }
+
+  generateAttendanceReport(sessionId: number) {
+    return this.api.get(
+      `/api/v1/Attendance/${sessionId}/Report`,
+      true,
+      {},
+      'blob'
+    );
+  }
 }

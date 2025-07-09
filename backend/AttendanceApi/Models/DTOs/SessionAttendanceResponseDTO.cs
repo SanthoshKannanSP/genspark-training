@@ -1,4 +1,4 @@
-using AttendanceApi.Models.DTOs;
+namespace AttendanceApi.Models.DTOs;
 
 public class SessionAttendanceResponseDTO
 {

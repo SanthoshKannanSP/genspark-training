@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using AttendanceApi.Interfaces;
 using AttendanceApi.Models;
 using AttendanceApi.Models.DTOs;
@@ -13,9 +12,12 @@ namespace AttendanceApi.Controllers;
 public class StudentController : ControllerBase
 {
     private readonly IStudentService _studentService;
-    public StudentController(IStudentService studentService)
+    private readonly ISettingsService _settingsService;
+
+    public StudentController(IStudentService studentService, ISettingsService settingsService)
     {
         _studentService = studentService;
+        _settingsService = settingsService;
     }
 
     [HttpGet]
@@ -38,6 +40,7 @@ public class StudentController : ControllerBase
     public async Task<ActionResult<Student>> AddStudent(AddStudentRequestDTO addStudentRequestDTO)
     {
         var student = await _studentService.AddStudent(addStudentRequestDTO);
+        await _settingsService.CreateDefaultSettings(student.Email);
         return Created("", student);
     }
 

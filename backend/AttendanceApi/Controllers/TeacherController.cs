@@ -13,9 +13,12 @@ namespace AttendanceApi.Controllers;
 public class TeacherController : ControllerBase
 {
     private readonly ITeacherService _teacherService;
-    public TeacherController(ITeacherService teacherService)
+        private readonly ISettingsService _settingsService;
+
+    public TeacherController(ITeacherService teacherService, ISettingsService settingsService)
     {
         _teacherService = teacherService;
+        _settingsService = settingsService;
     }
 
     [HttpGet]
@@ -37,6 +40,7 @@ public class TeacherController : ControllerBase
     public async Task<ActionResult<Teacher>> AddTeacher(AddTeacherRequestDTO addTeacherRequestDTO)
     {
         var teacher = await _teacherService.AddTeacher(addTeacherRequestDTO);
+        await _settingsService.CreateDefaultSettings(teacher.Email);
         return Created("", teacher);
     }
 

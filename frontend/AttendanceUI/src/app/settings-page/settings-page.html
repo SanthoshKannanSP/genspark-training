@@ -1,19 +1,10 @@
 <div class="container">
   <h1>Settings</h1>
-  <form>
+  <form [formGroup]="settingsForm" (submit)="updateSettings()">
     <div class="col-lg-2 col-md-4 col-sm-6">
-      <label class="form-label">Theme</label>
-      <select class="form-select" formControlName="status">
-        <option value="" [defaultSelected]="true">Light</option>
-        <option value="scheduled">Dark</option>
-      </select>
       <div>
         <label class="form-label">Date Format</label>
-        <select
-          class="form-select"
-          formControlName="dateFormat"
-          (change)="onChange($event)"
-        >
+        <select class="form-select" formControlName="dateFormat">
           <option value="dd/MM/yyyy" [defaultSelected]="true">
             DD/MM/YYYY
           </option>
@@ -26,9 +17,12 @@
       <div>
         <label class="form-label">Time Format</label>
         <select class="form-select" formControlName="timeFormat">
-          <option value="">1:00 PM</option>
-          <option value="scheduled">13:00</option>
+          <option value="hh:mm aa">1:00 PM</option>
+          <option value="HH:mm">13:00</option>
         </select>
+      </div>
+      <div>
+        <button type="submit" class="btn btn-primary">Update Settings</button>
       </div>
     </div>
   </form>

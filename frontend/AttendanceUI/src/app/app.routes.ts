@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { HeroPage } from './hero-page/hero-page';
 import { LoginPage } from './login-page/login-page';
-import { SignUpChoosePage } from './sign-up-choose-page/sign-up-choose-page';
 import { DashboardPage } from './dashboard/dashboard-page/dashboard-page';
 import { PortalPage } from './portal-page/portal-page';
 import { MySessionsPage } from './my-sessions/my-sessions-page/my-sessions-page';
@@ -20,11 +19,18 @@ export const routes: Routes = [
   { path: '', component: HeroPage },
   { path: 'unauthorized', component: UnauthorizedPage },
   { path: 'login', component: LoginPage },
-  { path: 'signup', component: SignUpChoosePage },
   { path: 'signup/teacher', component: TeacherSignupPage },
   { path: 'signup/student', component: StudentSignupPage },
-  { path: 'invite/:sessionCode', component: InvitePage },
-  { path: 'session/live', component: LiveSessionControl },
+  {
+    path: 'invite/:sessionCode',
+    component: InvitePage,
+    canActivate: [studentAuthGuard],
+  },
+  {
+    path: 'session/live',
+    component: LiveSessionControl,
+    canActivate: [teacherAuthGuard],
+  },
   {
     path: 'portal',
     component: PortalPage,
@@ -42,7 +48,7 @@ export const routes: Routes = [
       {
         path: 'attendance',
         component: AttendanceDetailsPage,
-        canActivate: [anyAuthGuard],
+        canActivate: [teacherAuthGuard],
       },
       {
         path: 'settings',

@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { HttpClientService } from '../services/http-client-service';
@@ -18,7 +17,7 @@ export class Sidebar {
   logout() {
     this.api.logout().subscribe({
       next: (data) => {
-        console.log(this.sidebarCloseButton.nativeElement.click());
+        this.sidebarCloseButton.nativeElement.click();
         this.router.navigateByUrl('/');
       },
       error: (error) => console.log(error),

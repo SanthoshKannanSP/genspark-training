@@ -93,6 +93,28 @@ namespace AttendanceApi.Migrations
                     b.ToTable("SessionAttendances");
                 });
 
+            modelBuilder.Entity("AttendanceApi.Models.Settings", b =>
+                {
+                    b.Property<string>("Username")
+                        .HasColumnType("text");
+
+                    b.Property<string>("DateFormat")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Theme")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("TimeFormat")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Username");
+
+                    b.ToTable("Settings");
+                });
+
             modelBuilder.Entity("AttendanceApi.Models.Student", b =>
                 {
                     b.Property<int>("StudentId")
@@ -216,6 +238,17 @@ namespace AttendanceApi.Migrations
                     b.Navigation("Student");
                 });
 
+            modelBuilder.Entity("AttendanceApi.Models.Settings", b =>
+                {
+                    b.HasOne("AttendanceApi.Models.User", "User")
+                        .WithOne("Settings")
+                        .HasForeignKey("AttendanceApi.Models.Settings", "Username")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("AttendanceApi.Models.Student", b =>
                 {
                     b.HasOne("AttendanceApi.Models.User", "User")
@@ -255,6 +288,8 @@ namespace AttendanceApi.Migrations
 
             modelBuilder.Entity("AttendanceApi.Models.User", b =>
                 {
+                    b.Navigation("Settings");
+
                     b.Navigation("Student");
 
                     b.Navigation("Teacher");

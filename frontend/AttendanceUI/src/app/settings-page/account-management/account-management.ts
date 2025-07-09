@@ -39,11 +39,8 @@ export class AccountManagement {
     this.accountService.account$.subscribe({
       next: (data) => {
         this.accountForm.patchValue(data);
-        console.log(data);
       },
     });
-
-    this.accountService.getAccountDetails();
   }
 
   pastDateValidator(control: any) {

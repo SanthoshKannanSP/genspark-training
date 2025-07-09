@@ -4,16 +4,20 @@ using AttendanceApi.Misc;
 using AttendanceApi.Models;
 using AttendanceApi.Models.DTOs;
 using Microsoft.AspNetCore.SignalR;
+using QuestPDF.Fluent;
 
 namespace AttendanceApi.Services;
 
 public class AttendanceService : IAttendanceService
 {
-    private readonly IRepository<int, Models.SessionAttendance> _sessionAttendanceRepository;
+    private readonly IRepository<int, SessionAttendance> _sessionAttendanceRepository;
+    private readonly IRepository<int, Session> _sessionRepository;
+
     private readonly IHubContext<NotificationHub> _hubContext;
-    public AttendanceService(IRepository<int, Models.SessionAttendance> sessionAttendanceRepository, IHubContext<NotificationHub> hubContext)
+    public AttendanceService(IRepository<int, SessionAttendance> sessionAttendanceRepository, IRepository<int, Session> sessionRepository, IHubContext<NotificationHub> hubContext)
     {
         _sessionAttendanceRepository = sessionAttendanceRepository;
+        _sessionRepository = sessionRepository;
         _hubContext = hubContext;
     }
     public async Task<SessionAttendance> AddAttendanceToStudent(AttendanceUpdateDTO attendanceUpdateDTO)
@@ -31,7 +35,16 @@ public class AttendanceService : IAttendanceService
 
         attendance.Status = "Attended";
         attendance = await _sessionAttendanceRepository.Update(attendance.SessionAttendanceId, attendance);
-        await _hubContext.Clients.All.SendAsync("ReceiveMessage", attendance.Student.Name, attendance.Session.SessionName);
+
+        var connections = NotificationHub.GetConnections(attendance.Student.Email);
+        if (connections != null)
+        {
+            foreach (var connection in connections)
+            {
+                await _hubContext.Clients.Client(connection).SendAsync("AttendanceMarked", attendance.Session.SessionName);
+            }
+        }
+
         return attendance;
     }
 
@@ -49,10 +62,10 @@ public class AttendanceService : IAttendanceService
             response = response.Where(a => a.StudentName.ToLower().Contains(studentName.ToLower()));
 
         if (attended.HasValue)
-            response = response.Where(a => a.Attended==attended);
+            response = response.Where(a => a.Attended == attended);
 
         var totalRecords = response.Count();
-        var paginatedAttendance = response.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+        var paginatedAttendance = response.OrderBy(s => s.StudentName).Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
         var paginatedResponse = new PaginatedResponseDTO<SessionAttendanceResponseDTO>
         {
@@ -74,15 +87,15 @@ public class AttendanceService : IAttendanceService
         return paginatedResponse;
     }
 
-    public async Task<List<Models.SessionAttendance>> GetAttendanceOfStudent(int studentId)
+    public async Task<List<SessionAttendance>> GetAttendanceOfStudent(int studentId)
     {
         var attendances = await _sessionAttendanceRepository.GetAll();
-        attendances = attendances.Where(s => s.StudentId == studentId && s.Session.Status!="Cancelled");
+        attendances = attendances.Where(s => s.StudentId == studentId && s.Session.Status != "Cancelled");
 
         return attendances.ToList();
     }
 
-    public async Task<Models.SessionAttendance> RemoveAttendanceFromStudent(AttendanceUpdateDTO attendanceUpdateDTO)
+    public async Task<SessionAttendance> RemoveAttendanceFromStudent(AttendanceUpdateDTO attendanceUpdateDTO)
     {
         var attendances = await _sessionAttendanceRepository.GetAll();
         var attendance = attendances.FirstOrDefault(s => s.StudentId == attendanceUpdateDTO.StudentId && s.SessionId == attendanceUpdateDTO.SessionId);
@@ -95,6 +108,41 @@ public class AttendanceService : IAttendanceService
 
         attendance.Status = "NotAttended";
         attendance = await _sessionAttendanceRepository.Update(attendance.SessionAttendanceId, attendance);
+
+        var connections = NotificationHub.GetConnections(attendance.Student.Email);
+        if (connections != null)
+        {
+            foreach (var connection in connections)
+            {
+                await _hubContext.Clients.Client(connection).SendAsync("AttendanceUnmarked", attendance.Session.SessionName);
+            }
+        }
+
         return attendance;
+    }
+
+    public async Task<byte[]> GenerateSessionReport(int sessionId)
+    {
+        var attendanceReportDto = new AttendanceReportDTO();
+
+        var session = await _sessionRepository.Get(sessionId);
+        if (session == null)
+            throw new Exception("Session not found");
+        attendanceReportDto.SessionName = session.SessionName;
+        attendanceReportDto.Date = session.Date;
+        attendanceReportDto.StartTime = session.StartTime;
+        attendanceReportDto.EndTime = session.EndTime;
+
+        var attendances = await _sessionAttendanceRepository.GetAll();
+        attendances = attendances.Where(s => s.SessionId == sessionId);
+        var attendanceDetails = attendances.Select(a => new SessionAttendanceDTO() { StudentId = a.StudentId, StudentName = a.Student.Name, Attended = a.Status == "Attended", SessionId = a.SessionId, Email = a.Student.Email });
+        attendanceReportDto.RegisteredCount = attendanceDetails.Count();
+        attendanceReportDto.AttendedCount = attendanceDetails.Count(s => s.Attended == true);
+        attendanceReportDto.SessionAttendance = attendanceDetails.OrderBy(s => s.StudentName).ToList();
+
+        var document = new AttendanceReport(attendanceReportDto);
+        using var stream = new MemoryStream();
+        document.GeneratePdf(stream);
+        return stream.ToArray();
     }
 }

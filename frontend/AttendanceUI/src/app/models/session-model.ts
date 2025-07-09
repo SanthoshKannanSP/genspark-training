@@ -11,7 +11,7 @@ export class SessionModel {
   public teacherDetails: TeacherDetails | null = null;
 }
 
-class TeacherDetails {
+export class TeacherDetails {
   public teacherId: number | null = null;
   public teacherName: string | null = null;
   public organization: string | null = null;

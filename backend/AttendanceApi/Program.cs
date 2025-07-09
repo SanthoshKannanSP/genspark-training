@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using QuestPDF.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -76,6 +77,7 @@ builder.Services.AddTransient<IRepository<int, SessionAttendance>, SessionAttend
 builder.Services.AddTransient<IRepository<int, Student>, StudentRepository>();
 builder.Services.AddTransient<IRepository<int, Teacher>, TeacherRepository>();
 builder.Services.AddTransient<IRepository<string, User>, UserRepository>();
+builder.Services.AddTransient<IRepository<string, Settings>, SettingsRepository>();
 #endregion
 
 #region Services
@@ -87,6 +89,8 @@ builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
 builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddTransient<IOwnerService, OwnerService>();
 builder.Services.AddTransient<IAttendanceService, AttendanceService>();
+builder.Services.AddTransient<ISettingsService, SettingsService>();
+
 #endregion
 
 #region AutoMapper
@@ -188,6 +192,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+QuestPDF.Settings.License = LicenseType.Community;
 
 app.UseHttpsRedirection();
 

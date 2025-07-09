@@ -10,10 +10,11 @@ import {
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormatDatePipe } from '../../misc/format-date-pipe';
 import { NotificationService } from '../../services/notification-service';
+import { FormatTimePipe } from '../../misc/format-time-pipe';
 
 @Component({
   selector: 'app-session-attendance-details-modal',
-  imports: [ReactiveFormsModule, FormatDatePipe],
+  imports: [ReactiveFormsModule, FormatDatePipe, FormatTimePipe],
   templateUrl: './session-attendance-details-modal.html',
   styleUrl: './session-attendance-details-modal.css',
 })
@@ -49,7 +50,6 @@ export class SessionAttendanceDetailsModal {
 
     let studentId = student.studentId;
     let sessionId = student.sessionId;
-    console.log(student);
     if (currentAttended) {
       this.attendanceService.unmarkAttendance(studentId, sessionId).subscribe({
         next: (data) => {
@@ -73,6 +73,7 @@ export class SessionAttendanceDetailsModal {
     } else {
       this.attendanceService.markAttendance(studentId, sessionId).subscribe({
         next: (data) => {
+          console.log(data);
           const message = `Successfully marked attendance to ${this.students.data?.sessionAttendance[index].studentName} for session ${this.session?.sessionName}`;
           this.notificationService.addNotification({
             message: message,

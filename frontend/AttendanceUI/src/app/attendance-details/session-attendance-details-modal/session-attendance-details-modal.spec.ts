@@ -11,6 +11,7 @@ import { of } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { SettingsService } from '../../services/settings-service';
 import { AttendanceDetailsModel } from '../../models/attendance-details-modal';
+import { FormatTimePipe } from '../../misc/format-time-pipe';
 
 describe('SessionAttendanceDetailsModal', () => {
   let component: SessionAttendanceDetailsModal;
@@ -61,6 +62,9 @@ describe('SessionAttendanceDetailsModal', () => {
       getDateFormat: jasmine
         .createSpy('getDateFormat')
         .and.returnValue('dd/MM/yyyy'),
+      getTimeFormat: jasmine
+        .createSpy('getTimeFormat')
+        .and.returnValue('hh:mm aa'),
     };
 
     await TestBed.configureTestingModule({
@@ -68,6 +72,7 @@ describe('SessionAttendanceDetailsModal', () => {
         SessionAttendanceDetailsModal,
         ReactiveFormsModule,
         FormatDatePipe,
+        FormatTimePipe,
       ],
       providers: [
         { provide: AttendanceService, useValue: attendanceServiceSpy },
@@ -121,7 +126,7 @@ describe('SessionAttendanceDetailsModal', () => {
     expect(sessionNameElement.textContent).toContain('Session: Math Class');
     expect(sessionDateElement.textContent).toContain('Date: 09/08/2025');
     expect(sessionTimeElement.textContent).toContain(
-      'Time: 09:00:00 - 11:00:00'
+      'Time: 09:00 AM - 11:00 AM'
     );
     expect(sessionRegisteredElement.textContent).toContain('Registered: 2');
     expect(sessionAttendedElement.textContent).toContain('Attended: 1');
@@ -144,13 +149,13 @@ describe('SessionAttendanceDetailsModal', () => {
     const student = mockStudents.data!.sessionAttendance[1];
     const fakeEvent = { target: { checked: true } } as unknown as Event;
 
-    attendanceService.markAttendance.and.returnValue(of({}));
+    attendanceService.markAttendance.and.returnValue(of(mockStudents));
     component.session = {
       sessionId: 101,
       sessionName: 'Test Session',
     } as AttendanceDetailsModel;
 
-    component.toggleAttendance(fakeEvent, student, 2);
+    component.toggleAttendance(fakeEvent, student, 1);
 
     expect(attendanceService.markAttendance).toHaveBeenCalledWith(2, 101);
   });

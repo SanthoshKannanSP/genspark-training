@@ -53,4 +53,15 @@ public class AttendanceController : ControllerBase
         var attendance = await _attendanceService.RemoveAttendanceFromStudent(attendanceUpdateDTO);
         return Ok(attendance);
     }
+
+    [Authorize(Roles = "Teacher")]
+    [HttpGet]
+    [Route("{sessionId}/Report")]
+    public async Task<ActionResult> GenerateAttendanceReport(int sessionId)
+    {
+        var report = await _attendanceService.GenerateSessionReport(sessionId);
+        Response.Headers["Content-Disposition"] = "inline; filename=SessionReport.pdf";
+
+        return File(report, "application/pdf");
+    }
 }

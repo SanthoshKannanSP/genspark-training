@@ -4,10 +4,11 @@ import { PaginatedResponse } from '../../models/paginated-response';
 import { AttendanceDetailsModel } from '../../models/attendance-details-modal';
 import { SessionAttendanceDetailsModal } from '../session-attendance-details-modal/session-attendance-details-modal';
 import { FormatDatePipe } from '../../misc/format-date-pipe';
+import { FormatTimePipe } from '../../misc/format-time-pipe';
 
 @Component({
   selector: 'app-attendance-table',
-  imports: [SessionAttendanceDetailsModal, FormatDatePipe],
+  imports: [SessionAttendanceDetailsModal, FormatDatePipe, FormatTimePipe],
   templateUrl: './attendance-table.html',
   styleUrl: './attendance-table.css',
 })

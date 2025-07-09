@@ -26,7 +26,7 @@ export class ScheduleSessionModal {
   constructor(private fb: FormBuilder) {
     this.sessionForm = this.fb.group(
       {
-        sessionName: ['', [Validators.required, Validators.minLength(1)]],
+        sessionName: ['', [Validators.required]],
         date: ['', [Validators.required, futureDateValidator]],
         startTime: ['', Validators.required],
         endTime: ['', Validators.required],
@@ -36,6 +36,26 @@ export class ScheduleSessionModal {
         validators: [endAfterStartValidator],
       }
     );
+  }
+
+  public get sessionName() {
+    return this.sessionForm.get('sessionName');
+  }
+
+  public get date() {
+    return this.sessionForm.get('date');
+  }
+
+  public get startTime() {
+    return this.sessionForm.get('startTime');
+  }
+
+  public get endTime() {
+    return this.sessionForm.get('endTime');
+  }
+
+  public get sessionLink() {
+    return this.sessionForm.get('sessionLink');
   }
 
   onSubmit() {

@@ -57,7 +57,6 @@ export class SessionService {
     this.api.get('/api/v1/Session/All', true, { params }).subscribe({
       next: (data: any) => {
         let result = new PaginatedResponse<SessionModel[]>();
-        console.log(data);
         result.pagination = data.data.pagination;
         result.data = data.data.data.$values;
         this.allSessions.next(result);

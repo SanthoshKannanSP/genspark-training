@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeroPage } from './hero-page/hero-page';
-import { SignUpChoosePage } from './sign-up-choose-page/sign-up-choose-page';
+import { AccountService } from './services/account-service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HeroPage, SignUpChoosePage],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

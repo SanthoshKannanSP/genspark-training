@@ -6,10 +6,11 @@ import { EditSessionComponent } from '../edit-session-modal/edit-session-modal';
 import { NotificationService } from '../../services/notification-service';
 import { HttpClientService } from '../../services/http-client-service';
 import { FormatDatePipe } from '../../misc/format-date-pipe';
+import { FormatTimePipe } from '../../misc/format-time-pipe';
 
 @Component({
   selector: 'app-sessions-table',
-  imports: [EditSessionComponent, FormatDatePipe],
+  imports: [EditSessionComponent, FormatDatePipe, FormatTimePipe],
   templateUrl: './sessions-table.html',
   styleUrl: './sessions-table.css',
 })
@@ -46,16 +47,14 @@ export class SessionsTable {
         });
       })
       .catch((err) => {
-        console.error('Clipboard copy failed', err);
         this.notificationService.addNotification({
           message: 'Unable to copy link to clipboard',
-          type: 'error',
+          type: 'danger',
         });
       });
   }
 
   public get pageNumbers(): number[] {
-    console.log(this.sessions.data);
     if (this.sessions.pagination == null) return [];
     return Array.from(
       { length: this.sessions.pagination.totalPages },

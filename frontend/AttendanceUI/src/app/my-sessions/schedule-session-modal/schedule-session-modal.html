@@ -6,7 +6,7 @@
   aria-labelledby="createSessionModalLabel"
   aria-hidden="true"
 >
-  <div class="modal-dialog modal-lg modal-dialog-centered">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="createSessionModalLabel">Create Session</h5>
@@ -25,10 +25,13 @@
           (ngSubmit)="onSubmit()"
           class="p-4 border rounded shadow-sm"
         >
-          <div class="row gap-3">
+          <div class="row gy-3">
             <!-- Session Name -->
-            <div class="row">
-              <label class="form-label">Session Name</label>
+            <div class="col-12">
+              <label class="form-label me-2">Session Name</label>
+              @if (sessionName?.invalid && sessionName?.touched) {
+              <small class="text-danger">Required</small>
+              }
               <input
                 type="text"
                 class="form-control"
@@ -37,39 +40,51 @@
               />
             </div>
 
-            <div class="row">
-              <!-- Date -->
-              <div class="col">
-                <label class="form-label">Date</label>
-                <input
-                  type="date"
-                  class="form-control"
-                  formControlName="date"
-                />
-              </div>
-              <!-- Start Time -->
-              <div class="col">
-                <label class="form-label">Start Time</label>
-                <input
-                  type="time"
-                  class="form-control"
-                  formControlName="startTime"
-                />
-              </div>
-              <!-- End Time -->
-              <div class="col">
-                <label class="form-label">End Time</label>
-                <input
-                  type="time"
-                  class="form-control"
-                  formControlName="endTime"
-                />
-              </div>
+            <!-- Date, Start Time, End Time -->
+            <div class="col-12 col-md-4">
+              <label class="form-label me-2">Date</label>
+              @if (date?.invalid && date?.touched) { @if
+              (date?.errors?.["required"]) {
+              <small class="text-danger">Required</small>
+              } @else if (date?.errors?.["dateNotInFuture"]) {
+              <small class="text-danger">Should be in future</small>
+              } }
+              <input type="date" class="form-control" formControlName="date" />
+            </div>
+
+            <div class="col-12 col-md-4">
+              <label class="form-label me-2">Start Time</label>
+              @if (startTime?.invalid && startTime?.touched) {
+              <small class="text-danger">Required</small>
+              }
+              <input
+                type="time"
+                class="form-control"
+                formControlName="startTime"
+              />
+            </div>
+
+            <div class="col-12 col-md-4">
+              <label class="form-label me-2">End Time</label>
+              @if ((endTime?.invalid || sessionForm.invalid) &&
+              endTime?.touched) { @if (endTime?.errors?.["required"]) {
+              <small class="text-danger">Required</small>
+              } @else if (sessionForm.errors?.["endBeforeStart"]) {
+              <small class="text-danger">Should end before start</small>
+              } }
+              <input
+                type="time"
+                class="form-control"
+                formControlName="endTime"
+              />
             </div>
 
             <!-- Session Link -->
-            <div class="row">
-              <label class="form-label">Session Link</label>
+            <div class="col-12">
+              <label class="form-label me-2">Session Link</label>
+              @if (sessionLink?.invalid && sessionLink?.touched) {
+              <small class="text-danger">Required</small>
+              }
               <input
                 type="text"
                 class="form-control"
@@ -79,7 +94,7 @@
             </div>
 
             <!-- Buttons -->
-            <div class="row-12 d-flex gap-2">
+            <div class="col-12 d-flex gap-2">
               <button type="submit" class="btn btn-primary">Submit</button>
               <button
                 type="button"

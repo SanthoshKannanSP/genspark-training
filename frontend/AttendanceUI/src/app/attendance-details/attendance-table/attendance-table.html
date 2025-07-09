@@ -17,7 +17,10 @@
             {{ attendance.sessionName }}
           </td>
           <td>{{ attendance.date | formatDate}}</td>
-          <td>{{ attendance.startTime }} - {{ attendance.endTime }}</td>
+          <td>
+            {{ attendance.startTime | formatTime }} - {{ attendance.endTime
+            |formatTime }}
+          </td>
           <td>{{attendance.attendedCount}}/{{attendance.registeredCount}}</td>
           <td>
             <button
@@ -62,8 +65,8 @@
           <strong>Date:</strong> {{ attendance.date | formatDate }}
         </div>
         <div class="mb-1">
-          <strong>Time:</strong> {{ attendance.startTime }} - {{
-          attendance.endTime }}
+          <strong>Time:</strong> {{ attendance.startTime | formatTime }} - {{
+          attendance.endTime | formatTime }}
         </div>
         <div class="mb-1">
           <strong>Attendance:</strong> {{ attendance.attendedCount }}/{{

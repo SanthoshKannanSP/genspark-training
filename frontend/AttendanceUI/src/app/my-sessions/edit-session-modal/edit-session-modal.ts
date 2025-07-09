@@ -7,6 +7,8 @@ import {
 } from '@angular/forms';
 import { SessionModel } from '../../models/session-model';
 import { SessionService } from '../../services/session-service';
+import { futureDateValidator } from '../../misc/future-date-validator';
+import { endAfterStartValidator } from '../../misc/end-time-validator';
 
 @Component({
   selector: 'app-edit-session-modal',
@@ -21,13 +23,38 @@ export class EditSessionComponent {
   currentSessionId: number | null = null;
 
   constructor(private fb: FormBuilder) {
-    this.editSessionForm = this.fb.group({
-      sessionName: ['', Validators.required],
-      date: ['', Validators.required],
-      startTime: ['', Validators.required],
-      endTime: ['', Validators.required],
-      sessionLink: ['', Validators.required],
-    });
+    this.editSessionForm = this.fb.group(
+      {
+        sessionName: ['', [Validators.required]],
+        date: ['', [Validators.required, futureDateValidator]],
+        startTime: ['', Validators.required],
+        endTime: ['', Validators.required],
+        sessionLink: ['', Validators.required],
+      },
+      {
+        validators: [endAfterStartValidator],
+      }
+    );
+  }
+
+  public get sessionName() {
+    return this.editSessionForm.get('sessionName');
+  }
+
+  public get date() {
+    return this.editSessionForm.get('date');
+  }
+
+  public get startTime() {
+    return this.editSessionForm.get('startTime');
+  }
+
+  public get endTime() {
+    return this.editSessionForm.get('endTime');
+  }
+
+  public get sessionLink() {
+    return this.editSessionForm.get('sessionLink');
   }
 
   openModal(session: SessionModel) {

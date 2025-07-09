@@ -2,10 +2,11 @@ import { Component, inject, Input } from '@angular/core';
 import { SessionModel } from '../../models/session-model';
 import { HttpClientService } from '../../services/http-client-service';
 import { FormatDatePipe } from '../../misc/format-date-pipe';
+import { FormatTimePipe } from '../../misc/format-time-pipe';
 
 @Component({
   selector: 'app-session-details',
-  imports: [FormatDatePipe],
+  imports: [FormatDatePipe, FormatTimePipe],
   templateUrl: './session-details.html',
   styleUrl: './session-details.css',
 })

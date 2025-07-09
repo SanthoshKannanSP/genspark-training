@@ -12,6 +12,7 @@ public class AttendanceContext : DbContext
     public DbSet<Student> Students { get; set; }
     public DbSet<Teacher> Teachers { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<Settings> Settings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -47,5 +48,11 @@ public class AttendanceContext : DbContext
 
 
         modelBuilder.Entity<User>().HasKey(u => u.Username);
+
+        modelBuilder.Entity<Settings>().HasKey(st => st.Username);
+        modelBuilder.Entity<Settings>().HasOne(st => st.User)
+                                    .WithOne(u => u.Settings)
+                                    .HasForeignKey<Settings>(st => st.Username)
+                                    .OnDelete(DeleteBehavior.Restrict);
     }
 }

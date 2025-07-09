@@ -32,8 +32,8 @@
               <strong>Date:</strong> {{ session?.date | formatDate }}
             </p>
             <p class="col sessionTime">
-              <strong>Time:</strong> {{ session?.startTime }} - {{
-              session?.endTime }}
+              <strong>Time:</strong> {{ session?.startTime | formatTime }} - {{
+              session?.endTime | formatTime }}
             </p>
           </div>
           <div class="row">

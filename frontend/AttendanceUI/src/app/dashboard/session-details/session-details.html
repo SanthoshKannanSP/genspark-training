@@ -33,11 +33,11 @@
           </div>
           <div class="col">
             <label class="fw-bold fs-5">Start Time:</label>
-            <div class="fs-6">{{ session?.startTime }}</div>
+            <div class="fs-6">{{ session?.startTime | formatTime }}</div>
           </div>
           <div class="col">
             <label class="fw-bold fs-5">End Time:</label>
-            <div class="fs-6">{{ session?.endTime }}</div>
+            <div class="fs-6">{{ session?.endTime | formatTime }}</div>
           </div>
         </div>
 

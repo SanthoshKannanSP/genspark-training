@@ -21,7 +21,10 @@
             {{ session.sessionName }}
           </td>
           <td>{{ session.date | formatDate }}</td>
-          <td>{{ session.startTime }} - {{ session.endTime }}</td>
+          <td>
+            {{ session.startTime | formatTime }} - {{ session.endTime |
+            formatTime }}
+          </td>
           <td>
             <span class="badge bg-secondary">{{ session.status }}</span>
           </td>
@@ -78,7 +81,7 @@
         <p><strong>Session Name:</strong> {{ session.sessionName }}</p>
         <p>
           <strong>Date & Time:</strong> {{ session.date | formatDate }} {{
-          session.startTime }} - {{ session.endTime }}
+          session.startTime |formatTime }} - {{ session.endTime |formatTime }}
         </p>
         <p>
           <strong class="me-2">Status: </strong>

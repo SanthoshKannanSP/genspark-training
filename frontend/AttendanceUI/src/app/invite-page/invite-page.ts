@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SessionService } from '../services/session-service';
 import { NotificationService } from '../services/notification-service';
@@ -9,13 +9,13 @@ import { NotificationService } from '../services/notification-service';
   templateUrl: './invite-page.html',
   styleUrl: './invite-page.css',
 })
-export class InvitePage {
+export class InvitePage implements OnInit {
   sessionService = inject(SessionService);
   activatedRoute = inject(ActivatedRoute);
   notificationService = inject(NotificationService);
   router = inject(Router);
 
-  constructor() {
+  ngOnInit(): void {
     let sessionCode = this.activatedRoute.snapshot.params['sessionCode'];
     this.sessionService.addStudentToSession(sessionCode).subscribe({
       next: () => {

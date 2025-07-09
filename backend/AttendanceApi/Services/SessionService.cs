@@ -148,7 +148,7 @@ public class SessionService : ISessionService
             allSessions = allSessions.Where(s => s.Status.ToLower() == status.ToLower());
 
         var totalRecords = allSessions.Count();
-        var paginatedSessions = allSessions.OrderByDescending(s => s.Date).Skip((page - 1) * pageSize).Take(pageSize).ToList();
+        var paginatedSessions = allSessions.OrderByDescending(s => s.Date).ThenByDescending(s => s.StartTime).ThenByDescending(s => s.EndTime).Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
         var response = new PaginatedResponseDTO<List<AllSessionRequestDTO>>
         {
@@ -388,11 +388,7 @@ public class SessionService : ISessionService
         if (endTime.HasValue)
             sessions = sessions.Where(s => s.EndTime <= endTime.Value);
 
-        Console.WriteLine("Hello");
-        Console.WriteLine(sessions.Count());
-        Console.WriteLine("World");
-        var totalRecords = sessions.Count();
-        var paginatedSessions = sessions.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+        
 
         var response = sessions.Select(s => new AttendanceDetailsResponseDTO()
         { 
@@ -404,10 +400,13 @@ public class SessionService : ISessionService
             RegisteredCount = s.StudentAttendance.Count(),
             AttendedCount = s.StudentAttendance.Where(s => s.Status == "Attended").Count(),
         });
+
+        var totalRecords = response.Count();
+        var paginatedAttendance = response.OrderByDescending(s => s.Date).ThenByDescending(s => s.StartTime).ThenByDescending(s => s.EndTime).Skip((page - 1) * pageSize).Take(pageSize).ToList();
         
         var paginatedResponse = new PaginatedResponseDTO<List<AttendanceDetailsResponseDTO>>
         {
-            Data = response.ToList(),
+            Data = paginatedAttendance,
             Pagination = new PaginationModel
             {
                 TotalRecords = totalRecords,
@@ -452,12 +451,12 @@ public class SessionService : ISessionService
         {
             StudentId = a.StudentId,
             StudentName = a.Student.Name
-        }).ToList();
+        }).OrderBy(a => a.StudentName).ToList();
         response.NotJoinedStudents = attendances.Where(a => a.Status == "NotAttended").Select(a => new LiveSessionStudentsDTO()
         {
             StudentId = a.StudentId,
             StudentName = a.Student.Name
-        }).ToList();
+        }).OrderBy(a => a.StudentName).ToList();
         return response;
     }
 

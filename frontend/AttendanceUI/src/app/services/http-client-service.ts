@@ -21,6 +21,7 @@ export class HttpClientService {
   http = inject(HttpClient);
 
   token = new BehaviorSubject(localStorage.getItem('access_token'));
+  token$ = this.token.asObservable();
   refreshToken = new BehaviorSubject(localStorage.getItem('refresh_token'));
 
   private get headers(): HttpHeaders {
@@ -33,10 +34,19 @@ export class HttpClientService {
     this.token.next(token);
   }
 
-  get(route: string, credentials: boolean = false, options: any = {}) {
+  get(
+    route: string,
+    credentials: boolean = false,
+    options: any = {},
+    responseType: string = 'json'
+  ) {
     const url = Environment.BASE_URL + route;
     return this.http
-      .get(url, { headers: credentials ? this.headers : undefined, ...options })
+      .get(url, {
+        headers: credentials ? this.headers : undefined,
+        responseType: responseType,
+        ...options,
+      })
       .pipe(
         catchError((error: HttpErrorResponse) => {
           console.log(error);
@@ -167,5 +177,12 @@ export class HttpClientService {
     if (decoded?.role == role) return true;
 
     return false;
+  }
+
+  getUsername() {
+    if (this.token.value == null) return '';
+    const decoded: any = jwtDecode(this.token.value);
+
+    return decoded.unique_name;
   }
 }

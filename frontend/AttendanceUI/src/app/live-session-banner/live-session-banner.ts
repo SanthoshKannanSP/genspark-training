@@ -23,6 +23,6 @@ export class LiveSessionBanner {
   }
 
   goToControl() {
-    this.router.navigate(['/session/live']);
+    this.router.navigateByUrl('/session/live');
   }
 }

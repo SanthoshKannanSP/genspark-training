@@ -35,13 +35,11 @@ export class LiveSessionControl {
   constructor() {
     this.liveSessionService.liveSessionDetails$.subscribe({
       next: (data) => {
-        console.log(data);
         this.liveSession = data;
         this.attendingStudents = [...this.liveSession.attendingStudents];
         this.notJoinedStudents = [...this.liveSession.notJoinedStudents];
         this.filteredAttending = [...this.attendingStudents];
         this.filteredNotJoined = [...this.notJoinedStudents];
-        console.log(this.notJoinedStudents);
       },
       error: (error) => console.log(error),
     });
