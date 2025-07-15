@@ -9,7 +9,7 @@ export function futureDateValidator(
   inputDate.setHours(0, 0, 0, 0);
   tomorrow.setHours(0, 0, 0, 0);
 
-  if (inputDate <= tomorrow) return { dateNotInFuture: true };
+  if (inputDate < tomorrow) return { dateNotInFuture: true };
 
   return null;
 }

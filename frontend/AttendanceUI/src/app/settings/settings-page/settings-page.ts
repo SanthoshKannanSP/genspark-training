@@ -1,13 +1,13 @@
 import { Component, inject } from '@angular/core';
-import { SettingsService } from '../services/settings-service';
-import { AccountManagement } from './account-management/account-management';
-import { Settings } from '../models/settings-model';
+import { AccountManagement } from '../account-management/account-management';
 import {
   FormBuilder,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { SettingsService } from '../../services/settings-service';
+import { Settings } from '../../models/settings-model';
 
 @Component({
   selector: 'app-settings-page',

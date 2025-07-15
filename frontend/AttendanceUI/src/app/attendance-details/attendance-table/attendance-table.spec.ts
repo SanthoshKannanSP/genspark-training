@@ -17,7 +17,7 @@ import { SettingsService } from '../../services/settings-service';
   template: '',
 })
 class MockSessionAttendanceDetailsModal {
-  @Input() modelId!: string;
+  @Input() modalId!: string;
   openModal = jasmine.createSpy('openModal');
 }
 
@@ -64,7 +64,7 @@ describe('AttendanceTable', () => {
     ]);
 
     await TestBed.configureTestingModule({
-      imports: [AttendanceTable, FormatDatePipe, FormatTimePipe],
+      imports: [AttendanceTable],
       providers: [
         { provide: AttendanceService, useValue: attendanceService },
         { provide: SettingsService, useValue: settingsService },
@@ -72,7 +72,13 @@ describe('AttendanceTable', () => {
       ],
     })
       .overrideComponent(AttendanceTable, {
-        set: { imports: [MockSessionAttendanceDetailsModal] },
+        set: {
+          imports: [
+            MockSessionAttendanceDetailsModal,
+            FormatDatePipe,
+            FormatTimePipe,
+          ],
+        },
       })
       .compileComponents();
 

@@ -7,10 +7,16 @@ import { NotificationService } from '../../services/notification-service';
 import { HttpClientService } from '../../services/http-client-service';
 import { FormatDatePipe } from '../../misc/format-date-pipe';
 import { FormatTimePipe } from '../../misc/format-time-pipe';
+import { SessionNotesModal } from '../../session-notes-modal/session-notes-modal';
 
 @Component({
   selector: 'app-sessions-table',
-  imports: [EditSessionComponent, FormatDatePipe, FormatTimePipe],
+  imports: [
+    EditSessionComponent,
+    FormatDatePipe,
+    FormatTimePipe,
+    SessionNotesModal,
+  ],
   templateUrl: './sessions-table.html',
   styleUrl: './sessions-table.css',
 })

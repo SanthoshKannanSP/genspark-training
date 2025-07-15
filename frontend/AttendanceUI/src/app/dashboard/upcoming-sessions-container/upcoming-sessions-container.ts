@@ -3,7 +3,6 @@ import { UpcomingSessionCard } from '../teacher-upcoming-session-card/upcoming-s
 import { SessionService } from '../../services/session-service';
 import { SessionDetails } from '../session-details/session-details';
 import { SessionModel } from '../../models/session-model';
-import { HttpClientService } from '../../services/http-client-service';
 
 @Component({
   selector: 'app-upcoming-sessions-container',
@@ -13,7 +12,6 @@ import { HttpClientService } from '../../services/http-client-service';
 })
 export class UpcomingSessionsContainer {
   sessionService = inject(SessionService);
-  api = inject(HttpClientService);
   upcomingSessions!: any[];
   @ViewChild('upcomingSessionDetailsModal')
   sessionDetailsModal!: SessionDetails;

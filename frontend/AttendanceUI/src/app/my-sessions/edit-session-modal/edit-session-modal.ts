@@ -64,17 +64,11 @@ export class EditSessionComponent {
 
   onSave() {
     if (this.editSessionForm.valid) {
-      const updatedSession = {
-        id: this.currentSessionId,
-        ...this.editSessionForm.value,
-      };
-
       if (this.currentSessionId != null && this.editSessionForm.valid) {
         this.sessionService
           .editSession(this.currentSessionId, this.editSessionForm.value)
           .subscribe({
-            next: (response: any) => {
-              let session = response.data;
+            next: () => {
               this.closeButton.nativeElement.click();
             },
             error: (error) => {

@@ -51,7 +51,6 @@ export class TeacherSignupPage {
 
   onSubmit() {
     if (this.signupForm.valid) {
-      console.log('Signup Form Submitted', this.signupForm.value);
       this.api.post('/api/v1/Teacher', this.signupForm.value).subscribe({
         next: () => {
           alert('Created account successfully. Now log into your account');

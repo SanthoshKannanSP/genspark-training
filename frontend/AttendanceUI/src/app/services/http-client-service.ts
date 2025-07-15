@@ -15,10 +15,12 @@ import {
 import { Environment } from '../../environment/environment';
 import { LoginModel } from '../models/login-model';
 import { jwtDecode } from 'jwt-decode';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class HttpClientService {
   http = inject(HttpClient);
+  router = inject(Router);
 
   token = new BehaviorSubject(localStorage.getItem('access_token'));
   token$ = this.token.asObservable();
@@ -50,7 +52,7 @@ export class HttpClientService {
       .pipe(
         catchError((error: HttpErrorResponse) => {
           console.log(error);
-          if (credentials) {
+          if (error.status == 0 && credentials) {
             return this.tryRefresh(() =>
               this.http.get(url, { headers: this.headers })
             );
@@ -66,7 +68,7 @@ export class HttpClientService {
       .post(url, body, { headers: credentials ? this.headers : undefined })
       .pipe(
         catchError((error: HttpErrorResponse) => {
-          if (credentials) {
+          if (error.status == 0 && credentials) {
             return this.tryRefresh(() =>
               this.http.post(url, body, { headers: this.headers })
             );
@@ -82,7 +84,7 @@ export class HttpClientService {
       .delete(url, { headers: credentials ? this.headers : undefined })
       .pipe(
         catchError((error: HttpErrorResponse) => {
-          if (credentials) {
+          if (error.status == 0 && credentials) {
             return this.tryRefresh(() =>
               this.http.delete(url, { headers: this.headers })
             );
@@ -118,6 +120,7 @@ export class HttpClientService {
           return retryCallback();
         }),
         catchError((err) => {
+          this.router.navigateByUrl('/');
           return throwError(() => err);
         })
       );

@@ -10,7 +10,9 @@
 <div class="portal-page">
   <app-sidebar></app-sidebar>
   <div style="width: 100%">
+    @if (accountService.api.hasRole("Teacher")) {
     <app-live-session-banner></app-live-session-banner>
+    }
     <div class="portal-components">
       <router-outlet></router-outlet>
     </div>

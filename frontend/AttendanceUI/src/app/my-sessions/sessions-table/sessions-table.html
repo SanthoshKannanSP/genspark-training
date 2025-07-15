@@ -10,7 +10,7 @@
           @if (student) {
           <th class="text-center">Attendance</th>
           } @else {
-          <th>Details</th>
+          <th>Actions</th>
           }
         </tr>
       </thead>
@@ -18,7 +18,14 @@
         @for (session of sessions.data; track $index) {
         <tr>
           <td class="text-truncate" style="min-width: 400px">
-            {{ session.sessionName }}
+            {{ session.sessionName }} @if (student) {
+            <i
+              class="bi bi-journal-text icon-button text-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#sessionNotesModal"
+              (click)="sessionNotesModal.openModal(session)"
+            ></i>
+            }
           </td>
           <td>{{ session.date | formatDate }}</td>
           <td>
@@ -26,7 +33,16 @@
             formatTime }}
           </td>
           <td>
-            <span class="badge bg-secondary">{{ session.status }}</span>
+            <span
+              class="badge"
+              [class]="{
+              'bg-primary' : session.status == 'Scheduled',
+              'bg-info' : session.status == 'Live',
+              'bg-success': session.status == 'Completed',
+              'bg-error' : session.status == 'Cancelled'
+            }"
+              >{{ session.status }}</span
+            >
           </td>
           @if (student) {
           <td class="text-center">
@@ -41,13 +57,20 @@
           } @else {
           <td class="d-flex gap-4">
             <i
-              class="bi bi-pencil"
+              class="bi bi-pencil icon-button"
               data-bs-toggle="modal"
               data-bs-target="#editSessionModal"
               (click)="editSessionModal.openModal(session)"
             ></i>
             <i
-              class="bi bi-share"
+              class="bi bi-cloud-upload icon-button"
+              data-bs-toggle="modal"
+              data-bs-target="#sessionNotesModal"
+              (click)="sessionNotesModal.openModal(session)"
+            >
+            </i>
+            <i
+              class="bi bi-share icon-button"
               (click)="copySessionInviteToClipboard(session.sessionCode!)"
             ></i>
           </td>
@@ -78,14 +101,26 @@
     @for (session of sessions.data; track $index) {
     <div class="card mb-3 shadow-sm">
       <div class="card-body">
-        <p><strong>Session Name:</strong> {{ session.sessionName }}</p>
+        <p>
+          <strong>Session Name:</strong> {{ session.sessionName }} @if (student)
+          {<i class="bi bi-journal-text icon-button"></i>}
+        </p>
         <p>
           <strong>Date & Time:</strong> {{ session.date | formatDate }} {{
           session.startTime |formatTime }} - {{ session.endTime |formatTime }}
         </p>
         <p>
           <strong class="me-2">Status: </strong>
-          <span class="badge bg-secondary">{{ session.status }}</span>
+          <span
+            class="badge"
+            [class]="{
+              'bg-primary' : session.status == 'Scheduled',
+              'bg-info' : session.status == 'Live',
+              'bg-success': session.status == 'Completed',
+              'bg-error' : session.status == 'Cancelled'
+            }"
+            >{{ session.status }}</span
+          >
         </p>
 
         @if (student) {
@@ -102,13 +137,20 @@
         } @else {
         <div class="d-flex gap-3">
           <i
-            class="bi bi-pencil"
+            class="bi bi-pencil icon-button"
             data-bs-toggle="modal"
             data-bs-target="#editSessionModal"
             (click)="editSessionModal.openModal(session)"
           ></i>
           <i
-            class="bi bi-share"
+            class="bi bi-cloud-upload icon icon-button"
+            data-bs-toggle="modal"
+            data-bs-target="#sessionNotesModal"
+            (click)="sessionNotesModal.openModal(session)"
+          >
+          </i>
+          <i
+            class="bi bi-share icon-button"
             (click)="copySessionInviteToClipboard(session.sessionCode!)"
           ></i>
         </div>
@@ -146,3 +188,7 @@
 </div>
 
 <app-edit-session-modal #editSessionModal></app-edit-session-modal>
+<app-session-notes-modal
+  [editable]="!student"
+  #sessionNotesModal
+></app-session-notes-modal>
