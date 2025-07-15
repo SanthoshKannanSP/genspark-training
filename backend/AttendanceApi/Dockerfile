@@ -18,6 +18,9 @@ RUN mkdir /https && \
       -in /https/aspnetcore.crt \
       -passout pass:password
 
+ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetcore.pfx
+ENV ASPNETCORE_Kestrel__Certificates__Default__Password="password"
+
 EXPOSE 8080
 EXPOSE 8081
 
@@ -44,11 +47,11 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 
 # Environment variable for Development to enable Swagger
-ENV ASPNETCORE_ENVIRONMENT=Development
+ENV ASPNETCORE_ENVIRONMENT=DEVELOPMENT
+
+# ENV ASPNETCORE_ENVIRONMENT=PRODUCTION
 
 # Configure Kestrel URLs
 ENV ASPNETCORE_URLS="http://+:8080;https://+:8081"
-
-
 
 ENTRYPOINT ["dotnet", "AttendanceApi.dll"]
