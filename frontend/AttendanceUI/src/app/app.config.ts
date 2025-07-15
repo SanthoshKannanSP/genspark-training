@@ -15,6 +15,7 @@ import { SettingsService } from './services/settings-service';
 import { DatePipe } from '@angular/common';
 import { AccountService } from './services/account-service';
 import { LiveSessionService } from './services/live-session-service';
+import { NoteService } from './services/note-service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -30,5 +31,6 @@ export const appConfig: ApplicationConfig = {
     SettingsService,
     AccountService,
     LiveSessionService,
+    NoteService,
   ],
 };

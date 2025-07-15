@@ -17,6 +17,7 @@ public class Session : IOwnableResource
 
     public Teacher? MadeBy { get; set; }
     public List<SessionAttendance> StudentAttendance { get; set; }
+    public List<Notes>? SessionNotes { get; set; }
 
     public string OwnerName => TeacherEmail;
 }

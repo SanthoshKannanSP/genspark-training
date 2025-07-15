@@ -13,6 +13,7 @@ public class AttendanceContext : DbContext
     public DbSet<Teacher> Teachers { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Settings> Settings { get; set; }
+    public DbSet<Notes> Notes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -53,6 +54,11 @@ public class AttendanceContext : DbContext
         modelBuilder.Entity<Settings>().HasOne(st => st.User)
                                     .WithOne(u => u.Settings)
                                     .HasForeignKey<Settings>(st => st.Username)
+                                    .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Notes>().HasKey(n => n.NoteId);
+        modelBuilder.Entity<Notes>().HasOne(n => n.Session)
+                                    .WithMany(s => s.SessionNotes)
                                     .OnDelete(DeleteBehavior.Restrict);
     }
 }

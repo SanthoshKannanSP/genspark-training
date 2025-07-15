@@ -10,6 +10,8 @@ using AttendanceApi.Models;
 using AttendanceApi.Models.DTOs;
 using AttendanceApi.Repositories;
 using AttendanceApi.Services;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -64,10 +66,25 @@ builder.Services.AddSwaggerGen(opt =>
     });
 });
 
+string connectionString;
+
+if (builder.Environment.IsDevelopment())
+{
+    connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+}
+else
+{
+    var keyVaultUrl = builder.Configuration["AzureBlob:KeyVaultUrl"];
+    var secretClient = new SecretClient(new Uri(keyVaultUrl), new DefaultAzureCredential());
+    KeyVaultSecret secret = await secretClient.GetSecretAsync("ConnectionString");
+    connectionString = secret.Value;
+}
+
+
 #region DbContext
 builder.Services.AddDbContext<AttendanceContext>(opts =>
 {
-    opts.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    opts.UseNpgsql(connectionString);
 });
 #endregion
 
@@ -78,6 +95,7 @@ builder.Services.AddTransient<IRepository<int, Student>, StudentRepository>();
 builder.Services.AddTransient<IRepository<int, Teacher>, TeacherRepository>();
 builder.Services.AddTransient<IRepository<string, User>, UserRepository>();
 builder.Services.AddTransient<IRepository<string, Settings>, SettingsRepository>();
+builder.Services.AddTransient<IRepository<int, Notes>, NoteRepository>();
 #endregion
 
 #region Services
@@ -90,7 +108,7 @@ builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddTransient<IOwnerService, OwnerService>();
 builder.Services.AddTransient<IAttendanceService, AttendanceService>();
 builder.Services.AddTransient<ISettingsService, SettingsService>();
-
+builder.Services.AddTransient<INotesService, NotesService>();
 #endregion
 
 #region AutoMapper
