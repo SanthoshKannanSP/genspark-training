@@ -1,0 +1,19 @@
+.session-header {
+  grid-template-columns: 6fr 2fr 3fr 2fr 2fr;
+  background-color: #f8f9fa;
+}
+
+.session-card-grid {
+  grid-template-columns: 6fr 2fr 3fr 2fr 2fr;
+  padding: 0.5rem 1rem;
+}
+
+@media (max-width: 767.98px) {
+  .session-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .action-icons {
+    justify-content: space-between;
+  }
+}

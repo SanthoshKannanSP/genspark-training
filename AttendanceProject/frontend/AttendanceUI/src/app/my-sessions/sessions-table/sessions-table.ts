@@ -60,6 +60,35 @@ export class SessionsTable {
       });
   }
 
+  isScheduled(index: number) {
+    if (this.sessions.data![index].status == 'Scheduled') return true;
+    return false;
+  }
+
+  cancelSession(sessionId: number) {
+    if (
+      confirm(
+        'Are you sure you want to cancel this session? This action cannot be undone'
+      )
+    ) {
+      this.sessionService.cancelSession(sessionId).subscribe({
+        next: (data) => {
+          this.notificationService.addNotification({
+            message: 'Session cancelled successfully',
+            type: 'success',
+          });
+        },
+        error: (error) => {
+          console.log(error);
+          this.notificationService.addNotification({
+            message: 'Unable to cancel session. Please try again later',
+            type: 'danger',
+          });
+        },
+      });
+    }
+  }
+
   public get pageNumbers(): number[] {
     if (this.sessions.pagination == null) return [];
     return Array.from(

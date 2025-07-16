@@ -77,6 +77,18 @@ export class SessionService {
     );
   }
 
+  cancelSession(sessionId: number) {
+    return this.api.post(`/api/v1/Session/${sessionId}/Cancel`, {}, true).pipe(
+      tap(() => {
+        this.currentFilters = null;
+        this.updateAllSessions();
+      }),
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  }
+
   editSession(sessionId: number, session: SessionModel) {
     return this.api
       .post(`/api/v1/Session/${sessionId}/Update`, session, true)

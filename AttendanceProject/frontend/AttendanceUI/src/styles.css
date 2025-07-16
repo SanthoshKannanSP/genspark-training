@@ -27,3 +27,41 @@ body {
   transform: scale(1);
   opacity: 0.8;
 }
+
+.disabled-icon-button {
+  pointer-events: none;
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.text-deep-blue {
+  color: #2a4d9b;
+}
+
+.text-burnt-orange {
+  color: #2e8b57;
+}
+
+.text-slate-teal {
+  color: #208080;
+}
+
+.badge-scheduled {
+  background-color: #b8860b;
+  color: #fff;
+}
+
+.badge-live {
+  background-color: #c1121f;
+  color: #fff;
+}
+
+.badge-completed {
+  background-color: #228b22;
+  color: #fff;
+}
+
+.badge-cancelled {
+  background-color: #555555;
+  color: #fff;
+}

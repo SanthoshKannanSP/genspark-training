@@ -1,170 +1,111 @@
-<div>
-  <div class="table-responsive shadow-sm rounded fs-5 d-none d-md-block">
-    <table class="table align-middle mb-0">
-      <thead class="table-light">
-        <tr>
-          <th>Title</th>
-          <th>Date</th>
-          <th>Timing</th>
-          <th>Status</th>
-          @if (student) {
-          <th class="text-center">Attendance</th>
-          } @else {
-          <th>Actions</th>
-          }
-        </tr>
-      </thead>
-      <tbody>
-        @for (session of sessions.data; track $index) {
-        <tr>
-          <td class="text-truncate" style="min-width: 400px">
-            {{ session.sessionName }} @if (student) {
-            <i
-              class="bi bi-journal-text icon-button text-primary"
-              data-bs-toggle="modal"
-              data-bs-target="#sessionNotesModal"
-              (click)="sessionNotesModal.openModal(session)"
-            ></i>
-            }
-          </td>
-          <td>{{ session.date | formatDate }}</td>
-          <td>
-            {{ session.startTime | formatTime }} - {{ session.endTime |
-            formatTime }}
-          </td>
-          <td>
-            <span
-              class="badge"
-              [class]="{
-              'bg-primary' : session.status == 'Scheduled',
-              'bg-info' : session.status == 'Live',
-              'bg-success': session.status == 'Completed',
-              'bg-error' : session.status == 'Cancelled'
-            }"
-              >{{ session.status }}</span
-            >
-          </td>
-          @if (student) {
-          <td class="text-center">
-            @if (session.status == "Completed") {
-            <span class="badge bg-secondary"
-              >{{ session.attended ? "Attended" : "Not Attended" }}</span
-            >
-            } @else {
-            <span>-</span>
-            }
-          </td>
-          } @else {
-          <td class="d-flex gap-4">
-            <i
-              class="bi bi-pencil icon-button"
-              data-bs-toggle="modal"
-              data-bs-target="#editSessionModal"
-              (click)="editSessionModal.openModal(session)"
-            ></i>
-            <i
-              class="bi bi-cloud-upload icon-button"
-              data-bs-toggle="modal"
-              data-bs-target="#sessionNotesModal"
-              (click)="sessionNotesModal.openModal(session)"
-            >
-            </i>
-            <i
-              class="bi bi-share icon-button"
-              (click)="copySessionInviteToClipboard(session.sessionCode!)"
-            ></i>
-          </td>
-          }
-        </tr>
-        } @for (row of emptyRows; track $index) {
-        <tr class="opacity-75" style="height: 54px">
-          @if ($index==4 && sessions.data?.length == 0) {
-          <td colspan="5" class="text-center align-middle">
-            <div class="d-flex justify-content-center align-items-center h-100">
-              <span class="text-muted fs-6">No Sessions Found</span>
-            </div>
-          </td>
-          } @else {
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          }
-        </tr>
-        }
-      </tbody>
-    </table>
+<div class="session-container">
+  <div
+    class="d-none d-md-grid session-header px-3 py-2 fw-semibold border-bottom text-black"
+  >
+    <h5><strong>Title</strong></h5>
+    <h5><strong>Date</strong></h5>
+    <h5><strong>Timing</strong></h5>
+    <h5><strong>Status</strong></h5>
+    @if (student) {
+    <h5 class="text-center"><strong>Attendance</strong></h5>
+    } @else {
+    <h5><strong>Actions</strong></h5>
+    }
   </div>
 
-  <div class="d-block d-md-none">
-    @for (session of sessions.data; track $index) {
-    <div class="card mb-3 shadow-sm">
-      <div class="card-body">
-        <p>
-          <strong>Session Name:</strong> {{ session.sessionName }} @if (student)
-          {<i class="bi bi-journal-text icon-button"></i>}
-        </p>
-        <p>
-          <strong>Date & Time:</strong> {{ session.date | formatDate }} {{
-          session.startTime |formatTime }} - {{ session.endTime |formatTime }}
-        </p>
-        <p>
-          <strong class="me-2">Status: </strong>
-          <span
-            class="badge"
-            [class]="{
-              'bg-primary' : session.status == 'Scheduled',
-              'bg-info' : session.status == 'Live',
-              'bg-success': session.status == 'Completed',
-              'bg-error' : session.status == 'Cancelled'
-            }"
-            >{{ session.status }}</span
-          >
-        </p>
-
-        @if (student) {
-        <p>
-          <strong>Attendance:</strong>
-          @if (session.status == "Completed") {
-          <span class="badge bg-secondary">
-            {{ session.attended ? "Attended" : "Not Attended" }}
-          </span>
-          } @else {
-          <span>-</span>
-          }
-        </p>
-        } @else {
-        <div class="d-flex gap-3">
+  @for (session of sessions.data; track $index) {
+  <div class="card session-row border-0 border-bottom shadow-sm rounded-0">
+    <div
+      class="card-body d-grid gap-2 d-md-grid session-card-grid align-items-center"
+    >
+      <div>
+        <div class="d-md-none fw-semibold">Title</div>
+        <div class="text-truncate" style="min-width: 100px">
+          {{ session.sessionName }} @if (student) {
           <i
-            class="bi bi-pencil icon-button"
-            data-bs-toggle="modal"
-            data-bs-target="#editSessionModal"
-            (click)="editSessionModal.openModal(session)"
-          ></i>
-          <i
-            class="bi bi-cloud-upload icon icon-button"
+            class="bi bi-journal-text icon-button text-primary ms-1"
             data-bs-toggle="modal"
             data-bs-target="#sessionNotesModal"
             (click)="sessionNotesModal.openModal(session)"
-          >
-          </i>
-          <i
-            class="bi bi-share icon-button"
-            (click)="copySessionInviteToClipboard(session.sessionCode!)"
           ></i>
+          }
         </div>
+      </div>
+
+      <div>
+        <div class="d-md-none fw-semibold">Date</div>
+        {{ session.date | formatDate }}
+      </div>
+
+      <div>
+        <div class="d-md-none fw-semibold">Timing</div>
+        {{ session.startTime | formatTime }} - {{ session.endTime | formatTime
+        }}
+      </div>
+
+      <div class="d-flex gap-2 mb-2">
+        <div class="d-md-none fw-semibold">Status</div>
+        <span
+          class="badge"
+          [class]="{
+              'badge-scheduled': session.status === 'Scheduled',
+              'badge-live': session.status === 'Live',
+              'badge-completed': session.status === 'Completed',
+              'badge-cancelled': session.status === 'Cancelled'
+            }"
+          >{{ session.status }}</span
+        >
+      </div>
+
+      @if (student) {
+      <div class="text-center">
+        <div class="d-md-none fw-semibold">Attendance</div>
+        @if (session.status === 'Completed') {
+        <span class="badge bg-secondary">
+          {{ session.attended ? "Attended" : "Not Attended" }}
+        </span>
+        } @else {
+        <span>-</span>
         }
       </div>
+      } @else {
+      <div class="d-flex gap-3 action-icons">
+        <i
+          class="bi bi-pencil-fill icon-button text-deep-blue"
+          [class.disabled-icon-button]="!isScheduled($index)"
+          [attr.data-bs-toggle]="isScheduled($index) ? 'modal' : null"
+          [attr.data-bs-target]="isScheduled($index) ? '#editSessionModal' : null"
+          (click)="isScheduled($index) && editSessionModal.openModal(session)"
+        ></i>
+        <i
+          class="bi bi-cloud-upload-fill icon-button text-sky-blue"
+          data-bs-toggle="modal"
+          data-bs-target="#sessionNotesModal"
+          (click)="sessionNotesModal.openModal(session)"
+        ></i>
+        <i
+          class="bi bi-share-fill icon-button text-slate-teal"
+          [class.disabled-icon-button]="!isScheduled($index)"
+          (click)="isScheduled($index) && copySessionInviteToClipboard(session.sessionCode!)"
+        ></i>
+        <i
+          class="bi bi-trash-fill icon-button text-danger"
+          [class.disabled-icon-button]="!isScheduled($index)"
+          (click)="cancelSession(session.sessionId)"
+        ></i>
+      </div>
+      }
     </div>
-    }
   </div>
+  } @if (sessions.data?.length === 0) {
+  <div class="text-center py-4 text-muted">No Sessions Found</div>
+  }
 
   <!-- Pagination -->
   @if (sessions.pagination != null && sessions.pagination.pageSize > 1) {
   <nav class="mt-3 d-flex justify-content-end">
     <ul class="pagination pagination-sm mb-0">
-      <li class="page-item" [class.disabled]="sessions.pagination.page == 1">
+      <li class="page-item" [class.disabled]="sessions.pagination.page === 1">
         <a class="page-link" (click)="goToPage(sessions.pagination.page - 1)"
           >Prev</a
         >
@@ -185,10 +126,10 @@
     </ul>
   </nav>
   }
-</div>
 
-<app-edit-session-modal #editSessionModal></app-edit-session-modal>
-<app-session-notes-modal
-  [editable]="!student"
-  #sessionNotesModal
-></app-session-notes-modal>
+  <app-edit-session-modal #editSessionModal></app-edit-session-modal>
+  <app-session-notes-modal
+    [editable]="!student"
+    #sessionNotesModal
+  ></app-session-notes-modal>
+</div>

@@ -6,8 +6,19 @@
   <div
     class="toast align-items-center text-white border-0 show mb-2 bg-success"
     role="alert"
+    aria-live="assertive"
+    aria-atomic="true"
     [class]="'bg-'+notification.type"
   >
+    <div class="toast-header">
+      <strong class="me-auto">Notification</strong>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="toast"
+        aria-label="Close"
+      ></button>
+    </div>
     <div class="toast-body">{{ notification.message }}</div>
   </div>
   }
