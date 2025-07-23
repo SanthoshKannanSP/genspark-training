@@ -6,7 +6,7 @@ export const teacherAuthGuard: CanActivateFn = (route, state) => {
   const api = inject(HttpClientService);
   const router = inject(Router);
 
-  if (api.isAuthenticated() && api.hasRole('Teacher')) {
+  if (api.isAuthenticated() && api.hasRole('Teacher') || api.hasRole('Admin') ) {
     return true;
   }
 

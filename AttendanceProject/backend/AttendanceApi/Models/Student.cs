@@ -13,6 +13,9 @@ public class Student : IOwnableResource
 
     public string OwnerName => Email;
 
+
+    public int? BatchId { get; set; }
+    public Batch? Batch { get; set; }
     public List<SessionAttendance> SessionsToAttend = [];
     public User? User;
 }

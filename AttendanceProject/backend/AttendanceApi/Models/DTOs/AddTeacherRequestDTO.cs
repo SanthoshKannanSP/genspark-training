@@ -12,4 +12,7 @@ public class AddTeacherRequestDTO
     public string Organization { get; set; } = string.Empty;
     [MinLength(8, ErrorMessage = "Password should be atleast 8 letters")]
     public string Password { get; set; } = string.Empty;
+
+    // WE CAN SET ROLE TO ADMIN
+    public string Role { get; set; } = "Teacher";
 }

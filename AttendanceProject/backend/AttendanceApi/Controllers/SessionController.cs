@@ -45,7 +45,7 @@ public class SessionController : ControllerBase
         return Ok(sessions);
     }
 
-    [Authorize(Roles = "Teacher")]
+    [Authorize(Roles = "Teacher, Admin")]
     [HttpPost]
     public async Task<ActionResult<Session>> ScheduleSession(AddSessionRequestDTO addSessionRequestDTO)
     {
@@ -98,7 +98,7 @@ public class SessionController : ControllerBase
         return Ok(session);
     }
 
-    [Authorize(Roles = "Teacher, Student")]
+    [Authorize(Roles = "Teacher, Admin, Student")]
     [HttpGet]
     [Route("Upcoming")]
     public async Task<ActionResult<List<UpcomingSessionsResponseDTO>>> GetUpcomingSessions()
@@ -107,7 +107,7 @@ public class SessionController : ControllerBase
         return Ok(sessions);
     }
 
-    [Authorize(Roles = "Teacher, Student")]
+    [Authorize(Roles = "Teacher, Admin, Student")]
     [HttpGet]
     [Route("Past")]
     public async Task<ActionResult<List<PastSessionResponseDTO>>> GetPastSessions()
@@ -116,7 +116,7 @@ public class SessionController : ControllerBase
         return Ok(sessions);
     }
 
-    [Authorize(Roles = "Teacher")]
+    [Authorize(Roles = "Teacher, Admin")]
     [HttpGet]
     [Route("Attendance")]
     public async Task<ActionResult<List<AttendanceDetailsResponseDTO>>> GetAttendanceDetails(int page,
@@ -131,7 +131,7 @@ public class SessionController : ControllerBase
         return Ok(sessions);
     }
 
-    [Authorize(Roles = "Teacher")]
+    [Authorize(Roles = "Teacher, Admin")]
     [HttpPost]
     [Route("Make/Live")]
     public async Task<ActionResult<Session>> MakeSessionLive(SessionIdDTO sessionIdDTO)
@@ -140,7 +140,7 @@ public class SessionController : ControllerBase
         return Ok(session);
     }
 
-    [Authorize(Roles = "Teacher")]
+    [Authorize(Roles = "Teacher, Admin")]
     [HttpGet]
     [Route("Live")]
     public async Task<ActionResult<LiveSessionResponseDTO>> GetLiveSession()

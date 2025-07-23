@@ -93,6 +93,23 @@ export class HttpClientService {
         })
       );
   }
+  
+  patch(route: string, body: any, credentials: boolean = false) {
+  const url = Environment.BASE_URL + route;
+  return this.http
+    .patch(url, body, { headers: credentials ? this.headers : undefined })
+    .pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status == 0 && credentials) {
+          return this.tryRefresh(() =>
+            this.http.patch(url, body, { headers: this.headers })
+          );
+        }
+        return throwError(() => error);
+      })
+    );
+}
+
 
   private tryRefresh(retryCallback: () => any) {
     if (!this.refreshToken) {

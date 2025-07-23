@@ -28,6 +28,7 @@ export class TeacherSignupPage {
         organization: ['', [Validators.minLength(3), Validators.required]],
         password: ['', [Validators.minLength(8), Validators.required]],
         confirmPassword: ['', Validators.required],
+        role: ['Teacher', Validators.required]
       },
       { validators: confirmPasswordValidator }
     );
@@ -48,6 +49,10 @@ export class TeacherSignupPage {
   get confirmPassword() {
     return this.signupForm.get('confirmPassword');
   }
+  get role() {
+    return this.signupForm.get('role')!;
+  }
+
 
   onSubmit() {
     if (this.signupForm.valid) {

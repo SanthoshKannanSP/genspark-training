@@ -27,7 +27,8 @@ export class ScheduleSessionModal {
     this.sessionForm = this.fb.group(
       {
         sessionName: ['', [Validators.required]],
-        date: ['', [Validators.required, futureDateValidator]],
+        // date: ['', [Validators.required, futureDateValidator]],
+        date: ['', [Validators.required]],
         startTime: ['', Validators.required],
         endTime: ['', Validators.required],
         sessionLink: ['', Validators.required],

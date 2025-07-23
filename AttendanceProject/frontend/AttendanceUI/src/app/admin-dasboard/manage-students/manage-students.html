@@ -1,0 +1,52 @@
+<div class="container mt-4">
+  <h2>Manage Students</h2>
+
+  <table class="table table-bordered mt-3">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Current Batch</th>
+        <th>Assign Batch</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let student of students">
+        <td>{{ student.name }}</td>
+        <td>{{ student.email }}</td>
+        <td>{{ student.status }}</td>
+        <td>{{ student.batch?.batchName || 'Not Assigned' }}</td>
+        <td>
+          <select
+            [(ngModel)]="selectedBatch[student.studentId]"
+            class="form-select form-select-sm d-inline-block w-auto me-2"
+          >
+            <option *ngFor="let batch of batches" [value]="batch.batchId">
+              {{ batch.batchName }}
+            </option>
+          </select>
+          <button
+            class="btn btn-sm btn-primary"
+            (click)="assignBatch(student.studentId)"
+          >
+            Assign
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="create-batch-form" style="margin-top: 30px; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
+  <h3>Create a New Batch</h3>
+
+  <div style="display: flex; gap: 10px; align-items: center;">
+    <input type="text" [(ngModel)]="newBatchName" placeholder="Enter batch name" class="form-control" />
+    <button (click)="createBatch()" class="btn btn-primary">Create</button>
+  </div>
+
+  <p *ngIf="batchCreateMessage" style="margin-top: 10px; color: green;">
+    {{ batchCreateMessage }}
+  </p>
+</div>
+
+</div>

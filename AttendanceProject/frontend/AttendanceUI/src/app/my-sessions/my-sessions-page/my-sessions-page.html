@@ -1,7 +1,7 @@
 <div class="components mx-4">
   <h1>My Sessions</h1>
   <app-filter-menu></app-filter-menu>
-  @if (api.hasRole("Teacher")) {
+  @if (api.hasRole("Teacher")||api.hasRole("Admin")) {
   <div class="d-flex mb-4">
     <button
       class="btn btn-primary align-self-start"

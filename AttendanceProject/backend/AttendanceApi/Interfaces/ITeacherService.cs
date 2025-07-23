@@ -7,6 +7,7 @@ public interface ITeacherService
 {
     public Task<Teacher> AddTeacher(AddTeacherRequestDTO addTeacherRequestDTO);
     public Task<Teacher> DeactivateTeacher();
+    public Task<bool> DeleteTeacherByIdAsync(int teacherId);
     public Task<List<Teacher>> GetAllActiveTeachers(int? page, int? pageSize);
     public Task<Teacher> GetTeacher(int teacherId);
 

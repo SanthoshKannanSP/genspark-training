@@ -15,6 +15,14 @@ public class AttendanceContext : DbContext
     public DbSet<Settings> Settings { get; set; }
     public DbSet<Notes> Notes { get; set; }
 
+    // ATTENDANCE EDIT REQUEST
+    public DbSet<AttendanceEditRequest> AttendanceEditRequests { get; set; }
+    
+    // BATCH
+    public DbSet<Batch> Batches { get; set; }
+
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Session>().HasKey(s => s.SessionId);
@@ -40,6 +48,10 @@ public class AttendanceContext : DbContext
                                 .WithOne(u => u.Student)
                                 .HasForeignKey<Student>(st => st.Email)
                                 .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<Student>().HasOne(s => s.Batch)
+                                .WithMany(b => b.Students)
+                                .HasForeignKey(s => s.BatchId)
+                                .OnDelete(DeleteBehavior.SetNull); 
 
         modelBuilder.Entity<Teacher>().HasKey(t => t.TeacherId);
         modelBuilder.Entity<Teacher>().HasOne(t => t.User)

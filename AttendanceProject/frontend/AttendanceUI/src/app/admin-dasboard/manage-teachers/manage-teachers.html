@@ -1,0 +1,68 @@
+<div class="container mt-4">
+  <h3 class="mb-3">Manage Teachers</h3>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>Name</th>
+          <!-- <th>Email</th> -->
+          <th>Organization</th>
+          <!-- <th>Status</th> -->
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let teacher of teachers">
+          <td>{{ teacher.name }}</td>
+
+          <td>{{ teacher.organization }}</td>
+          
+          <td>
+            <button
+              class="btn btn-danger btn-sm"
+              (click)="removeTeacher(teacher.teacherId)"
+            >
+              Remove
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="teachers.length === 0">
+          <td colspan="5" class="text-center text-muted">No teachers found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="form-wrapper">
+  <h3>Add New Teacher</h3>
+  <form [formGroup]="createTeacherForm" (ngSubmit)="onSubmit()" class="teacher-form">
+    <div class="form-grid">
+      <label for="name">Name:</label>
+      <input id="name" formControlName="name" />
+      <div class="error" *ngIf="name.invalid && name.touched">Name is required (min 3 chars)</div>
+
+      <label for="email">Email:</label>
+      <input id="email" formControlName="email" />
+      <div class="error" *ngIf="email.invalid && email.touched">Enter a valid email</div>
+
+      <label for="organization">Organization:</label>
+      <input id="organization" formControlName="organization" />
+      <div class="error" *ngIf="organization.invalid && organization.touched">Min 3 characters</div>
+
+      <label for="password">Password:</label>
+      <input id="password" type="password" formControlName="password" />
+      <div class="error" *ngIf="password.invalid && password.touched">Min 8 characters</div>
+
+      <label for="confirmPassword">Confirm Password:</label>
+      <input id="confirmPassword" type="password" formControlName="confirmPassword" />
+      <div class="error" *ngIf="confirmPassword.invalid && confirmPassword.touched">Must match password</div>
+    </div>
+
+    <div class="submit-container">
+      <button type="submit" [disabled]="createTeacherForm.invalid">Add Teacher</button>
+    </div>
+  </form>
+</div>
+
+</div>

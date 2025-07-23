@@ -22,7 +22,7 @@ export class AccountService {
         next: (data: any) => this.account.next(data.data as StudentModel),
         error: (error) => console.log(error),
       });
-    } else if (this.api.hasRole('Teacher')) {
+    } else if (this.api.hasRole('Teacher')|| this.api.hasRole('Admin')) {
       this.api.get('/api/v1/Teacher/Me', true).subscribe({
         next: (data: any) => this.account.next(data.data as TeacherModel),
         error: (error) => console.log(error),
@@ -48,7 +48,7 @@ export class AccountService {
           });
         },
       });
-    } else if (this.api.hasRole('Teacher')) {
+    } else if (this.api.hasRole('Teacher') || this.api.hasRole('Admin') ) {
       this.api.post('/api/v1/Teacher/Update', details, true).subscribe({
         next: (data: any) => {
           this.account.next(data.data as TeacherModel);
@@ -83,7 +83,7 @@ export class AccountService {
           });
         },
       });
-    } else if (this.api.hasRole('Teacher')) {
+    } else if (this.api.hasRole('Teacher')|| this.api.hasRole('Admin')) {
       this.api.delete('/api/v1/Teacher', true).subscribe({
         next: (data) => {
           alert('Successfully deleted the account');

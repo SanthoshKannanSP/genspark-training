@@ -16,12 +16,12 @@ public class TokenService : ITokenService
     }
     public string GenerateToken(User user)
     {
+
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.Role, user.Role)
         };
-
         var creds = new SigningCredentials(_securityKey, SecurityAlgorithms.HmacSha256Signature);
         var tokenDescriptor = new SecurityTokenDescriptor()
         {

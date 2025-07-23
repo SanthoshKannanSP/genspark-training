@@ -12,12 +12,12 @@ public class StudentRepository : AbstractRepository<int, Student>
     }
     public override async Task<Student> Get(int key)
     {
-        return await _attendenceContent.Students.SingleOrDefaultAsync(t => t.StudentId == key);
+        return await _attendenceContent.Students.Include(s => s.Batch).SingleOrDefaultAsync(t => t.StudentId == key);
     }
 
     public override async Task<IQueryable<Student>> GetAll()
     {
-        return _attendenceContent.Students.AsQueryable();
+        return _attendenceContent.Students.Include(s => s.Batch).AsQueryable();
     }
         
 }
