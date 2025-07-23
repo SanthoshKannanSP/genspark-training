@@ -12,15 +12,15 @@ public class AddSessionRequestDTO : IValidatableObject
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
-        // if (EndTime <= StartTime)
-        // {
-        //     yield return new ValidationResult("The EndTime should be after the StartTime", new[] { nameof(StartTime), nameof(EndTime) });
-        // }
+        if (EndTime <= StartTime)
+        {
+            yield return new ValidationResult("The EndTime should be after the StartTime", new[] { nameof(StartTime), nameof(EndTime) });
+        }
 
-        // if (Date <= DateOnly.FromDateTime(DateTime.Now))
-        // {
-        //     yield return new ValidationResult("The Session Date should be in the future", new[] { nameof(Date) });
-        // }
+        if (Date <= DateOnly.FromDateTime(DateTime.Now))
+        {
+            yield return new ValidationResult("The Session Date should be in the future", new[] { nameof(Date) });
+        }
 
         if (SessionName.Length <= 2)
         {
