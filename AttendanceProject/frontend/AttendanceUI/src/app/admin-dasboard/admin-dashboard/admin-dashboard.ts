@@ -9,14 +9,29 @@ import { filter } from 'rxjs';
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.css'
 })
-export class AdminDashboard {
-  isDashboardRoot: boolean = true;
+// export class AdminDashboard {
+//   isDashboardRoot: boolean = true;
 
-  constructor(private router: Router) {
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: any) => {
-      this.isDashboardRoot = event.url === '/portal/admin-dashboard';
-    });
+//   constructor(private router: Router) {
+//     this.router.events.pipe(
+//       filter(event => event instanceof NavigationEnd)
+//     ).subscribe((event: any) => {
+//       this.isDashboardRoot = event.url === '/portal/admin-dashboard';
+//     });
+//   }
+// }
+
+export class AdminDashboard {
+  isDashboardRoot: boolean = false;
+
+  constructor(private router: Router) {}
+
+  ngOnInit(): void {
+    this.checkIfRoot();
+    this.router.events.subscribe(() => this.checkIfRoot());
+  }
+
+  private checkIfRoot() {
+    this.isDashboardRoot = this.router.url === '/portal/admin-dashboard';
   }
 }

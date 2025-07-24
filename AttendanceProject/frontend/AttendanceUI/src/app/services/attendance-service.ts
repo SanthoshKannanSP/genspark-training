@@ -131,6 +131,6 @@ export class AttendanceService {
   }
   // APPROVE EDIT REQUEST
   approveAttendanceEditRequest(requestId: number) {
-    return this.api.patch(`/api/v1/Attendance/${requestId}/approve`, {});
+    return this.api.patch(`/api/v1/Attendance/${requestId}/approve`, {}, true);
   }
 }

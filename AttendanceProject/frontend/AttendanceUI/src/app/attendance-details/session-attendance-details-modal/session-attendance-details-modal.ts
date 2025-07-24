@@ -124,7 +124,7 @@ export class SessionAttendanceDetailsModal {
         student.attended = currentAttended;
         checkbox.checked = currentAttended;
         this.notificationService.addNotification({
-          message: `Failed to submit edit request.`,
+          message: `Can not make repetitive changes to the same student.`,
           type: 'danger',
         });
       }

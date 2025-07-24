@@ -205,6 +205,7 @@ public class AttendanceService : IAttendanceService
     public async Task<bool> ApproveEditRequestAsync(int requestId)
     {
         var request = await _attendanceEditRequestRepository.Get(requestId);
+        Console.WriteLine(request);
         if (request == null)
             return false;
 
