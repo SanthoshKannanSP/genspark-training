@@ -47,6 +47,7 @@ public class BatchController : ControllerBase
     public async Task<IActionResult> AssignStudentToBatch([FromBody] AssignStudentRequestDto dto)
     {
         var result = await _batchService.AssignStudentToBatchAsync(dto);
-        return Ok(result);
+        // return Ok(result);
+        return NoContent();
     }
 }

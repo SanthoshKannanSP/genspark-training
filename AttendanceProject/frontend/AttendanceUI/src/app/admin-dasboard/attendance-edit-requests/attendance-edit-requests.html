@@ -49,14 +49,12 @@
       <tbody>
         <tr
           *ngFor="let request of editRequests"
-          [hidden]="request.status === 'Approved'"
         >
           <td>{{ request.studentName }}</td>
           <td>{{ request.sessionName }}</td>
           <td>{{ request.requestedAt | date }}</td>
           <td>{{ request.currentStatus }}</td>
           <td>{{ request.requestedStatus }}</td>
-          <td>{{ request.status }}</td>
           <td>
             <button
               class="btn btn-success btn-sm"

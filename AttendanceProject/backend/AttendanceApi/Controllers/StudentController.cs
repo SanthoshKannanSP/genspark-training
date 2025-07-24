@@ -20,12 +20,21 @@ public class StudentController : ControllerBase
         _settingsService = settingsService;
     }
 
+    // [HttpGet]
+    // public async Task<ActionResult<List<Student>>> GetAllStudents(int page, int pageSize)
+    // {
+    //     var students = await _studentService.GetAllActiveStudents(page, pageSize);
+    //     return Ok(students);
+    // }
     [HttpGet]
-    public async Task<ActionResult<List<Student>>> GetAllStudents(int page, int pageSize)
+    // [Route("active")]
+    public async Task<ActionResult<List<StudentResponseDto>>> GetAllActiveStudents(int page = 1, int pageSize = 10)
     {
-        var students = await _studentService.GetAllActiveStudents(page, pageSize);
-        return Ok(students);
+        var result = await _studentService.GetAllActiveStudents(page, pageSize);
+        return Ok(result);
     }
+
+
 
 
     [HttpGet]

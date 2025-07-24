@@ -17,12 +17,15 @@ export class AttendanceEditRequests {
   constructor(private attendanceService: AttendanceService) {}
   
   ngOnInit() {
-  this.attendanceService.getAllAttendanceEditRequests();
+  this.refreshRequests(); 
   this.attendanceService.attendanceEditRequests$.subscribe(data => {
     console.log('Edit Requests:', data);
     this.editRequests = data;
   });
 }
+  refreshRequests() {
+    this.attendanceService.getAllAttendanceEditRequests();
+  }
 // approveRequest(request: AttendanceEditRequestModel) {
 //   if (request.requestedStatus === 'Attended') {
 //     this.attendanceService
@@ -57,6 +60,7 @@ approveRequest(request: AttendanceEditRequestModel) {
         message: 'Attendance edit request approved.',
         type: 'success',
         });
+        this.refreshRequests(); 
       },
     });
   });

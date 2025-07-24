@@ -183,6 +183,7 @@ public class AttendanceService : IAttendanceService
         var query = await _attendanceEditRequestRepository.GetAll(); // IQueryable<AttendanceEditRequest>
 
         var result = await query
+            .Where(r => r.Status == "Pending")
             .Select(r => new AttendanceEditRequestDTOResponse
             {
                 Id = r.Id,
