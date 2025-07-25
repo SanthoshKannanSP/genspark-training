@@ -1,0 +1,27 @@
+<div class="container mt-4">
+  <div class="d-flex justify-start gap-4 align-items-center mb-4">
+    <h2>All Videos</h2>
+    <a class="btn btn-success" [routerLink]="['/videos/upload']"
+      >Upload Video</a
+    >
+  </div>
+
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    @for (video of videos; track $index) {
+    <div class="col">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">{{ video.title }}</h5>
+          <p class="card-text">{{ video.description }}</p>
+          <p class="text-muted small">
+            {{ video.uploadDate | date: 'medium' }}
+          </p>
+          <button class="btn btn-primary" (click)="openVideo(video)">
+            View Video
+          </button>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+</div>

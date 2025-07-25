@@ -1,0 +1,9 @@
+@if (video) {
+<div class="container mt-4">
+  <h2>{{ video.title }}</h2>
+  <p>{{ video.description }}</p>
+  <p class="text-muted">Uploaded: {{ video.uploadDate | date:'medium' }}</p>
+
+  <app-video-player [fileName]="video.videoId"></app-video-player>
+</div>
+}
