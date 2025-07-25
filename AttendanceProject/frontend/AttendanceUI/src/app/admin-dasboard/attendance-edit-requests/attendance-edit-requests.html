@@ -1,0 +1,74 @@
+<!-- <div class="container mt-4">
+  <h2 class="mb-4">Attendance Edit Requests</h2>
+  
+  <div class="row row-cols-1 row-cols-md-2 g-4">
+  <div
+    class="col"
+    *ngFor="let request of editRequests"
+  >
+    <ng-container *ngIf="request.status !== 'Approved'">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h5 class="card-title"><strong>Student Name: </strong>{{ request.studentName }}</h5>
+          <p class="card-text">
+            <strong>Session Name: </strong> {{ request.sessionName }}<br>
+            <strong>Session Date: </strong> {{ request.requestedAt | date }}<br>
+            <strong>Current Status: </strong> {{ request.currentStatus }}<br>
+            <strong>Requested Status: </strong> {{ request.requestedStatus }}
+          </p>
+          <button
+            class="btn btn-success me-2"
+            (click)="approveRequest(request)"
+          >
+            Approve
+          </button>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+</div> -->
+
+
+<div class="container mt-4">
+  <h2 class="mb-4">Attendance Edit Requests</h2>
+
+  <div *ngIf="editRequests && editRequests.length > 0; else noRequests">
+    <table class="table table-bordered table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Student Name</th>
+          <th>Session Name</th>
+          <th>Session Date</th>
+          <th>Current Status</th>
+          <th>Requested Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let request of editRequests"
+        >
+          <td>{{ request.studentName }}</td>
+          <td>{{ request.sessionName }}</td>
+          <td>{{ request.requestedAt | date }}</td>
+          <td>{{ request.currentStatus }}</td>
+          <td>{{ request.requestedStatus }}</td>
+          <td>
+            <button
+              class="btn btn-success btn-sm"
+              (click)="approveRequest(request)"
+            >
+              Approve
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #noRequests>
+    <div class="alert alert-info">No attendance edit requests found.</div>
+  </ng-template>
+</div>

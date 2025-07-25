@@ -63,17 +63,45 @@ public class StudentService : IStudentService
         return student;
     }
 
-    public async Task<List<Student>> GetAllActiveStudents(int page, int pageSize)
+    // public async Task<List<Student>> GetAllActiveStudents(int page, int pageSize)
+    // {
+    //     page = page > 0 ? page : 1;
+    //     pageSize = pageSize > 0 ? pageSize : 10;
+    //     var students = await _studentRepository.GetAll();
+    //     if (students == null)
+    //         throw new Exception("No students found");
+    //     students = students.Where(s => s.Status == "Active");
+    //     students = students.Skip((page - 1) * pageSize).Take(pageSize);
+    //     return students.ToList();
+    // }
+    public async Task<List<StudentResponseDto>> GetAllActiveStudents(int page, int pageSize)
     {
         page = page > 0 ? page : 1;
         pageSize = pageSize > 0 ? pageSize : 10;
+
         var students = await _studentRepository.GetAll();
-        if (students == null)
-            throw new Exception("No students found");
-        students = students.Where(s => s.Status == "Active");
-        students = students.Skip((page - 1) * pageSize).Take(pageSize);
-        return students.ToList();
+
+        var filtered = students
+            .Where(s => s.Status == "Active")
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(s => new StudentResponseDto
+            {
+                StudentId = s.StudentId,
+                Name = s.Name,
+                Email = s.Email,
+                Status = s.Status,
+                Batch = s.Batch == null ? null : new StudentResponseDto.BatchDto
+                {
+                    BatchId = s.Batch.BatchId,
+                    BatchName = s.Batch.BatchName
+                }
+            });
+
+        return filtered.ToList();
+
     }
+
 
     public async Task<StudentDetailsDTO> GetMyDetails()
     {

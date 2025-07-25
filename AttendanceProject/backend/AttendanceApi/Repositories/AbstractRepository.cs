@@ -43,4 +43,6 @@ public abstract class AbstractRepository<K, T> : IRepository<K, T> where T : cla
         await _attendenceContent.SaveChangesAsync();
         return item;
     }
+
+
 }

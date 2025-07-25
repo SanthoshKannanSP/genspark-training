@@ -1,52 +1,37 @@
 <!-- Sidebar for Medium+ Screens -->
-<div
-  class="d-none d-xl-flex flex-column flex-shrink-0 p-3 text-white bg-dark"
-  style="width: 250px; height: 100vh"
->
-  <a
-    href="/"
-    class="d-flex align-items-center mb-3 text-white text-decoration-none"
-  >
+<div class="d-none d-xl-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 250px; height: 100vh">
+  <a href="/" class="d-flex align-items-center mb-3 text-white text-decoration-none">
     <span class="fs-5">Student Portal</span>
   </a>
   <hr />
   <ul class="nav nav-pills flex-column mb-auto">
     <li class="nav-item">
-      <a
-        routerLink="/portal/dashboard"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        class="nav-link text-white"
-      >
+      <a routerLink="/portal/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+        class="nav-link text-white">
         Dashboard
       </a>
     </li>
     <li>
-      <a
-        routerLink="/portal/sessions"
-        routerLinkActive="active"
-        class="nav-link text-white"
-      >
+      <a routerLink="/portal/sessions" routerLinkActive="active" class="nav-link text-white">
         My Sessions
       </a>
     </li>
-    @if (api.hasRole("Teacher")) {
+    @if (api.hasRole("Teacher")||api.hasRole("Admin")) {
     <li>
-      <a
-        routerLink="/portal/attendance"
-        routerLinkActive="active"
-        class="nav-link text-white"
-      >
+      <a routerLink="/portal/attendance" routerLinkActive="active" class="nav-link text-white">
         Attendance Details
       </a>
     </li>
     }
+    @if (api.hasRole("Admin")) {
     <li>
-      <a
-        routerLink="/portal/settings"
-        routerLinkActive="active"
-        class="nav-link text-white"
-      >
+      <a routerLink="/portal/admin-dashboard" routerLinkActive="active" class="nav-link text-white">
+        Admin-Dash
+      </a>
+    </li>
+    }
+    <li>
+      <a routerLink="/portal/settings" routerLinkActive="active" class="nav-link text-white">
         Settings
       </a>
     </li>
@@ -60,67 +45,46 @@
 </div>
 
 <!-- Sidebar Modal for Small Screens -->
-<div
-  class="modal fade"
-  id="sidebarModal"
-  tabindex="-1"
-  aria-labelledby="sidebarModalLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="sidebarModal" tabindex="-1" aria-labelledby="sidebarModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-fullscreen">
     <div class="modal-content bg-dark text-white">
       <div class="modal-header border-0">
         <h5 class="modal-title">Menu</h5>
-        <button
-          type="button"
-          id="sidebarCloseButton"
-          #sidebarCloseButton
-          class="btn-close btn-close-white"
-          data-bs-dismiss="modal"
-        ></button>
+        <button type="button" id="sidebarCloseButton" #sidebarCloseButton class="btn-close btn-close-white"
+          data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
         <ul class="nav nav-pills flex-column mb-auto">
           <li class="nav-item">
-            <a
-              routerLink="/portal/dashboard"
-              routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: true }"
-              class="nav-link text-white"
-              data-bs-dismiss="modal"
-            >
+            <a routerLink="/portal/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+              class="nav-link text-white" data-bs-dismiss="modal">
               Dashboard
             </a>
           </li>
           <li>
-            <a
-              routerLink="/portal/sessions"
-              routerLinkActive="active"
-              class="nav-link text-white"
-              data-bs-dismiss="modal"
-            >
+            <a routerLink="/portal/sessions" routerLinkActive="active" class="nav-link text-white"
+              data-bs-dismiss="modal">
               My Sessions
             </a>
           </li>
           @if (api.hasRole("Teacher")) {
           <li>
-            <a
-              routerLink="/portal/attendance"
-              routerLinkActive="active"
-              class="nav-link text-white"
-              data-bs-dismiss="modal"
-            >
+            <a routerLink="/portal/attendance" routerLinkActive="active" class="nav-link text-white"
+              data-bs-dismiss="modal">
               Attendance Details
             </a>
           </li>
           }
+          @if (api.hasRole("Admin")) {
           <li>
-            <a
-              routerLink="/portal/settings"
-              routerLinkActive="active"
-              class="nav-link text-white"
-              data-bs-dismiss="modal"
-            >
+            <a routerLink="/portal/admin-dashboard" routerLinkActive="active" class="nav-link text-white">
+              Admin-Dash
+            </a>
+          </li>
+          }
+          <li>
+            <a routerLink="/portal/settings" routerLinkActive="active" class="nav-link text-white"
+              data-bs-dismiss="modal">
               Settings
             </a>
           </li>

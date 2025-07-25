@@ -41,6 +41,60 @@ export class SessionAttendanceDetailsModal {
     });
   }
 
+  // toggleAttendance(event: Event, student: StudentAttendance, index: number) {
+  //   const checkbox = event.target as HTMLInputElement;
+  //   const currentAttended = student.attended;
+  //   const changeAttended = checkbox.checked;
+
+  //   student.attended = changeAttended;
+
+  //   let studentId = student.studentId;
+  //   let sessionId = student.sessionId;
+  //   if (currentAttended) {
+  //     this.attendanceService.unmarkAttendance(studentId, sessionId).subscribe({
+  //       next: (data) => {
+  //         const message = `Successfully unmarked attendance to ${this.students.data?.sessionAttendance[index].studentName} for session ${this.session?.sessionName}`;
+  //         this.notificationService.addNotification({
+  //           message: message,
+  //           type: 'success',
+  //         });
+  //       },
+  //       error: (error) => {
+  //         console.log(error);
+  //         student.attended = currentAttended;
+  //         checkbox.checked = currentAttended;
+  //         const message = `Failed to unmark attendance to ${this.students.data?.sessionAttendance[index].studentName} for session ${this.session?.sessionName}`;
+  //         this.notificationService.addNotification({
+  //           message: message,
+  //           type: 'danger',
+  //         });
+  //       },
+  //     });
+  //   } else {
+  //     this.attendanceService.markAttendance(studentId, sessionId).subscribe({
+  //       next: (data) => {
+  //         console.log(data);
+  //         const message = `Successfully marked attendance to ${this.students.data?.sessionAttendance[index].studentName} for session ${this.session?.sessionName}`;
+  //         this.notificationService.addNotification({
+  //           message: message,
+  //           type: 'success',
+  //         });
+  //       },
+  //       error: (error) => {
+  //         console.log(error);
+  //         student.attended = currentAttended;
+  //         checkbox.checked = currentAttended;
+  //         const message = `Failed to mark attendance to ${this.students.data?.sessionAttendance[index].studentName} for session ${this.session?.sessionName}`;
+  //         this.notificationService.addNotification({
+  //           message: message,
+  //           type: 'danger',
+  //         });
+  //       },
+  //     });
+  //   }
+  // }
+
+  // E D I T   R E Q U E S T
   toggleAttendance(event: Event, student: StudentAttendance, index: number) {
     const checkbox = event.target as HTMLInputElement;
     const currentAttended = student.attended;
@@ -48,51 +102,35 @@ export class SessionAttendanceDetailsModal {
 
     student.attended = changeAttended;
 
-    let studentId = student.studentId;
-    let sessionId = student.sessionId;
-    if (currentAttended) {
-      this.attendanceService.unmarkAttendance(studentId, sessionId).subscribe({
-        next: (data) => {
-          const message = `Successfully unmarked attendance to ${this.students.data?.sessionAttendance[index].studentName} for session ${this.session?.sessionName}`;
-          this.notificationService.addNotification({
-            message: message,
-            type: 'success',
-          });
-        },
-        error: (error) => {
-          console.log(error);
-          student.attended = currentAttended;
-          checkbox.checked = currentAttended;
-          const message = `Failed to unmark attendance to ${this.students.data?.sessionAttendance[index].studentName} for session ${this.session?.sessionName}`;
-          this.notificationService.addNotification({
-            message: message,
-            type: 'danger',
-          });
-        },
-      });
-    } else {
-      this.attendanceService.markAttendance(studentId, sessionId).subscribe({
-        next: (data) => {
-          console.log(data);
-          const message = `Successfully marked attendance to ${this.students.data?.sessionAttendance[index].studentName} for session ${this.session?.sessionName}`;
-          this.notificationService.addNotification({
-            message: message,
-            type: 'success',
-          });
-        },
-        error: (error) => {
-          console.log(error);
-          student.attended = currentAttended;
-          checkbox.checked = currentAttended;
-          const message = `Failed to mark attendance to ${this.students.data?.sessionAttendance[index].studentName} for session ${this.session?.sessionName}`;
-          this.notificationService.addNotification({
-            message: message,
-            type: 'danger',
-          });
-        },
-      });
-    }
+    const studentId = student.studentId;
+    const sessionId = student.sessionId;
+    const sessionAttendanceId = student.sessionAttendanceId;
+
+    // Send edit request instead of toggling directly
+    const requestedStatus = changeAttended ? 'Attended' : 'NotAttended';
+
+    this.attendanceService.submitEditRequest({
+      sessionAttendanceId,
+      requestedStatus,
+    }).subscribe({
+      next: () => {
+        this.notificationService.addNotification({
+          message: `Attendance edit request submitted for ${this.students.data?.sessionAttendance[index].studentName}`,
+          type: 'info',
+        });
+      },
+      error: (error: any) => {
+        console.error(error);
+        student.attended = currentAttended;
+        checkbox.checked = currentAttended;
+        this.notificationService.addNotification({
+          message: `Can not make repetitive changes to the same student.`,
+          type: 'danger',
+        });
+      }
+    });
   }
+
 
   openModal(session: AttendanceDetailsModel) {
     this.session = session;

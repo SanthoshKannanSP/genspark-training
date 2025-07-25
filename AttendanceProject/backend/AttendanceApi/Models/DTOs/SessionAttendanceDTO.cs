@@ -2,6 +2,7 @@ namespace AttendanceApi.Models.DTOs;
 
 public class SessionAttendanceDTO
 {
+    public int SessionAttendanceId { get; set; } 
     public int StudentId { get; set; }
     public string StudentName { get; set; } = string.Empty;
     public string? Email { get; set; }

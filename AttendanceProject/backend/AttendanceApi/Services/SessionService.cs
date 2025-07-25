@@ -94,7 +94,7 @@ public class SessionService : ISessionService
         pageSize = pageSize > 0 ? pageSize : 10;
 
         IQueryable<AllSessionRequestDTO> allSessions;
-        if (role == "Teacher")
+        if (role == "Teacher" || role == "Admin")
         {
             var sessions = await _sessionRepository.GetAll();
             allSessions = sessions.Where(s => s.TeacherEmail == username).Select(s => new AllSessionRequestDTO()
@@ -176,7 +176,7 @@ public class SessionService : ISessionService
             throw new Exception("Role not found");
 
         var response = new List<PastSessionResponseDTO>();
-        if (role == "Teacher")
+        if (role == "Teacher" || role == "Admin")
         {
             var sessions = await _sessionRepository.GetAll();
             sessions = sessions.Where(s => s.TeacherEmail == username && s.Status == "Completed").OrderByDescending(s => s.Date).ThenByDescending(s => s.SessionId).Take(3);
@@ -249,7 +249,7 @@ public class SessionService : ISessionService
             throw new Exception("Role not found");
 
         var response = new List<UpcomingSessionsResponseDTO>();
-        if (role == "Teacher")
+        if (role == "Teacher" || role == "Admin")
         {
             var sessions = await _sessionRepository.GetAll();
             sessions = sessions.Where(s => s.MadeBy.Email == username && s.Status == "Scheduled" && s.Date >= DateOnly.FromDateTime(DateTime.Now)).OrderBy(s => s.Date).ThenBy(s => s.StartTime).Take(3);
@@ -355,7 +355,7 @@ public class SessionService : ISessionService
         pageSize = pageSize > 0 ? pageSize : 10;
 
         IQueryable<Session> sessions;
-        if (role == "Teacher")
+        if (role == "Teacher" || role == "Admin")
         {
             sessions = await _sessionRepository.GetAll();
             sessions = sessions.Where(s => s.TeacherEmail == username);

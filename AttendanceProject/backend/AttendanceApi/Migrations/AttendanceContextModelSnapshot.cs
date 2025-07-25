@@ -22,6 +22,52 @@ namespace AttendanceApi.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("AttendanceApi.Models.AttendanceEditRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("RequestedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("RequestedStatus")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("SessionAttendanceId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SessionAttendanceId");
+
+                    b.ToTable("AttendanceEditRequests");
+                });
+
+            modelBuilder.Entity("AttendanceApi.Models.Batch", b =>
+                {
+                    b.Property<int>("BatchId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("BatchId"));
+
+                    b.Property<string>("BatchName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("BatchId");
+
+                    b.ToTable("Batches");
+                });
+
             modelBuilder.Entity("AttendanceApi.Models.Notes", b =>
                 {
                     b.Property<int>("NoteId")
@@ -152,6 +198,9 @@ namespace AttendanceApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StudentId"));
 
+                    b.Property<int?>("BatchId")
+                        .HasColumnType("integer");
+
                     b.Property<DateOnly>("DateOfBirth")
                         .HasColumnType("date");
 
@@ -172,6 +221,8 @@ namespace AttendanceApi.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("StudentId");
+
+                    b.HasIndex("BatchId");
 
                     b.HasIndex("Email")
                         .IsUnique();
@@ -236,6 +287,17 @@ namespace AttendanceApi.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("AttendanceApi.Models.AttendanceEditRequest", b =>
+                {
+                    b.HasOne("AttendanceApi.Models.SessionAttendance", "SessionAttendance")
+                        .WithMany()
+                        .HasForeignKey("SessionAttendanceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SessionAttendance");
+                });
+
             modelBuilder.Entity("AttendanceApi.Models.Notes", b =>
                 {
                     b.HasOne("AttendanceApi.Models.Session", "Session")
@@ -291,11 +353,18 @@ namespace AttendanceApi.Migrations
 
             modelBuilder.Entity("AttendanceApi.Models.Student", b =>
                 {
+                    b.HasOne("AttendanceApi.Models.Batch", "Batch")
+                        .WithMany("Students")
+                        .HasForeignKey("BatchId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("AttendanceApi.Models.User", "User")
                         .WithOne("Student")
                         .HasForeignKey("AttendanceApi.Models.Student", "Email")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Batch");
 
                     b.Navigation("User");
                 });
@@ -309,6 +378,11 @@ namespace AttendanceApi.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("AttendanceApi.Models.Batch", b =>
+                {
+                    b.Navigation("Students");
                 });
 
             modelBuilder.Entity("AttendanceApi.Models.Session", b =>

@@ -1,0 +1,20 @@
+<h1>Admin Dashboard</h1>
+<nav class="my-3">
+  <a routerLink="attendance-edit-requests" class="btn btn-success me-2">Attendance Edit Requests</a>
+  <a routerLink="manage-students" class="btn btn-primary me-2">Manage Students</a>
+  <a routerLink="manage-teachers" class="btn btn-warning ">Manage Teachers</a>
+</nav>
+<hr />
+<div *ngIf="isDashboardRoot" class="alert alert-info">
+  <h4>Welcome to the Admin Dashboard</h4>
+  <p>This dashboard allows administrators to manage and monitor attendance-related activities effectively. Use the buttons above to navigate between key sections:</p>
+  <ul>
+    <li><strong>Attendance Edit Requests</strong>: Review and approve/reject requests submitted by teachers for modifying attendance records.</li>
+    <li><strong>Manage Students</strong>: View, add, update, or remove student profiles. Each student is associated with a batch and can have attendance entries.</li>
+    <li><strong>Manage Teachers</strong>: Manage teacher records including assigning them to batches and giving them access to attendance functionalities.</li>
+  </ul>
+  <p>Please use the navigation buttons above to get started.</p>
+</div>
+
+
+<router-outlet></router-outlet>

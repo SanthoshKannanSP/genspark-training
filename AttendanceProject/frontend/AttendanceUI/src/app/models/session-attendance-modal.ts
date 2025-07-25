@@ -9,4 +9,5 @@ export class StudentAttendance {
   studentName: string = '';
   sessionId: number = 0;
   attended: boolean = false;
+  sessionAttendanceId: number = 0;
 }

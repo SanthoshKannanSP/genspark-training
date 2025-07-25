@@ -1,6 +1,4 @@
-<div
-  class="min-vh-100 d-flex justify-content-center align-items-center bg-light px-3"
->
+<div class="min-vh-100 d-flex justify-content-center align-items-center bg-light px-3">
   <div class="w-100" style="max-width: 800px">
     <div class="bg-white shadow-sm rounded-4 p-4">
       <h3 class="text-center mb-4 fw-semibold text-primary">Teacher Signup</h3>
@@ -9,12 +7,8 @@
         <!-- Name -->
         <div class="mb-3">
           <label class="form-label text-muted small">Full Name</label>
-          <input
-            type="text"
-            class="form-control form-control-lg rounded-3"
-            formControlName="name"
-            placeholder="John Doe"
-          />
+          <input type="text" class="form-control form-control-lg rounded-3" formControlName="name"
+            placeholder="John Doe" />
           @if (name.invalid && name.touched) {
           <small class="text-danger">Enter a valid name</small>
           }
@@ -23,26 +17,27 @@
         <!-- Email -->
         <div class="mb-3">
           <label class="form-label text-muted small">Email</label>
-          <input
-            type="email"
-            class="form-control form-control-lg rounded-3"
-            formControlName="email"
-            placeholder="name@example.com"
-          />
+          <input type="email" class="form-control form-control-lg rounded-3" formControlName="email"
+            placeholder="name@example.com" />
           @if (email.invalid && email.touched) {
           <small class="text-danger">Enter a valid email</small>
           }
         </div>
 
+        <!-- Role -->
+        <div class="mb-4">
+          <label class="form-label text-muted small">Role</label>
+          <select class="form-select form-select-lg rounded-3" formControlName="role">
+            <option value="Teacher">Teacher</option>
+            <option value="Admin">Admin</option>
+          </select>
+        </div>
+
         <!-- Organization -->
         <div class="mb-3">
           <label class="form-label text-muted small">Organization</label>
-          <input
-            type="text"
-            class="form-control form-control-lg rounded-3"
-            formControlName="organization"
-            placeholder="Your Institute"
-          />
+          <input type="text" class="form-control form-control-lg rounded-3" formControlName="organization"
+            placeholder="Your Institute" />
           @if (organization.invalid && organization.touched) {
           <small class="text-danger">Organization is required</small>
           }
@@ -51,12 +46,8 @@
         <!-- Password -->
         <div class="mb-4">
           <label class="form-label text-muted small">Password</label>
-          <input
-            type="password"
-            class="form-control form-control-lg rounded-3"
-            formControlName="password"
-            placeholder="********"
-          />
+          <input type="password" class="form-control form-control-lg rounded-3" formControlName="password"
+            placeholder="********" />
           @if (password.invalid && password.touched) {
           <small class="text-danger">Must be at least 8 characters</small>
           }
@@ -65,23 +56,16 @@
         <!-- Confirm Password -->
         <div class="mb-4">
           <label class="form-label text-muted small">Confirm Password</label>
-          <input
-            type="password"
-            class="form-control form-control-lg rounded-3"
-            formControlName="confirmPassword"
-            placeholder="********"
-          />
+          <input type="password" class="form-control form-control-lg rounded-3" formControlName="confirmPassword"
+            placeholder="********" />
           @if (signupForm.errors?.["passwordMismatch"] &&
           confirmPassword?.touched) {
           <small class="text-danger">Passwords do not match</small>
           }
         </div>
         <!-- Submit -->
-        <button
-          class="btn btn-primary w-100 rounded-pill py-2 fw-semibold"
-          type="submit"
-          [disabled]="signupForm.invalid"
-        >
+        <button class="btn btn-primary w-100 rounded-pill py-2 fw-semibold" type="submit"
+          [disabled]="signupForm.invalid">
           Sign Up
         </button>
       </form>

@@ -6,19 +6,18 @@ import { HttpParams } from '@angular/common/http';
 import { PaginatedResponse } from '../models/paginated-response';
 import { AttendanceDetailsModel } from '../models/attendance-details-modal';
 import { SessionAttendanceModel } from '../models/session-attendance-modal';
+import { AttendanceEditRequestModel } from '../models/attendance-edit-request-model';
 
 @Injectable()
 export class AttendanceService {
   api = inject(HttpClientService);
-  attendanceDetails = new BehaviorSubject<
-    PaginatedResponse<AttendanceDetailsModel[]>
-  >(new PaginatedResponse<AttendanceDetailsModel[]>());
+  attendanceDetails = new BehaviorSubject< PaginatedResponse<AttendanceDetailsModel[]>>(new PaginatedResponse<AttendanceDetailsModel[]>());
   attendanceDetails$ = this.attendanceDetails.asObservable();
-  sessionAttendanceDetails = new BehaviorSubject<
-    PaginatedResponse<SessionAttendanceModel>
-  >(new PaginatedResponse<SessionAttendanceModel>());
+  sessionAttendanceDetails = new BehaviorSubject<PaginatedResponse<SessionAttendanceModel>>(new PaginatedResponse<SessionAttendanceModel>());
   sessionAttendanceDetails$ = this.sessionAttendanceDetails.asObservable();
   currentFilters: FilterModel | null = null;
+  private attendanceEditRequests = new BehaviorSubject<AttendanceEditRequestModel[]>([]);
+  attendanceEditRequests$ = this.attendanceEditRequests.asObservable();
 
   updateAllSessions(
     page: number | null = null,
@@ -109,5 +108,29 @@ export class AttendanceService {
       {},
       'blob'
     );
+  }
+
+  // EDIT ATTENDANCE
+  submitEditRequest(request: { sessionAttendanceId: number; requestedStatus: string }) {
+    return this.api.post(
+      '/api/v1/Attendance/request-edit',
+      request,
+      true
+    );
+  }
+
+  // GET ALL ATTENDANCE EDIT REQUESTS
+  getAllAttendanceEditRequests() {
+    this.api.get('/api/v1/Attendance/attendance-edit-requests', true).subscribe({
+      next: (data: any) => {
+        const requests: AttendanceEditRequestModel[] = data.data.$values ?? data.data;
+        this.attendanceEditRequests.next(requests);
+      },
+      error: (error) => console.error('Failed to fetch attendance edit requests', error),
+    });
+  }
+  // APPROVE EDIT REQUEST
+  approveAttendanceEditRequest(requestId: number) {
+    return this.api.patch(`/api/v1/Attendance/${requestId}/approve`, {}, true);
   }
 }

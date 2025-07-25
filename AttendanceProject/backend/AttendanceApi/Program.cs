@@ -96,6 +96,12 @@ builder.Services.AddTransient<IRepository<int, Teacher>, TeacherRepository>();
 builder.Services.AddTransient<IRepository<string, User>, UserRepository>();
 builder.Services.AddTransient<IRepository<string, Settings>, SettingsRepository>();
 builder.Services.AddTransient<IRepository<int, Notes>, NoteRepository>();
+// AttendanceEditRequestRepository
+builder.Services.AddTransient<IRepository<int, AttendanceEditRequest>, AttendanceEditRequestRepository>();
+// BatchRepository
+builder.Services.AddTransient<IRepository<int, Batch>, BatchRepository>();
+
+
 #endregion
 
 #region Services
@@ -109,6 +115,9 @@ builder.Services.AddTransient<IOwnerService, OwnerService>();
 builder.Services.AddTransient<IAttendanceService, AttendanceService>();
 builder.Services.AddTransient<ISettingsService, SettingsService>();
 builder.Services.AddTransient<INotesService, NotesService>();
+builder.Services.AddTransient<IBatchService, BatchService>();
+
+
 #endregion
 
 #region AutoMapper
@@ -203,6 +212,7 @@ builder.Services.AddAuthorization(options =>
 #endregion
 
 var app = builder.Build();
+app.UseCors();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -218,7 +228,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseCors();
+
 app.MapHub<NotificationHub>("/notification");
 
 app.UseRateLimiter();

@@ -29,7 +29,13 @@ public class TeacherService : ITeacherService
             if (existingTeacher != null)
                 throw new Exception("An account with the given email already exists");
             var user = _mapper.Map<User>(addTeacherRequestDTO);
-            user.Role = "Teacher";
+            
+            // Enabling Admin/Teacher roles
+            // user.Role = "Teacher";
+            user.Role = string.IsNullOrWhiteSpace(addTeacherRequestDTO.Role)
+                ? "Teacher"
+                : addTeacherRequestDTO.Role.Trim();
+
             var encryptedData = _encryptionService.EncryptData(new EncryptModel()
             {
                 Data = addTeacherRequestDTO.Password
@@ -60,6 +66,21 @@ public class TeacherService : ITeacherService
         teacher.Status = "Deactivated";
         teacher = await _teacherRepository.Update(teacher.TeacherId, teacher);
         return teacher;
+    }
+
+    // ADMIN DELETE
+    public async Task<bool> DeleteTeacherByIdAsync(int teacherId)
+    {
+        var teacher = await _teacherRepository.Get(teacherId);
+        if (teacher == null)
+            throw new Exception("Teacher not found");
+
+        if (teacher.Status == "Deactivated")
+            throw new Exception("Teacher is already deactivated");
+
+        teacher.Status = "Deactivated";
+        await _teacherRepository.Update(teacherId, teacher);
+        return true;
     }
 
     public async Task<List<Teacher>> GetAllActiveTeachers(int? page, int? pageSize)

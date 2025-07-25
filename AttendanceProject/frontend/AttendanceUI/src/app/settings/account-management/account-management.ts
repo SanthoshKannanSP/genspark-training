@@ -29,7 +29,7 @@ export class AccountManagement {
         dateOfBirth: ['', [Validators.required, this.pastDateValidator]],
         gender: ['', [Validators.required]],
       });
-    } else if (this.api.hasRole('Teacher')) {
+    } else if (this.api.hasRole('Teacher') || this.api.hasRole('Admin')) {
       this.accountForm = this.fb.group({
         name: ['', [Validators.required, Validators.minLength(1)]],
         organization: ['', Validators.required],

@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using AttendanceApi.Interfaces;
 using AttendanceApi.Misc;
 using AttendanceApi.Models;
@@ -12,14 +13,44 @@ public class AttendanceService : IAttendanceService
 {
     private readonly IRepository<int, SessionAttendance> _sessionAttendanceRepository;
     private readonly IRepository<int, Session> _sessionRepository;
+    private readonly IRepository<int, AttendanceEditRequest> _attendanceEditRequestRepository;
 
     private readonly IHubContext<NotificationHub> _hubContext;
-    public AttendanceService(IRepository<int, SessionAttendance> sessionAttendanceRepository, IRepository<int, Session> sessionRepository, IHubContext<NotificationHub> hubContext)
+    public AttendanceService(IRepository<int, SessionAttendance> sessionAttendanceRepository, IRepository<int, Session> sessionRepository, IRepository<int, AttendanceEditRequest> attendanceEditRequestRepository, IHubContext<NotificationHub> hubContext)
     {
         _sessionAttendanceRepository = sessionAttendanceRepository;
         _sessionRepository = sessionRepository;
+        _attendanceEditRequestRepository = attendanceEditRequestRepository;
         _hubContext = hubContext;
     }
+
+    // R E Q U E S T    B Y    T E A C H E R
+    public async Task<AttendanceEditRequest> RequestAttendanceEditAsync(AttendanceEditRequestDTO dto)
+    {
+        var sessionAttendance = await _sessionAttendanceRepository.Get(dto.SessionAttendanceId);
+        if (sessionAttendance == null)
+            throw new Exception("Invalid SessionAttendanceId");
+
+        if (sessionAttendance.Status == dto.RequestedStatus)
+            throw new Exception("Requested status is same as current status");
+
+
+        var existingRequests = await _attendanceEditRequestRepository.GetAll();
+        var pending = existingRequests.FirstOrDefault(r =>
+            r.SessionAttendanceId == dto.SessionAttendanceId && r.Status == "Pending");
+        if (pending != null)
+            throw new Exception("A pending request already exists for this record");
+
+        var request = new AttendanceEditRequest
+        {
+            SessionAttendanceId = dto.SessionAttendanceId,
+            RequestedStatus = dto.RequestedStatus
+        };
+
+        return await _attendanceEditRequestRepository.Add(request);
+    }
+
+    // A D M I N
     public async Task<SessionAttendance> AddAttendanceToStudent(AttendanceUpdateDTO attendanceUpdateDTO)
     {
         var attendances = await _sessionAttendanceRepository.GetAll();
@@ -56,7 +87,7 @@ public class AttendanceService : IAttendanceService
         var attendances = await _sessionAttendanceRepository.GetAll();
         attendances = attendances.Where(s => s.SessionId == sessionId);
 
-        var response = attendances.Select(a => new SessionAttendanceDTO() { StudentId = a.StudentId, StudentName = a.Student.Name, Attended = a.Status == "Attended", SessionId = a.SessionId });
+        var response = attendances.Select(a => new SessionAttendanceDTO() { StudentId = a.StudentId, StudentName = a.Student.Name, Attended = a.Status == "Attended", SessionId = a.SessionId, SessionAttendanceId = a.SessionAttendanceId });
 
         if (!string.IsNullOrWhiteSpace(studentName))
             response = response.Where(a => a.StudentName.ToLower().Contains(studentName.ToLower()));
@@ -145,4 +176,45 @@ public class AttendanceService : IAttendanceService
         document.GeneratePdf(stream);
         return stream.ToArray();
     }
+
+    //GET ALL ATTENDANCE EDIT REQUESTS
+    public async Task<List<AttendanceEditRequestDTOResponse>> GetAllAttendanceEditRequests()
+    {
+        var query = await _attendanceEditRequestRepository.GetAll(); // IQueryable<AttendanceEditRequest>
+
+        var result = await query
+            .Where(r => r.Status == "Pending")
+            .Select(r => new AttendanceEditRequestDTOResponse
+            {
+                Id = r.Id,
+                SessionAttendanceId = r.SessionAttendanceId,
+                RequestedStatus = r.RequestedStatus,
+                Status = r.Status,
+                RequestedAt = r.RequestedAt,
+                StudentName = r.SessionAttendance.Student.Name,
+                SessionName =r.SessionAttendance.Session.SessionName,
+                CurrentStatus = r.SessionAttendance.Status,
+                StudentId = r.SessionAttendance.StudentId,
+                SessionId = r.SessionAttendance.SessionId
+            })
+            .ToListAsync();
+
+        return result;
+    }
+
+    //APPROVE EDIT REQUEST
+    public async Task<bool> ApproveEditRequestAsync(int requestId)
+    {
+        var request = await _attendanceEditRequestRepository.Get(requestId);
+        Console.WriteLine(request);
+        if (request == null)
+            return false;
+
+        request.Status = "Approved";
+
+        // await _attendanceEditRequestRepository.UpdateAsync(request);
+        await _attendanceEditRequestRepository.Update(request.Id, request);
+        return true;
+    }
+
 }

@@ -44,7 +44,7 @@ public class TeacherController : ControllerBase
         return Created("", teacher);
     }
 
-    [Authorize(Roles = "Teacher")]
+    [Authorize(Roles = "Teacher, Admin")]
     [HttpDelete]
     public async Task<ActionResult<Teacher>> DeactivateTeacher()
     {
@@ -52,7 +52,16 @@ public class TeacherController : ControllerBase
         return Ok(teacher);
     }
 
-    [Authorize(Roles = "Teacher")]
+    // ADMIN DELETE
+    [HttpDelete("{teacherId}")]
+    public async Task<IActionResult> DeactivateTeacherById(int teacherId)
+    {
+        var result = await _teacherService.DeleteTeacherByIdAsync(teacherId);
+        return Ok(new { message = "Teacher deactivated successfully", success = result });
+    }
+
+
+    [Authorize(Roles = "Teacher, Admin")]
     [HttpGet]
     [Route("Me")]
     public async Task<ActionResult<TeacherDetailsDTO>> GetMyDetails()
@@ -61,7 +70,7 @@ public class TeacherController : ControllerBase
         return teacher;
     }
 
-    [Authorize(Roles = "Teacher")]
+    [Authorize(Roles = "Teacher, Admin")]
     [HttpPost]
     [Route("Update")]
     public async Task<ActionResult<TeacherDetailsDTO>> UpdateDetails(TeacherDetailsDTO teacherDetailsDTO)
