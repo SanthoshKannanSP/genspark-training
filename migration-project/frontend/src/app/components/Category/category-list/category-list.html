@@ -1,0 +1,12 @@
+<ul>
+  @for(category of categories; track $index) {
+  <li>
+    <a
+      [routerLink]="['/products']"
+      [queryParams]="{ page: 1, category: category.categoryId }"
+    >
+      {{ category.name }}
+    </a>
+  </li>
+  }
+</ul>

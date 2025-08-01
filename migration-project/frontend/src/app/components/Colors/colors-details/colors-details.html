@@ -1,0 +1,17 @@
+<h2>Details</h2>
+
+@if (color) {
+<div>
+  <h4>Color</h4>
+  <hr />
+  <dl>
+    <dt>Name</dt>
+    <dd>{{ color.name }}</dd>
+  </dl>
+
+  <p>
+    <button (click)="goToEdit()">Edit</button> |
+    <button (click)="goBack()">Back to List</button>
+  </p>
+</div>
+}

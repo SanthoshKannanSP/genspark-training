@@ -1,0 +1,46 @@
+<h2>Index</h2>
+
+<p>
+  <button (click)="router.navigate(['/news-management/create'])">
+    Create New
+  </button>
+</p>
+
+<div>
+  <button (click)="exportToCSV()">Export to CSV</button>
+  <button (click)="exportToExcel()">Export to Excel</button>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Short Description</th>
+      <th>Image</th>
+      <th>Content</th>
+      <th>Created Date</th>
+      <th>Status</th>
+      <th>Username</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (item of newsList; track $index) {
+    <tr>
+      <td>{{ item.title }}</td>
+      <td>{{ item.shortDescription }}</td>
+      <td>{{ item.image }}</td>
+      <td>{{ item.content }}</td>
+      <td>{{ item.createdDate | date: 'short' }}</td>
+      <td>{{ item.status === 1 ? 'Active' : 'Inactive' }}</td>
+      <td>{{ item.username }}</td>
+      <td>
+        <a [routerLink]="['/news-management/edit', item.newsId]">Edit</a> |
+        <a [routerLink]="['/news-management/details', item.newsId]">Details</a>
+        |
+        <button (click)="deleteNews(item.newsId)">Delete</button>
+      </td>
+    </tr>
+    }
+  </tbody>
+</table>

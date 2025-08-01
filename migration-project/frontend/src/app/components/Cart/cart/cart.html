@@ -1,0 +1,64 @@
+<h2>Index</h2>
+
+@if (cart.length > 0) {
+<div>
+  <form>
+    <table class="shopping-cart">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Sub Total</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of cart; track $index) {
+        <tr>
+          <td>
+            <a [routerLink]="['/products', item.product.productId]">
+              {{ item.product.productName }}
+            </a>
+          </td>
+          <td>${{ item.product.price | number }}</td>
+          <td>
+            <input
+              type="number"
+              [value]="item.quantity"
+              (change)="updateQuantity(item, $event)"
+              min="1"
+            />
+          </td>
+          <td>${{ item.product.price * item.quantity | number }}</td>
+          <td>
+            <button type="button" (click)="removeItem(item.product.productId)">
+              Delete
+            </button>
+          </td>
+        </tr>
+        }
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3" class="total-price-text"><strong>Total:</strong></td>
+          <td colspan="2" class="total-price-digit">
+            ${{ getTotal() | number }}
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <div class="cart-actions">
+      <a routerLink="/products" class="btn continue-shopping"
+        >Continue Shopping</a
+      >
+      <a routerLink="/checkout" class="btn continue-shopping">Checkout</a>
+    </div>
+  </form>
+</div>
+} @else {
+<div>
+  <h4>No items in your cart!</h4>
+</div>
+}

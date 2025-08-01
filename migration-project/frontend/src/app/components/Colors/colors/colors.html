@@ -1,0 +1,35 @@
+<div class="top-breadcrumb">
+  <ul>
+    <li>
+      <a routerLink="/home">Home</a><span class="span-breadcrumb">>></span>
+    </li>
+    <li><a routerLink="/colors">Colors</a></li>
+  </ul>
+</div>
+
+<h2>Index</h2>
+
+<p>
+  <button (click)="router.navigate(['/colors/create'])">Create New</button>
+</p>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (item of colors; track $index) {
+    <tr>
+      <td>{{ item.name }}</td>
+      <td>
+        <a [routerLink]="['/colors/edit', item.colorId]">Edit</a> |
+        <a [routerLink]="['/colors/details', item.colorId]">Details</a> |
+        <button (click)="onDelete(item.colorId!)">Delete</button>
+      </td>
+    </tr>
+    }
+  </tbody>
+</table>

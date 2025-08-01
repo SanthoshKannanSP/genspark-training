@@ -1,0 +1,36 @@
+<h2>Edit</h2>
+
+<form
+  [formGroup]="categoryForm"
+  (ngSubmit)="onSubmit()"
+  class="form-horizontal"
+>
+  <h4>Category</h4>
+  <hr />
+
+  <div class="form-group">
+    <label class="control-label col-md-2">Name</label>
+    <div class="col-md-10">
+      <input type="text" formControlName="name" class="form-control" />
+      @if (categoryForm.get('name')?.invalid &&
+      categoryForm.get('name')?.touched) {
+      <div class="text-danger">Name is required.</div>
+      }
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-md-offset-2 col-md-10">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="categoryForm.invalid"
+      >
+        Save
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="onCancel()">
+        Back to List
+      </button>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,17 @@
+<h2>Details</h2>
+
+@if (category) {
+<div>
+  <h4>Category</h4>
+  <hr />
+  <dl>
+    <dt>Name</dt>
+    <dd>{{ category.name }}</dd>
+  </dl>
+
+  <p>
+    <button (click)="goToEdit()">Edit</button> |
+    <button (click)="goBack()">Back to List</button>
+  </p>
+</div>
+}

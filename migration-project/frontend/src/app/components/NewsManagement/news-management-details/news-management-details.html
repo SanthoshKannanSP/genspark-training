@@ -1,0 +1,40 @@
+<h2>Details</h2>
+
+@if (news) {
+<div>
+  <dl class="row">
+    <dt class="col-sm-3">Title</dt>
+    <dd class="col-sm-9">{{ news.title }}</dd>
+
+    <dt class="col-sm-3">Short Description</dt>
+    <dd class="col-sm-9">{{ news.shortDescription }}</dd>
+
+    <dt class="col-sm-3">Image</dt>
+    <dd class="col-sm-9">{{news.image}}</dd>
+
+    <dt class="col-sm-3">Content</dt>
+    <dd class="col-sm-9">{{ news.content }}</dd>
+
+    <dt class="col-sm-3">Created Date</dt>
+    <dd class="col-sm-9">{{ news.createdDate | date }}</dd>
+
+    <dt class="col-sm-3">Status</dt>
+    <dd class="col-sm-9">{{ news.status === 1 ? 'Active' : 'Inactive' }}</dd>
+
+    <dt class="col-sm-3">Author</dt>
+    <dd class="col-sm-9">{{ news.username }}</dd>
+  </dl>
+
+  <div>
+    <button
+      class="btn btn-primary"
+      [routerLink]="['/news-management/edit', news.newsId]"
+    >
+      Edit
+    </button>
+    <a class="btn btn-secondary ml-2" [routerLink]="['/news-management']">
+      Back to List
+    </a>
+  </div>
+</div>
+}

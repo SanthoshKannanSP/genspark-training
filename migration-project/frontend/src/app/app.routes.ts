@@ -1,0 +1,49 @@
+import { Routes } from '@angular/router';
+import { Categories } from './components/Category/categories/categories';
+import { Home } from './components/Home/home/home';
+import { CategoryDetail } from './components/Category/category-detail/category-detail';
+import { CategoryEdit } from './components/Category/category-edit/category-edit';
+import { CategoryCreate } from './components/Category/category-create/category-create';
+import { Products } from './components/Product/products/products';
+import { ProductDetails } from './components/Product/product-details/product-details';
+import { News } from './components/News/news/news';
+import { ContactUs } from './components/ContactUs/contact-us/contact-us';
+import { Colors } from './components/Colors/colors/colors';
+import { ColorsCreate } from './components/Colors/colors-create/colors-create';
+import { ColorsDetails } from './components/Colors/colors-details/colors-details';
+import { ColorsEdit } from './components/Colors/colors-edit/colors-edit';
+import { NewsManagement } from './components/NewsManagement/news-management/news-management';
+import { NewsManagementCreate } from './components/NewsManagement/news-management-create/news-management-create';
+import { NewsManagementDetails } from './components/NewsManagement/news-management-details/news-management-details';
+import { NewsManagementEdit } from './components/NewsManagement/news-management-edit/news-management-edit';
+import { Cart } from './components/Cart/cart/cart';
+import { Checkout } from './components/Cart/checkout/checkout';
+import { Success } from './components/Cart/success/success';
+import { Orders } from './components/Orders/orders/orders';
+import { OrderDetails } from './components/Orders/order-details/order-details';
+
+export const routes: Routes = [
+  { path: 'home', component: Home },
+  { path: 'categories', component: Categories },
+  { path: 'categories/create', component: CategoryCreate },
+  { path: 'categories/details/:id', component: CategoryDetail },
+  { path: 'categories/edit/:id', component: CategoryEdit },
+  { path: 'products', component: Products },
+  { path: 'products/:id', component: ProductDetails },
+  { path: 'news', component: News },
+  { path: 'contact-us', component: ContactUs },
+  { path: 'colors', component: Colors },
+  { path: 'colors/create', component: ColorsCreate },
+  { path: 'colors/details/:id', component: ColorsDetails },
+  { path: 'colors/edit/:id', component: ColorsEdit },
+  { path: 'news-management', component: NewsManagement },
+  { path: 'news-management/create', component: NewsManagementCreate },
+  { path: 'news-management/details/:id', component: NewsManagementDetails },
+  { path: 'news-management/edit/:id', component: NewsManagementEdit },
+  { path: 'cart', component: Cart },
+  { path: 'checkout', component: Checkout },
+  { path: 'checkout/success', component: Success },
+  { path: 'orders', component: Orders },
+  { path: 'orders/details/:id', component: OrderDetails },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+];

@@ -1,0 +1,40 @@
+<div class="top-breadcrumb">
+  <ul>
+    <li>
+      <a routerLink="/home">Home</a><span class="span-breadcrumb">>></span>
+    </li>
+    <li><a routerLink="/news">News</a></li>
+  </ul>
+</div>
+
+<div class="clear"></div>
+
+@for (item of newsList; track $index) {
+<div class="main-content">
+  <div class="content-image">
+    <a [routerLink]="['/news-management/details',item.newsId]"
+      ><img [src]="baseUrl + item.image" alt="News Image"
+    /></a>
+  </div>
+  <div class="content-title">
+    <a href="#">{{ item.title }}</a>
+  </div>
+  <div class="content-price"></div>
+</div>
+}
+
+<div class="clear"></div>
+
+<!-- Pagination -->
+<div class="div-pagination">
+  <div class="div-pagination">
+    @for (page of [].constructor(totalPages); track $index) {
+    <button
+      [disabled]="pageNumber === $index + 1"
+      (click)="goToPage($index + 1)"
+    >
+      {{ $index + 1 }}
+    </button>
+    }
+  </div>
+</div>

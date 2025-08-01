@@ -1,0 +1,40 @@
+<h2>Order Details</h2>
+
+@if (order) {
+<div>
+  <div>
+    <h4>Order ID: {{ order.orderID }}</h4>
+    <p>
+      <strong>Order Date:</strong> {{ order.orderDate | date: 'shortDate' }}
+    </p>
+    <p><strong>Payment Type:</strong> {{ order.paymentType }}</p>
+    <p><strong>Status:</strong> {{ order.status }}</p>
+    <p><strong>Customer Name:</strong> {{ order.customerName }}</p>
+    <p><strong>Customer Phone:</strong> {{ order.customerPhone }}</p>
+    <p><strong>Customer Email:</strong> {{ order.customerEmail }}</p>
+    <p><strong>Customer Address:</strong> {{ order.customerAddress }}</p>
+  </div>
+
+  <h3>Products</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Product Name</th>
+        <th>Quantity</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (item of orderDetails; track $index) {
+      <tr>
+        <td>{{ item.productName }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>${{ item.price | number }}</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+
+  <a class="btn btn-primary" routerLink="/orders">Back to List</a>
+</div>
+}
