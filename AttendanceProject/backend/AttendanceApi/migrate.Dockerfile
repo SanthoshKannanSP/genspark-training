@@ -6,7 +6,7 @@ COPY ./backend/AttendanceApi/. .
 
 RUN pwd && ls -l
 
-
+# Restore dependencies
 RUN dotnet restore AttendanceApi.csproj
 
 
@@ -16,8 +16,7 @@ RUN dotnet tool install --global dotnet-ef
 # Make sure dotnet tools path is available
 ENV PATH="$PATH:/root/.dotnet/tools"
 
-# Restore dependencies
-
+ENV ASPNETCORE_ENVIRONMENT=PRODUCTION
 
 # Run EF Core database update
 CMD ["dotnet", "ef", "database", "update"]

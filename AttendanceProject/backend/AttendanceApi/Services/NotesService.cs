@@ -2,6 +2,8 @@ using AttendanceApi.Interfaces;
 using AttendanceApi.Models;
 using AttendanceApi.Models.DTOs;
 using AttendanceApi.Repositories;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using Azure.Storage.Blobs;
 
 namespace AttendanceApi.Services;
@@ -15,7 +17,7 @@ public class NotesService : INotesService
         _noteRepository = noteRepository;
         var keyVaultUrl = configuration["Azure:KeyVaultUrl"];
         var secretClient = new SecretClient(new Uri(keyVaultUrl), new DefaultAzureCredential());
-        KeyVaultSecret secret = await secretClient.GetSecretAsync("ContainerSasUrl");
+        KeyVaultSecret secret = secretClient.GetSecret("ContainerSasUrl");
         var sasUrl = secret.Value;
         _containerClinet = new BlobContainerClient(new Uri(sasUrl!));
     }
