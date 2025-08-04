@@ -38,6 +38,15 @@ services:
     networks:
       - app-network
 
+  migration:
+    build:
+      dockerfile: backend/AttendanceApi/migrate.Dockerfile
+    container_name: migration
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
 volumes:
   postgres_data:
 

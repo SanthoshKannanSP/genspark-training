@@ -47,7 +47,7 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 
 # Environment variable for Development to enable Swagger
-ENV ASPNETCORE_ENVIRONMENT=DEVELOPMENT
+ENV ASPNETCORE_ENVIRONMENT=PRODUCTION
 
 # ENV ASPNETCORE_ENVIRONMENT=PRODUCTION
 

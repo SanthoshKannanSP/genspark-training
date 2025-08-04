@@ -67,7 +67,6 @@ public class AttendanceController : ControllerBase
 
     [Authorize(Roles = "Teacher, Admin")]
     [HttpPost("request-edit")]
-    [Route("request-edit")]
     public async Task<IActionResult> RequestEdit([FromBody] AttendanceEditRequestDTO dto)
     {
         var result = await _attendanceService.RequestAttendanceEditAsync(dto);

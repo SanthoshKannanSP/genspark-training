@@ -13,7 +13,10 @@ public class NotesService : INotesService
     public NotesService(IRepository<int, Notes> noteRepository, IConfiguration configuration)
     {
         _noteRepository = noteRepository;
-        var sasUrl = configuration["AzureBlob:ContainerSasUrl"];
+        var keyVaultUrl = configuration["Azure:KeyVaultUrl"];
+        var secretClient = new SecretClient(new Uri(keyVaultUrl), new DefaultAzureCredential());
+        KeyVaultSecret secret = await secretClient.GetSecretAsync("ContainerSasUrl");
+        var sasUrl = secret.Value;
         _containerClinet = new BlobContainerClient(new Uri(sasUrl!));
     }
 
@@ -80,7 +83,7 @@ public class NotesService : INotesService
         await blobClient.UploadAsync(file);
 
         await _noteRepository.Add(note);
-        
+
         file.Close();
         return;
     }

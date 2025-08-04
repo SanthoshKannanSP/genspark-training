@@ -74,7 +74,7 @@ if (builder.Environment.IsDevelopment())
 }
 else
 {
-    var keyVaultUrl = builder.Configuration["AzureBlob:KeyVaultUrl"];
+    var keyVaultUrl = builder.Configuration["Azure:KeyVaultUrl"];
     var secretClient = new SecretClient(new Uri(keyVaultUrl), new DefaultAzureCredential());
     KeyVaultSecret secret = await secretClient.GetSecretAsync("ConnectionString");
     connectionString = secret.Value;
@@ -127,8 +127,10 @@ builder.Services.AddAutoMapper(typeof(Student));
 #endregion
 
 #region CORS
-builder.Services.AddCors(options=>{
-    options.AddDefaultPolicy(policy=>{
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
         policy.WithOrigins("http://localhost:4200")
             .AllowAnyHeader()
             .AllowAnyMethod()
@@ -164,7 +166,7 @@ builder.Services.AddRateLimiter(opts =>
 
         if (username == null)
             username = context.Connection.RemoteIpAddress.ToString();
-        
+
         return RateLimitPartition.GetTokenBucketLimiter(username, key => new TokenBucketRateLimiterOptions
         {
             TokenLimit = 1000,
@@ -174,9 +176,9 @@ builder.Services.AddRateLimiter(opts =>
             TokensPerPeriod = 1000,
             AutoReplenishment = true
         });
-        
+
     });
-});;
+}); ;
 #endregion
 
 #region AuthenticationFilter
@@ -215,11 +217,9 @@ var app = builder.Build();
 app.UseCors();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
+
 
 QuestPDF.Settings.License = LicenseType.Community;
 
